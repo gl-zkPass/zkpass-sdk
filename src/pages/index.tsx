@@ -1,50 +1,61 @@
-import {
-  CredType,
-  IVerifyCriteria,
-  IVerifyRequestReceipt,
-  KycKtpField,
-  VerifierSDK,
-  VerifyOperator,
-  VerifyRequest,
-} from "didpass";
-import { useEffect, useState } from "react";
-
-const criteria: IVerifyCriteria = {
-  credField: KycKtpField.BirthDate,
-  verifyOperator: VerifyOperator.lessThan,
-  value: 20080101,
-};
-const didPass = new VerifierSDK(
-  "7f5912dc-ec21-11ed-9ef2-06a8434e4f5e",
-  "development"
-);
+import { VerificationStatus } from "didpass";
+import { useCallback, useEffect, useState } from "react";
+import { QRCode } from "react-qrcode-logo";
+import { QrData } from "./api/get-verifier-qr";
 
 export default function Home() {
-  const [qr, setQr] = useState<string>("");
-
+  const [qrData, setQrData] = useState<QrData | undefined>();
+  const [status, setStatus] = useState<VerificationStatus>(
+    VerificationStatus.PENDING
+  );
   useEffect(() => {
+    const generateQR = async () => {
+      const response = await fetch("/api/get-verifier-qr");
+      const data = await response.json();
+      setQrData(data);
+    };
     generateQR();
   }, []);
 
-  async function generateQR() {
-    let criteria: IVerifyCriteria = {
-      credField: KycKtpField.BirthDate,
-    };
+  const checkStatus = useCallback(async () => {
+    if (!qrData) return VerificationStatus.NOT_FOUND;
+    const response = await fetch(`/api/check-status/${qrData.requestId}`);
+    const data = await response.json();
+    return data;
+  }, [qrData]);
 
-    criteria = {
-      ...criteria,
-      verifyOperator: VerifyOperator.lessThan,
-      value: 20080101,
-    };
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const res = await checkStatus();
+      setStatus(res.status);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [checkStatus, qrData]);
 
-    const verifyRequest = new VerifyRequest(CredType.Ktp, criteria);
-    console.log(verifyRequest);
-    const verifyRequestReceipt: IVerifyRequestReceipt =
-      await didPass.requestVerification(verifyRequest);
-    let requestId = verifyRequestReceipt.id as string;
-    const qrString = JSON.stringify(verifyRequestReceipt.qrCode, null, 2);
-    setQr(qrString);
-  }
+  return (
+    <div className="p-4">
+      <h2 className="text-lg font-bold mb-2">
+        Please use your wallet to scan this QR code to verify your data from
+        your SSI account.
+      </h2>
+      <div className="flex mb-4">
+        <QRCode
+          id="verifier-qr"
+          qrStyle="dots"
+          value={qrData?.data}
+          removeQrCodeBehindLogo={true}
+          quietZone={10}
+          size={300}
+        />
+      </div>
 
-  return <>{qr}</>;
+      <p className="text-lg text-white">Verification status: {status}</p>
+      <div className="bg-gray-100 p-4">
+        <h2 className="text-black">QR Data</h2>
+        <pre className="p-4 bg-white rounded-lg shadow-md overflow-x-auto">
+          <code className="text-sm text-gray-800">{qrData?.data}</code>
+        </pre>
+      </div>
+    </div>
+  );
 }
