@@ -23,7 +23,7 @@ export default async function handler(
 }
 
 async function checkStatus(requestId: string): Promise<VerificationStatus> {
-  const didPass = new VerifierSDK("YOUR_API_KEY", "development");
+  const didPass = new VerifierSDK("YOUR_API_KEY", "ENVIRONMENT");
   let status = (await didPass.checkStatus(requestId)).statusType;
   return status;
 }

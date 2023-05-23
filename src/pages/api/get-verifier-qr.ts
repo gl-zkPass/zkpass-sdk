@@ -28,7 +28,7 @@ export default async function handler(
 }
 
 async function getQr() {
-  const didPass = new VerifierSDK("YOUR_API_KEY", "development");
+  const didPass = new VerifierSDK("YOUR_API_KEY", "ENVIRONMENT");
   let criteria: IVerifyCriteria = {
     credField: KycKtpField.BirthDate,
     verifyOperator: VerifyOperator.lessThan,

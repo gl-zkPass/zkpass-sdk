@@ -8,7 +8,7 @@
 $ npm i
 ```
 
-2. Enter your API key in src/pages/api/check-status/[requestId].ts and src/pages/api/get-verifier-qr.ts
+2. Enter your API key and Environment type in src/pages/api/check-status/[requestId].ts and src/pages/api/get-verifier-qr.ts
 3. Start the NextJs Application:
 
 ```bash
