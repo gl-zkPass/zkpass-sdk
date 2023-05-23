@@ -1,9 +1,9 @@
-import didPass from "@swiss-web2/utils/didpass";
 import {
   CredType,
   IVerifyCriteria,
   IVerifyRequestReceipt,
   KycKtpField,
+  VerifierSDK,
   VerifyOperator,
   VerifyRequest,
 } from "didpass";
@@ -28,6 +28,7 @@ export default async function handler(
 }
 
 async function getQr() {
+  const didPass = new VerifierSDK("YOUR_API_KEY", "development");
   let criteria: IVerifyCriteria = {
     credField: KycKtpField.BirthDate,
     verifyOperator: VerifyOperator.lessThan,

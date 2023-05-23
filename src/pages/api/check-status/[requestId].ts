@@ -1,5 +1,4 @@
-import didPass from "@swiss-web2/utils/didpass";
-import { VerificationStatus } from "didpass";
+import { VerificationStatus, VerifierSDK } from "didpass";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
@@ -24,6 +23,7 @@ export default async function handler(
 }
 
 async function checkStatus(requestId: string): Promise<VerificationStatus> {
+  const didPass = new VerifierSDK("YOUR_API_KEY", "development");
   let status = (await didPass.checkStatus(requestId)).statusType;
   return status;
 }
