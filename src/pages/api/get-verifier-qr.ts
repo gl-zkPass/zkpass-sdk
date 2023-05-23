@@ -14,12 +14,6 @@ export type QrData = {
   requestId: string;
 };
 
-const criteria: IVerifyCriteria = {
-  credField: KycKtpField.BirthDate,
-  verifyOperator: VerifyOperator.lessThan,
-  value: 20080101,
-};
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<QrData>
@@ -36,10 +30,6 @@ export default async function handler(
 async function getQr() {
   let criteria: IVerifyCriteria = {
     credField: KycKtpField.BirthDate,
-  };
-
-  criteria = {
-    ...criteria,
     verifyOperator: VerifyOperator.lessThan,
     value: 20080101,
   };
