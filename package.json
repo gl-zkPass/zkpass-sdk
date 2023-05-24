@@ -13,7 +13,7 @@
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
     "autoprefixer": "10.4.14",
-    "didpass": "file:../web2/sdk/didpass.tgz",
+    "didpass": "file:./didpass.tgz",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.3",
     "next": "13.4.3",
