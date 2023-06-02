@@ -1,4 +1,4 @@
-import { VerificationStatus, VerifierSDK } from "didpass";
+import { VerificationStatus, VerifierSDK } from "@didpass/sdk";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
@@ -23,7 +23,7 @@ export default async function handler(
 }
 
 async function checkStatus(requestId: string): Promise<VerificationStatus> {
-  const didPass = new VerifierSDK("YOUR_API_KEY", "ENVIRONMENT");
+  const didPass = new VerifierSDK("API-KEY", "ENVIRONMENT");
   let status = (await didPass.checkStatus(requestId)).statusType;
   return status;
 }

@@ -1,4 +1,4 @@
-import { VerificationStatus } from "didpass";
+import { VerificationStatus } from "@didpass/sdk";
 import { useCallback, useEffect, useState } from "react";
 import { QRCode } from "react-qrcode-logo";
 import { QrData } from "./api/get-verifier-qr";

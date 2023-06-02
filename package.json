@@ -9,11 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@didpass/sdk": "^0.0.1",
     "@types/node": "20.2.3",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
     "autoprefixer": "10.4.14",
-    "didpass": "file:didpass.tgz",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.3",
     "next": "13.4.3",

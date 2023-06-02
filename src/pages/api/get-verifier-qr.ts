@@ -6,7 +6,7 @@ import {
   VerifierSDK,
   VerifyOperator,
   VerifyRequest,
-} from "didpass";
+} from "@didpass/sdk";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export type QrData = {
@@ -28,7 +28,7 @@ export default async function handler(
 }
 
 async function getQr() {
-  const didPass = new VerifierSDK("YOUR_API_KEY", "ENVIRONMENT");
+  const didPass = new VerifierSDK("API-KEY", "ENVIRONMENT");
   let criteria: IVerifyCriteria = {
     credField: KycKtpField.BirthDate,
     verifyOperator: VerifyOperator.lessThan,
