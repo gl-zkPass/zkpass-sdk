@@ -3,7 +3,7 @@ import {
   IVerifyCriteria,
   IVerifyRequestReceipt,
   KycKtpField,
-  VerifierSDK,
+  DidPassVerifier,
   VerifyOperator,
   VerifyRequest,
 } from "@didpass/sdk";
@@ -28,7 +28,7 @@ export default async function handler(
 }
 
 async function getQr() {
-  const didPass = new VerifierSDK("API-KEY", "ENVIRONMENT");
+  const didPass = new DidPassVerifier("API-KEY", "ENVIRONMENT");
   let criteria: IVerifyCriteria = {
     credField: KycKtpField.BirthDate,
     verifyOperator: VerifyOperator.lessThan,
