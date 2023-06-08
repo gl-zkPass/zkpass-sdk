@@ -5,6 +5,9 @@ type Data = {
   status: VerificationStatus;
 };
 
+const DIDPASS_API_KEY = process.env.DIDPASS_API_KEY || "";
+const DIDPASS_ENVIRONMENT = process.env.DIDPASS_ENVIRONMENT || "";
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
@@ -23,7 +26,7 @@ export default async function handler(
 }
 
 async function checkStatus(requestId: string): Promise<VerificationStatus> {
-  const didPass = new DidPassVerifier("API-KEY", "ENVIRONMENT");
+  const didPass = new DidPassVerifier(DIDPASS_API_KEY, DIDPASS_ENVIRONMENT);
   let status = (await didPass.checkStatus(requestId)).statusType;
   return status;
 }

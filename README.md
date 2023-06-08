@@ -8,11 +8,18 @@
    npm i
    ```
 
-2. Enter your API key and Environment type in src/pages/api/check-status/[requestId].ts and src/pages/api/get-verifier-qr.ts
-3. Start the NextJs Application:
+2. Copy paste `.env.example` into `.env`
+3. Enter your API key and Environment type into `.env`
+
+   ```bash
+   DIDPASS_API_KEY=
+   DIDPASS_ENVIRONMENT=
+   ```
+
+4. Start the NextJs Application:
 
    ```bash
    npm run dev
    ```
 
-4. Navigate to http://localhost:3000
+5. Navigate to http://localhost:3000

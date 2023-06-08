@@ -14,6 +14,9 @@ export type QrData = {
   requestId: string;
 };
 
+const DIDPASS_API_KEY = process.env.DIDPASS_API_KEY || "";
+const DIDPASS_ENVIRONMENT = process.env.DIDPASS_ENVIRONMENT || "";
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<QrData>
@@ -28,7 +31,7 @@ export default async function handler(
 }
 
 async function getQr() {
-  const didPass = new DidPassVerifier("API-KEY", "ENVIRONMENT");
+  const didPass = new DidPassVerifier(DIDPASS_API_KEY, DIDPASS_ENVIRONMENT);
   let criteria: IVerifyCriteria = {
     credField: KycKtpField.BirthDate,
     verifyOperator: VerifyOperator.lessThan,
