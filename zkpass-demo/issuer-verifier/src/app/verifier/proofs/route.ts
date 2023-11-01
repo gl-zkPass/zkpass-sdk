@@ -7,7 +7,6 @@ export async function POST(req: Request) {
   try {
     const { proof } = await req.json();
     console.log({ proof });
-    // const data = false;
     const myValidator = new MyValidator();
     const proofResult = await verifyZkpassProof(proof, myValidator);
     console.log({ proofResult });

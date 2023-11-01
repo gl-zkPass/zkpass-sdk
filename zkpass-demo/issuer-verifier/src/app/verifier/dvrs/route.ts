@@ -1,22 +1,13 @@
-import * as jose from "jose";
 import fs from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
-import { exec } from "child_process";
 import { signDataToJwsToken } from "zkpass-client-ts";
 
 const PRIVATE_KEY_PEM =
   "-----BEGIN PRIVATE KEY-----\n" +
-  "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgLxxbcd7aVcNEdE/C\n" +
-  "EGPwLzM6lkLuDYzhd3FqALuuHCahRANCAASnpYmXAC2V39TiEOaa64x1kJW0x5Qh\n" +
-  "PfGQN1TAs6+xVUD6KJLB9pfgeoqVE8MYb4XpYaOfHKz1Pka017ee97A4\n" +
-  "-----END PRIVATE KEY-----\n";
-
-const MOCK_PRIVATE_KEY_PEM =
-  "-----BEGIN PRIVATE KEY-----\n" +
-  "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgLxxbcd7aVcNEdE/C\n" +
-  "EGPwLzM6lkLuDYzhd3FqALuuHCahRANCAASnpYmXAC2V39TiEOaa64x1kJW0x5Qh\n" +
-  "PfGQN1TAs6+xVUD6KJLB9pfgeoqVE8MYb4XpYaOfHKz1Pka017ee97A4\n" +
+  "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgoscaQEAjaaBo1WZ3\n" +
+  "QYh0QF1bgjq/LF7nelvj8blaxeChRANCAARD9HUmJXTWInD5PYLY1sR4HOiNm+e8\n" +
+  "ORtu6YJAO6qFhyuzxyxid3QFJNyanOswNxxbaEwhKxfE+q+jOfKR4pND\n" +
   "-----END PRIVATE KEY-----\n";
 
 const ASSET_PATH = "public/verifier/";
@@ -47,19 +38,6 @@ export async function POST(req: Request) {
   const user = users[userName];
 
   const dvrQuery = _generateBloodTestQuery(user);
-
-  // const kid = "PhE7UwNG7wskhKX9Qb71DAlXyM6a-Bcy5kHQLH1c3VY";
-  // const alg = "ES256";
-
-  // const privateKey = await jose.importPKCS8(PRIVATE_KEY_PEM, alg);
-
-  // const jwt = await new jose.SignJWT(dvr)
-  //   .setProtectedHeader({ alg, kid })
-  //   .setIssuedAt()
-  //   .setIssuer("zkpass:issuer")
-  //   .setAudience("zkpass:audience")
-  //   .setExpirationTime("2h")
-  //   .sign(privateKey);
 
   const data = {
     dvr_title: "Onboarding Blood Test",
@@ -98,11 +76,7 @@ function _setHeader(response: NextResponse) {
 async function _signDVR(data: { [key: string]: any }) {
   const verifyingKeyJKWS = {
     jku: process.env.NEXT_PUBLIC_URL + "/verifier/jwks.json",
-    kid: "k-1",
-  };
-  const mockVerifyingKeyJKWS = {
-    jku: "https://raw.githubusercontent.com/zulamdat/zulamdat.github.io/sample-key/zkp-key/verifier-key.json",
-    kid: "k-1",
+    kid: "H3l/puWLF1UF4QHGMlIBvg8DrHax5ECYYjEDMUTeELk=",
   };
   data["user_data_verifying_key"] = {
     KeysetEndpoint: verifyingKeyJKWS,
@@ -112,13 +86,7 @@ async function _signDVR(data: { [key: string]: any }) {
     data,
     verifyingKeyJKWS
   );
-  const mockSignedDVR = await signDataToJwsToken(
-    MOCK_PRIVATE_KEY_PEM,
-    data,
-    mockVerifyingKeyJKWS
-  );
   return signedDVR;
-  // return mockSignedDVR;
 }
 
 function _generateBloodTestQuery(user: User): string {

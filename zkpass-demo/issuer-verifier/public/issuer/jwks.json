@@ -1,18 +1,9 @@
 {
   "keys": [
     {
-      "kty": "EC",
-      "x": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE7f0QoVUsccB9yMwHAR7oVk/L+ZkX",
-      "y": "8ZqC1Z0XTaj3BMcMnqh+VzdHZX3yGKa3+uhNAhKWWyfB/r+3E8rPSHtXXQ==",
-      "crv": "P-256",
-      "kid": "k-1"
-    },
-    {
-      "kty": "EC",
-      "crv": "P-256",
-      "x": "Ui0I5ctpZfsmpgZamaWAp1lsAQngMmD2wzfZNcW2gmE",
-      "y": "qZm_O9f979o1XJz1j3UYVs0XvsY1bVfEnQKGWo27VO8",
-      "kid": "edBvX+uarFeeyAoVKOjDiGD82BMJfS5RIFNFeikMblE="
+      "x": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEr7aLXocA6clMDjYg80A8VncGmvrm",
+      "y": "o7c4uEj4D7SZuWBrCyDcsIProfTGh00ZlS5YAoCBnp8k9GMeojZj0aN82w==",
+      "kid": "yibXxdascCcvpCxxbVvRm1B0N2loYIB8wMyGJjr5P0A="
     }
   ]
 }

@@ -7,7 +7,7 @@ export async function POST(req: Request) {
   return Response.json({ status: 200, message: "Logout successful" });
 }
 
-export async function OPTION() {
+export async function OPTIONS() {
   let response = NextResponse.json({ status: 200 });
   response.headers.set("Access-Control-Allow-Origin", "*");
   response.headers.set("Access-Control-Allow-Methods", "POST, GET, OPTIONS");

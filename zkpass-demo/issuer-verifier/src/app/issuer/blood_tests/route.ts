@@ -1,4 +1,3 @@
-import * as jose from "jose";
 import fs from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
@@ -6,23 +5,9 @@ import { signDataToJwsToken } from "zkpass-client-ts";
 
 const PRIVATE_KEY_PEM =
   "-----BEGIN PRIVATE KEY-----\n" +
-  "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg3J/wAlzSD8ZyAU8f\n" +
-  "bPkuCY/BSlq2Y2S5hym8sRccpZehRANCAATt/RChVSxxwH3IzAcBHuhWT8v5mRfx\n" +
-  "moLVnRdNqPcExwyeqH5XN0dlffIYprf66E0CEpZbJ8H+v7cTys9Ie1dd\n" +
-  "-----END PRIVATE KEY-----\n";
-
-// const PRIVATE_KEY_PEM =
-//   "-----BEGIN PRIVATE KEY-----\n" +
-//   "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgRzMXfxwfxRv9nGX0\n" +
-//   "6T4aeb5pxUyZbsjAlUx1DYsP/xqhRANCAARSLQjly2ll+yamBlqZpYCnWWwBCeAy\n" +
-//   "YPbDN9k1xbaCYamZvzvX/e/aNVyc9Y91GFbNF77GNW1XxJ0ChlqNu1Tv\n" +
-//   "-----END PRIVATE KEY-----\n";
-
-const MOCK_PRIVATE_KEY_PEM =
-  "-----BEGIN PRIVATE KEY-----\n" +
-  "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg3J/wAlzSD8ZyAU8f\n" +
-  "bPkuCY/BSlq2Y2S5hym8sRccpZehRANCAATt/RChVSxxwH3IzAcBHuhWT8v5mRfx\n" +
-  "moLVnRdNqPcExwyeqH5XN0dlffIYprf66E0CEpZbJ8H+v7cTys9Ie1dd\n" +
+  "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgln38K+VhuqmDCahN\n" +
+  "VFfftgyM7MeY7t6LZqIx+PcPCjOhRANCAASvtotehwDpyUwONiDzQDxWdwaa+uaj\n" +
+  "tzi4SPgPtJm5YGsLINywg+uh9MaHTRmVLlgCgIGenyT0Yx6iNmPRo3zb\n" +
   "-----END PRIVATE KEY-----\n";
 
 const ASSET_PATH = "public/issuer/";
@@ -67,18 +52,6 @@ export async function POST(req: Request) {
 
   const bloodTest = bloodTests[userName];
 
-  // const kid = "7wpN4uGns0IXN5rD8GJKgx2qVuUBuAfhzJbnUWW7rQg";
-  // const alg = "ES256";
-
-  // const privateKey = await jose.importPKCS8(PRIVATE_KEY_PEM, alg);
-
-  // const jwt = await new jose.SignJWT(bloodTest)
-  //   .setProtectedHeader({ alg, kid })
-  //   .setIssuedAt()
-  //   .setIssuer("zkpass:issuer")
-  //   .setAudience("zkpass:audience")
-  //   .setExpirationTime("2h")
-  //   .sign(privateKey);
   const jwt = await _signBloodTest(bloodTest);
 
   console.log("=== blood_test jwt sent ===");
@@ -97,11 +70,7 @@ export async function OPTION() {
 async function _signBloodTest(data: { [key: string]: any }) {
   const verifyingKeyJKWS = {
     jku: process.env.NEXT_PUBLIC_URL + "/issuer/jwks.json",
-    kid: "k-1",
-  };
-  const mockVerifyingKeyJKWS = {
-    jku: "https://raw.githubusercontent.com/zulamdat/zulamdat.github.io/sample-key/zkp-key/issuer-key.json",
-    kid: "k-1",
+    kid: "yibXxdascCcvpCxxbVvRm1B0N2loYIB8wMyGJjr5P0A=",
   };
 
   const signedBloodTest = await signDataToJwsToken(
@@ -109,13 +78,7 @@ async function _signBloodTest(data: { [key: string]: any }) {
     data,
     verifyingKeyJKWS
   );
-  const mockSignedBloodTest = await signDataToJwsToken(
-    MOCK_PRIVATE_KEY_PEM,
-    data,
-    mockVerifyingKeyJKWS
-  );
   return signedBloodTest;
-  // return mockSignedBloodTest;
 }
 
 function _setHeader(response: NextResponse) {

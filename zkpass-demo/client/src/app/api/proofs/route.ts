@@ -6,11 +6,6 @@ export async function POST(req: Request) {
     const { dvr, blood_test } = await req.json();
     console.log({ dvr, blood_test });
     const zkPassServiceURL = "http://43.218.83.70:10888/proof";
-    // return Response.json({
-    //   status: 200,
-    //   data: "someproofstring",
-    //   message: "Intentionally failed",
-    // });
 
     interface ProofResponseBody {
       status: number;
@@ -23,11 +18,6 @@ export async function POST(req: Request) {
       dvr
     );
     console.log({ proofResponseBody });
-    // const proofResponseBody: ProofResponseBody = await proofResponse.json();
-    // console.log({
-    //   status: proofResponseBody.status,
-    //   proof: proofResponseBody.proof.substring(0, 200),
-    // });
     return Response.json({ status: 200, data: proofResponseBody.proof });
   } catch (error) {
     console.log("== Error generating proof ==");
@@ -36,7 +26,7 @@ export async function POST(req: Request) {
   }
 }
 
-export async function OPTION() {
+export async function OPTIONS() {
   let response = NextResponse.json({ status: 200 });
   response.headers.set("Access-Control-Allow-Origin", "*");
   response.headers.set("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
