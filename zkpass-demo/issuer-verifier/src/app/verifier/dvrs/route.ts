@@ -7,10 +7,11 @@ import { signDataToJwsToken } from "zkpass-client-ts";
 
 const PRIVATE_KEY_PEM =
   "-----BEGIN PRIVATE KEY-----\n" +
-  "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg5id+/cVk6kmj3dM7\n" +
-  "alwP77XUmhQb/W4wtHVsBtjhSAOhRANCAATro+vBiHB3a0cO4J0l1GHJVitGas2w\n" +
-  "+K+wfnV1/3aCBlgDXS883XmznpgRhiiHD5oel26PqDZ5U5YiW48NDLhG\n" +
+  "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgLxxbcd7aVcNEdE/C\n" +
+  "EGPwLzM6lkLuDYzhd3FqALuuHCahRANCAASnpYmXAC2V39TiEOaa64x1kJW0x5Qh\n" +
+  "PfGQN1TAs6+xVUD6KJLB9pfgeoqVE8MYb4XpYaOfHKz1Pka017ee97A4\n" +
   "-----END PRIVATE KEY-----\n";
+
 const MOCK_PRIVATE_KEY_PEM =
   "-----BEGIN PRIVATE KEY-----\n" +
   "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgLxxbcd7aVcNEdE/C\n" +
@@ -97,7 +98,7 @@ function _setHeader(response: NextResponse) {
 async function _signDVR(data: { [key: string]: any }) {
   const verifyingKeyJKWS = {
     jku: process.env.NEXT_PUBLIC_URL + "/verifier/jwks.json",
-    kid: "PhE7UwNG7wskhKX9Qb71DAlXyM6a-Bcy5kHQLH1c3VY",
+    kid: "k-1",
   };
   const mockVerifyingKeyJKWS = {
     jku: "https://raw.githubusercontent.com/zulamdat/zulamdat.github.io/sample-key/zkp-key/verifier-key.json",
@@ -116,8 +117,8 @@ async function _signDVR(data: { [key: string]: any }) {
     data,
     mockVerifyingKeyJKWS
   );
-  // return signedDVR;
-  return mockSignedDVR;
+  return signedDVR;
+  // return mockSignedDVR;
 }
 
 function _generateBloodTestQuery(user: User): string {

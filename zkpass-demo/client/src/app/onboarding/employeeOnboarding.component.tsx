@@ -208,12 +208,28 @@ export default function EmployeeOnboarding({
           body: JSON.stringify({ proof: proofBody.data }),
         }
       );
-      const validateProofBody: ProofResponse = await validateProof.json();
+      interface ProofData {
+        result: boolean;
+        proof: {
+          zkproof: string;
+          dvr_title: string;
+          dvr_id: string;
+          dvr_digest: string;
+          user_data_verifying_key: any;
+          dvr_verifying_key: any;
+          time_stamp: number;
+        };
+      }
+      interface ProofResult {
+        status: number;
+        data: ProofData;
+      }
+      const validateProofBody: ProofResult = await validateProof.json();
       console.log({ validateProofBody });
 
       if (validateProofBody.status == 200) {
         console.log("== validate proof body 200");
-        setProofResult(validateProofBody.data as unknown as boolean);
+        setProofResult(validateProofBody.data.result);
       } else {
         console.log("== validate proof body not 200");
         setProofResult(false);

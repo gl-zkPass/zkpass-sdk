@@ -6,10 +6,17 @@ import { signDataToJwsToken } from "zkpass-client-ts";
 
 const PRIVATE_KEY_PEM =
   "-----BEGIN PRIVATE KEY-----\n" +
-  "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQglp8yytUIEmLwvS4C\n" +
-  "VoNdq/ZoMr8r62NNpahRLs3Qz1ChRANCAATLbp6ZyQBJdpuqTuzNu6PICiQ+RoH7\n" +
-  "OCpNtkldFWXbaBH8y7yVnz7tzFlnfsklwfmBp0S55BwmNoDRdOUde3U5\n" +
+  "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg3J/wAlzSD8ZyAU8f\n" +
+  "bPkuCY/BSlq2Y2S5hym8sRccpZehRANCAATt/RChVSxxwH3IzAcBHuhWT8v5mRfx\n" +
+  "moLVnRdNqPcExwyeqH5XN0dlffIYprf66E0CEpZbJ8H+v7cTys9Ie1dd\n" +
   "-----END PRIVATE KEY-----\n";
+
+// const PRIVATE_KEY_PEM =
+//   "-----BEGIN PRIVATE KEY-----\n" +
+//   "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgRzMXfxwfxRv9nGX0\n" +
+//   "6T4aeb5pxUyZbsjAlUx1DYsP/xqhRANCAARSLQjly2ll+yamBlqZpYCnWWwBCeAy\n" +
+//   "YPbDN9k1xbaCYamZvzvX/e/aNVyc9Y91GFbNF77GNW1XxJ0ChlqNu1Tv\n" +
+//   "-----END PRIVATE KEY-----\n";
 
 const MOCK_PRIVATE_KEY_PEM =
   "-----BEGIN PRIVATE KEY-----\n" +
@@ -90,7 +97,7 @@ export async function OPTION() {
 async function _signBloodTest(data: { [key: string]: any }) {
   const verifyingKeyJKWS = {
     jku: process.env.NEXT_PUBLIC_URL + "/issuer/jwks.json",
-    kid: "7wpN4uGns0IXN5rD8GJKgx2qVuUBuAfhzJbnUWW7rQg",
+    kid: "k-1",
   };
   const mockVerifyingKeyJKWS = {
     jku: "https://raw.githubusercontent.com/zulamdat/zulamdat.github.io/sample-key/zkp-key/issuer-key.json",
@@ -107,8 +114,8 @@ async function _signBloodTest(data: { [key: string]: any }) {
     data,
     mockVerifyingKeyJKWS
   );
-  // return signedBloodTest;
-  return mockSignedBloodTest;
+  return signedBloodTest;
+  // return mockSignedBloodTest;
 }
 
 function _setHeader(response: NextResponse) {

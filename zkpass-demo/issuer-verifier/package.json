@@ -13,7 +13,7 @@
     "next": "13.5.6",
     "react": "^18",
     "react-dom": "^18",
-    "zkpass-client-ts": "/Users/naufa.f.muhammad/did/zkpass/zkpass-client-wrappers/zkpass-client-ts/zkpass-client-ts-0.0.0.tgz"
+    "zkpass-client-ts": "file:../../../zkpass/zkpass-client-wrappers/zkpass-client-ts/zkpass-client-ts-0.0.0.tgz"
   },
   "devDependencies": {
     "@types/node": "^20",

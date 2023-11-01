@@ -3,5 +3,10 @@
     "firstName": "John",
     "lastName": "Doe",
     "dateOfBirth": "1985-12-12"
+  },
+  "jane": {
+    "firstName": "Jane",
+    "lastName": "Dee",
+    "dateOfBirth": "1990-1-1"
   }
 }

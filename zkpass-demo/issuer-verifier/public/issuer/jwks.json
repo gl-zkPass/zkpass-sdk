@@ -2,12 +2,17 @@
   "keys": [
     {
       "kty": "EC",
-      "x": "y26emckASXabqk7szbujyAokPkaB-zgqTbZJXRVl22g",
-      "y": "EfzLvJWfPu3MWWd-ySXB-YGnRLnkHCY2gNF05R17dTk",
+      "x": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE7f0QoVUsccB9yMwHAR7oVk/L+ZkX",
+      "y": "8ZqC1Z0XTaj3BMcMnqh+VzdHZX3yGKa3+uhNAhKWWyfB/r+3E8rPSHtXXQ==",
       "crv": "P-256",
-      "kid": "7wpN4uGns0IXN5rD8GJKgx2qVuUBuAfhzJbnUWW7rQg",
-      "use": "sig",
-      "alg": "ES256"
+      "kid": "k-1"
+    },
+    {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "Ui0I5ctpZfsmpgZamaWAp1lsAQngMmD2wzfZNcW2gmE",
+      "y": "qZm_O9f979o1XJz1j3UYVs0XvsY1bVfEnQKGWo27VO8",
+      "kid": "edBvX+uarFeeyAoVKOjDiGD82BMJfS5RIFNFeikMblE="
     }
   ]
 }
