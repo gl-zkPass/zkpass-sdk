@@ -26,3 +26,17 @@
 ## Modifying Proof Validator [Optional]
 
 - You can update the method to validate provided proof in [proofValidator](src/app/verifier/proofs/proofValidator.ts)
+
+## Snippets
+
+### Issuer Signing Data
+
+https://github.com/GDP-ADMIN/didPass-demo/blob/b62cdaec4150d2022eb49930d9aa9c2afcd06d81/zkpass-demo/typescript/issuer-verifier/src/app/issuer/blood_tests/route.ts#L64-L95
+
+### Verifier Signing DVR
+
+https://github.com/GDP-ADMIN/didPass-demo/blob/b62cdaec4150d2022eb49930d9aa9c2afcd06d81/zkpass-demo/typescript/issuer-verifier/src/app/verifier/dvrs/route.ts#L67-L125
+
+### Verifier Validating Proof
+
+https://github.com/GDP-ADMIN/didPass-demo/blob/b62cdaec4150d2022eb49930d9aa9c2afcd06d81/zkpass-demo/typescript/issuer-verifier/src/app/verifier/proofs/route.ts#L10-L19
