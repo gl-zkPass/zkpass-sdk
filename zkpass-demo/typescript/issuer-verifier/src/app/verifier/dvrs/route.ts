@@ -103,24 +103,19 @@ async function _generateSignedDVR(user: User) {
     },
   });
 
-  const dataToSign = {
-    ...data,
-    query: JSON.stringify(data["query"]),
-  };
-
-  console.log({ DataVerificationRequest: data });
-  // This dvrLookup will be used in the proof validation process in proofValidator.ts
-  dvrLookup.value.addDVR(data);
-
   /**
    * Step 4
    * sign data to jws token
    */
   const signedDVR = await signDataToJwsToken(
     PRIVATE_KEY_PEM,
-    dataToSign,
+    data.stringifyQuery(),
     verifyingKeyJKWS
   );
+
+  console.log({ DataVerificationRequest: data });
+  // This dvrLookup will be used in the proof validation process in proofValidator.ts
+  dvrLookup.value.addDVR(data);
 
   return signedDVR;
 }
