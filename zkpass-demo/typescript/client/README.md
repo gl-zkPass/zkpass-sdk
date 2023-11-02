@@ -9,3 +9,6 @@
 - `npm run dev` - Start the client.
 - Open `http://localhost:3001`
 - Check [list users](../issuer-verifier/public/verifier/users.json) to see available users, `username` and `password` is user's firstname.
+
+## Generate zkPass Proof Snippet
+https://github.com/GDP-ADMIN/didPass-demo/blob/61b2768b7e549148c384ac0019ba3720ce6bed2f/zkpass-demo/typescript/client/src/app/api/proofs/route.ts#L9-L23
