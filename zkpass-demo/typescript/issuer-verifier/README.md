@@ -35,7 +35,7 @@ https://github.com/GDP-ADMIN/didPass-demo/blob/b62cdaec4150d2022eb49930d9aa9c2af
 
 ### Verifier Signing DVR
 
-https://github.com/GDP-ADMIN/didPass-demo/blob/b62cdaec4150d2022eb49930d9aa9c2afcd06d81/zkpass-demo/typescript/issuer-verifier/src/app/verifier/dvrs/route.ts#L67-L125
+https://github.com/GDP-ADMIN/didPass-demo/blob/aaf798e96409d4a4cf64bbc6ac84c2eeefaba1a4/zkpass-demo/typescript/issuer-verifier/src/app/verifier/dvrs/route.ts#L67-L114
 
 ### Verifier Validating Proof
 
