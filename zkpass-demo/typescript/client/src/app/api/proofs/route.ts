@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { generateZkpassProof } from "zkpass-client-ts";
+import { generateZkpassProof } from "@didpass/zkpass-client-ts";
 
 export async function POST(req: Request) {
   try {

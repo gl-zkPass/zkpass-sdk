@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
-import { signDataToJwsToken } from "zkpass-client-ts";
+import { signDataToJwsToken } from "@didpass/zkpass-client-ts";
 
 const ASSET_PATH = "public/issuer/";
 

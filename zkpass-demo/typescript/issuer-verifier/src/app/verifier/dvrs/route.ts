@@ -4,8 +4,8 @@ import { NextResponse } from "next/server";
 import {
   getQueryEngineVersionInfo,
   signDataToJwsToken,
-} from "zkpass-client-ts";
-import { DataVerificationRequest } from "zkpass-client-ts/types/dvr";
+} from "@didpass/zkpass-client-ts";
+import { DataVerificationRequest } from "@didpass/zkpass-client-ts/types/dvr";
 import { v4 as uuidv4 } from "uuid";
 import { dvrLookup } from "./dvrHelper";
 
@@ -91,6 +91,7 @@ async function _generateSignedDVR(user: User) {
    */
   const { query_engine_version, query_method_version } =
     await getQueryEngineVersionInfo();
+    console.log(query_engine_version)
   const data = DataVerificationRequest.fromJSON({
     dvr_title: "Onboarding Blood Test",
     dvr_id: uuidv4(),

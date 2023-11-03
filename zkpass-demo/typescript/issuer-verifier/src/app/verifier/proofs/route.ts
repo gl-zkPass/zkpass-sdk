@@ -1,4 +1,4 @@
-import { verifyZkpassProof } from "zkpass-client-ts";
+import { verifyZkpassProof } from "@didpass/zkpass-client-ts";
 import { MyValidator } from "./proofValidator";
 
 export async function POST(req: Request) {

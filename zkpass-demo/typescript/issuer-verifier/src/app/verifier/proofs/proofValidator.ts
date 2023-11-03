@@ -2,9 +2,9 @@ import {
   ZkPassProofMetadataValidator,
   PublicKey,
   KeysetEndpointWrapped,
-} from "zkpass-client-ts/types/common";
+} from "@didpass/zkpass-client-ts/types/common";
 import { dvrLookup } from "../dvrs/dvrHelper";
-import { DataVerificationRequest } from "zkpass-client-ts/types/dvr";
+import { DataVerificationRequest } from "@didpass/zkpass-client-ts/types/dvr";
 
 export class MyValidator implements ZkPassProofMetadataValidator {
   /**
