@@ -31,7 +31,6 @@ export class MyValidator implements ZkPassProofMetadataValidator {
      */
 
     const dvr = dvrLookup.value.getDVR(dvrId);
-    dvr?.user_data_verifying_key;
     console.log("=== MyValidator.validate ===");
     console.log({ dvr });
     if (!dvr) {
