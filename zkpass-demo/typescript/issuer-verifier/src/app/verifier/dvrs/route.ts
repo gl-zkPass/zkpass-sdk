@@ -107,9 +107,8 @@ async function _generateSignedDVR(user: User) {
    * Step 4
    * sign data to jws token
    */
-  const signedDVR = await signDataToJwsToken(
+  const signedDVR = await data.signToJwsToken(
     PRIVATE_KEY_PEM,
-    data.stringifyQuery(),
     verifyingKeyJKWS
   );
 

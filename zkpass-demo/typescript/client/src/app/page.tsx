@@ -13,6 +13,11 @@ export default function Home() {
   const router = useRouter();
 
   const _handleLogin = () => {
+    if (username.length == 0 || password.length == 0) {
+      setMessage("Username or password cannot be empty");
+      setOpen(true);
+      return;
+    }
     fetch("http://localhost:3001/api/login", {
       method: "POST",
       body: JSON.stringify({ username, password }),
@@ -65,6 +70,11 @@ export default function Home() {
             variant="outlined"
             className="w-4/6"
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                _handleLogin();
+              }
+            }}
           />
           <Button variant="outlined" onClick={_handleLogin}>
             Login
