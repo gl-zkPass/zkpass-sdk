@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@didpass/zkpass-client-ts": "^0.0.3",
+    "@didpass/zkpass-client-ts": "^0.0.4",
     "jose": "^4.15.4",
     "next": "13.5.6",
     "react": "^18",
