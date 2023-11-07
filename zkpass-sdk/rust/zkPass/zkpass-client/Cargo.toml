@@ -1,0 +1,20 @@
+[package]
+name = "zkpass-client"
+version = "0.1.0"
+edition = "2021"
+
+#[lib]
+#crate-type = ["rlib"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+async-trait = "0.1.73"
+futures = "0.3.28"
+httpmock = "0.6.8"
+josekit = "0.8.3"
+reqwest = { version = "0.11.20", features = ["blocking", "json"] }
+serde = "1.0.188"
+serde_json = "1.0.107"
+tokio = { version = "1.32.0", features = ["full"] }
+zkpass-core = { path = "../zkpass-core" }
