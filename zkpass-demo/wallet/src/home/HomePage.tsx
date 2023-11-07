@@ -23,14 +23,14 @@ const HomePage = () => {
   const [isError, setIsError] = useState<boolean>(false);
   const [proofToken, setProofToken] = useState<string>('');
   
-  const userDataToken = 'eyJ0eXAiOiJKV1QiLCJqa3UiOiJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20venVsYW1kYXQvenVsYW1kYXQuZ2l0aHViLmlvL3NhbXBsZS1rZXkvemtwLWtleS9pc3N1ZXIta2V5Lmpzb24iLCJraWQiOiJrLTEiLCJhbGciOiJFUzI1NiJ9.eyJkYXRhIjp7ImJjYURvY0lEIjoiRE9DODk3OTIzQ1AiLCJiY2FEb2NOYW1lIjoiQkNBIEN1c3RvbWVyIFByb2ZpbGUiLCJjdXN0b21lcklEIjoiQkNBMTIzNzU2MTA4IiwicGVyc29uYWxJbmZvIjp7ImZpcnN0TmFtZSI6IkRld2kiLCJsYXN0TmFtZSI6IlB1dHJpIiwiZGF0ZU9mQmlydGgiOiIxOTgwLTAxLTAxIiwiZHJpdmVyTGljZW5zZU51bWJlciI6IkRMMTIzNDU2Nzg5In0sImZpbmFuY2lhbEluZm8iOnsiYXZlcmFnZU1vbnRobHlCYWxhbmNlIjoyMDAwMDAwMDAsImNyZWRpdFJhdGluZ3MiOnsicGVmaW5kbyI6NzIwLCJjcmVkaXRLYXJtYSI6NzI1LCJlcXVpSW5mbyI6NzMwfSwiYWNjb3VudHMiOnsiY2hlY2tpbmciOnsiYWNjb3VudE51bWJlciI6IkNISzEyMzQ1NjciLCJiYWxhbmNlIjo1MDAwMDAwMH0sInNhdmluZ3MiOnsiYWNjb3VudE51bWJlciI6IlNBVjEyMzQ1NjciLCJiYWxhbmNlIjoxNTAwMDAwMDB9fX0sImxvYW5IaXN0b3J5IjpbeyJsb2FuVHlwZSI6ImF1dG8iLCJsb2FuQW1vdW50IjoyMDAwMDAwMDAsImxvYW5TdGF0dXMiOiJjbG9zZWQifV0sImNvbnRhY3RJbmZvIjp7ImVtYWlsIjoiZGV3aS5wdXRyaUB5YWhvby5jb20iLCJwaG9uZSI6Iis2Mi04NTUtMTIzLTQ1NjcifSwiZmxhZ3MiOnsiaXNPdmVyZHJhZnRQcm90ZWN0ZWQiOnRydWUsImlzVklQIjpmYWxzZSwiZnJhdWRBbGVydHMiOmZhbHNlfX19.Z8zKFQJJHIs4oaqRQ9V_R75waswfEqcjpHwfiQdUKU4aju6Spf9pMhUgajfI2rSjAQXtmGjteDx_yC6o74tSDg';
-  const dvrToken = 'eyJ0eXAiOiJKV1QiLCJqa3UiOiJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20venVsYW1kYXQvenVsYW1kYXQuZ2l0aHViLmlvL3NhbXBsZS1rZXkvemtwLWtleS92ZXJpZmllci1rZXkuanNvbiIsImtpZCI6ImstMSIsImFsZyI6IkVTMjU2In0.eyJkYXRhIjp7ImR2cl90aXRsZSI6Ik15IERWUiIsImR2cl9pZCI6IjEyMzQ1Njc4IiwicXVlcnlfZW5naW5lX3ZlciI6IjAuMS4wIiwicXVlcnlfbWV0aG9kX3ZlciI6ImE3ODhjNjg2YmY3N2I5Y2VhZmNmODFiNWYzOTYyNWZiZmE5ZjdhN2EyNjU4YThiOGExMzRiNjgzOWNkOTJjZjUiLCJxdWVyeSI6IntcImFuZFwiOlt7XCI9PVwiOltcImJjYURvY0lEXCIsXCJET0M4OTc5MjNDUFwiXX0se1wifj09XCI6W1wicGVyc29uYWxJbmZvLmZpcnN0TmFtZVwiLFwiRGV3aVwiXX0se1wifj09XCI6W1wicGVyc29uYWxJbmZvLmxhc3ROYW1lXCIsXCJQdXRyaVwiXX0se1wifj09XCI6W1wicGVyc29uYWxJbmZvLmRyaXZlckxpY2Vuc2VOdW1iZXJcIixcIkRMMTIzNDU2Nzg5XCJdfSx7XCI-PVwiOltcImZpbmFuY2lhbEluZm8uY3JlZGl0UmF0aW5ncy5wZWZpbmRvXCIsNjUwXX0se1wiPj1cIjpbXCJmaW5hbmNpYWxJbmZvLmFjY291bnRzLnNhdmluZ3MuYmFsYW5jZVwiLDMwMDAwMDAwXX1dfSIsInVzZXJfZGF0YV91cmwiOiJodHRwczovL3h5ei5jb20iLCJ1c2VyX2RhdGFfdmVyaWZ5aW5nX2tleSI6eyJLZXlzZXRFbmRwb2ludCI6eyJqa3UiOiJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20venVsYW1kYXQvenVsYW1kYXQuZ2l0aHViLmlvL3NhbXBsZS1rZXkvemtwLWtleS9pc3N1ZXIta2V5Lmpzb24iLCJraWQiOiJrLTEifX19fQ.x6uTHXCjgA15hrXh7GShDOdH3K6was-zSYZeojjqMQckp0_NIIdeHdHOgcfqvkvmonpYJIxACDcCnynOsy3NBg';
-  
   useEffect(() => {
-    const decodedUserData = decode(userDataToken).data;
+    if (!Config.USER_DATA_TOKEN || !Config.DVR_TOKEN) {
+      setIsError(true);
+    }
+    const decodedUserData = decode(Config.USER_DATA_TOKEN).data;
     setUserData(decodedUserData);
 
-    const decodedDvr = decode(dvrToken).data;
+    const decodedDvr = decode(Config.DVR_TOKEN).data;
     const decodedDvrQuery = JSON.parse(decodedDvr.query);
     setDvr(decodedDvrQuery);
   }, []);
@@ -94,7 +94,27 @@ const HomePage = () => {
 
   const generateProof = async () => {
     try {
-      const result:any = await generateZkPassProof(Config.ZKPASS_URL || '', userDataToken, dvrToken);
+      if (!Config.USER_DATA_TOKEN || !Config.DVR_TOKEN) {
+        setIsError(true);
+      }
+
+      /**
+       * Step 1
+       * Provide ZKPass Url, User Data Token, and Dvr Token
+       */
+      const userDataToken = Config.USER_DATA_TOKEN;
+      const dvrToken = Config.DVR_TOKEN;
+      const zkPassUrl = Config.ZKPASS_URL;
+
+      /**
+       * Step 2
+       * Generate ZkPass Proof by ZkPass Url
+       */
+      const result: any = await generateZkPassProof(
+        zkPassUrl!, 
+        userDataToken!,
+        dvrToken!
+      );
 
       if (result.status == 200 && result.proof) {
         console.log('Proof Token: ', result.proof)
