@@ -16,22 +16,28 @@ pub struct ProofMethodOutput {
     pub result: bool
 }
 
-#[allow(improper_ctypes)]
-#[link(name = "r0_zkpass_query", kind = "dylib")]
-extern "C" {
-    pub fn verify_zkproof_internal(receipt: &str) -> ProofMethodOutput;
+fn verify_zkproof_internal(receipt: &str) -> ProofMethodOutput {
+    unsafe {
+        let lib = libloading::Library::new("libr0_zkpass_query.so").unwrap();
+        let func: libloading::Symbol<unsafe extern "C" fn(&str) -> ProofMethodOutput> = lib.get(b"verify_zkproof_internal").unwrap();
+        func(receipt)
+    }
 }
 
-#[allow(improper_ctypes)]
-#[link(name = "r0_zkpass_query", kind = "dylib")]
-extern "C" {
-    pub fn get_query_method_version_internal() -> String ;
+fn get_query_method_version_internal() -> String {
+    unsafe {
+        let lib = libloading::Library::new("libr0_zkpass_query.so").unwrap();
+        let func: libloading::Symbol<unsafe extern "C" fn() -> String> = lib.get(b"get_query_method_version_internal").unwrap();
+        func()
+    }
 }
 
-#[allow(improper_ctypes)]
-#[link(name = "r0_zkpass_query", kind = "dylib")]
-extern "C" {
-    pub fn get_query_engine_version_internal() -> String;
+fn get_query_engine_version_internal() -> String {
+    unsafe {
+        let lib = libloading::Library::new("libr0_zkpass_query.so").unwrap();
+        let func: libloading::Symbol<unsafe extern "C" fn() -> String> = lib.get(b"get_query_engine_version_internal").unwrap();
+        func()
+    }
 }
 
 impl ZkPassProofVerifier for ZkPassClient {
@@ -39,43 +45,24 @@ impl ZkPassProofVerifier for ZkPassClient {
         &self,
         zkpass_proof_token:                 &str
     ) -> Result<(bool, ZkPassProof), ZkPassError> {
-        #[cfg(not(feature = "stub"))] 
-        {
-            let zkpass_proof_verifying_key = PublicKey {
-                x: String::from(ZKPASS_DSA_PUBKEY_X),
-                y: String::from(ZKPASS_DSA_PUBKEY_Y)
-            };
+        let zkpass_proof_verifying_key = PublicKey {
+            x: String::from(ZKPASS_DSA_PUBKEY_X),
+            y: String::from(ZKPASS_DSA_PUBKEY_Y)
+        };
 
-            let (zkpass_proof, _header) = verify_jws_token(
-                zkpass_proof_verifying_key.to_pem().as_str(),
-                zkpass_proof_token)?;
-            let zkpass_proof: ZkPassProof = serde_json::from_value(zkpass_proof).unwrap();
-            //
-            //  zkp verification
-            //
-            let output = unsafe {
-                verify_zkproof_internal(&zkpass_proof.zkproof)
-            };
+        let (zkpass_proof, _header) = verify_jws_token(
+            zkpass_proof_verifying_key.to_pem().as_str(),
+            zkpass_proof_token)?;
+        let zkpass_proof: ZkPassProof = serde_json::from_value(zkpass_proof).unwrap();
+        //
+        //  zkp verification
+        //
+        let output = verify_zkproof_internal(&zkpass_proof.zkproof);
 
-            Ok((output.result, zkpass_proof))
-
-        }
-        #[cfg(feature = "stub")]
-        {
-            Err(ZkPassError::NotImplementedError)
-        }
+        Ok((output.result, zkpass_proof))
     }
 
     fn get_query_engine_version_info(&self) -> (String, String) {
-        #[cfg(not(feature = "stub"))] 
-        {
-            unsafe {
-                (get_query_engine_version_internal(), get_query_method_version_internal())
-            }
-        }
-        #[cfg(feature = "stub")] 
-        {
-            (String::from(""), String::from(""))
-        }
+        (get_query_engine_version_internal(), get_query_method_version_internal())
     }
 }
