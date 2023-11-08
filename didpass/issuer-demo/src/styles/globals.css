@@ -1,0 +1,78 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,700;1,300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+body {
+  margin: 0;
+  background-color: var(--color-gray);
+  line-height: normal;
+  font-family: var(--font-roboto);
+}
+
+:root {
+  /* fonts */
+  --font-roboto: Roboto;
+  --font-inherit: inherit;
+  --font-open-sans: "Open Sans";
+
+  /* font sizes */
+  --font-size-xsm: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-13xl: 32px;
+  --font-size-5xl: 24px;
+
+  /* Colors */
+  --color-gray: #0c0c0c;
+  --color-gray-100: rgba(255, 255, 255, 0.5);
+  --color-gray-200: rgba(0, 0, 0, 0.13);
+  --color-gray-300: rgba(255, 255, 255, 0.2);
+  --color-gray-30: rgba(255, 255, 255, 0.3);
+  --color-gray-400: #1d1e21;
+  --color-gray-500: #161719;
+  --color-aqua: #1afff9;
+  --color-black: #000;
+  --color-pink: #ff619a;
+  --white: #fff;
+  --white50: rgba(255, 255, 255, 0.5);
+  --white30: rgba(255, 255, 255, 0.3);
+
+  /* Gaps */
+  --gap-5xl: 24px;
+  --gap-5xs: 8px;
+  --gap-3xs: 10px;
+
+  /* Paddings */
+  --padding-5xl: 24px;
+  --padding-13xl: 32px;
+  --padding-lgi: 19px;
+
+  /* border radiuses */
+  --br-xl: 20px;
+  --br-5xl: 24px;
+}
+
+.breadcrumbLink {
+  color: var(--white50);
+  font-size: 14px;
+}
+
+* {
+  color: var(--white);
+}
+
+.form-label {
+  margin-bottom: 0.3rem;
+  font-weight: bold;
+}
+
+.MuiDayCalendar-weekDayLabel {
+  color: white;
+}
+
+.hidden {
+  display: none;
+}
+
+.MuiDataGrid-root .MuiDataGrid-cell:focus-within {
+  outline: none !important;
+}

@@ -1,0 +1,41 @@
+.appBar {
+    background-color: var(--color-gray);
+}
+
+.logo {
+    flex-grow: 1;
+}
+
+.ssiid {
+    color: var(--color-aqua);
+    position: relative;
+    line-height: 32px;
+}
+
+.logo,
+.navigation {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.logo {
+    gap: var(--gap-5xs);
+}
+
+.navigation {
+    align-self: stretch;
+}
+
+.issuer {
+    color: var(--white);
+}
+
+.breadcrumbSeparator {
+    color: var(--white50);
+}
+
+.title {
+    margin-top: 1rem;
+}
