@@ -1,3 +1,19 @@
+//! # zkPass-client SDK Library
+//!
+//! The **zkpass-client** crate is the official Rust SDK for integrating with the zkPass ecosystem. It offers a suite of functionalities designed to facilitate the interaction between applications and the zkPass platform via its RESTful API.
+//!
+//! This SDK abstracts the complexity of direct API calls and provides a robust, idiomatic Rust interface for the zkPass Service. By handling lower-level details, zkpass-client allows developers to focus on building feature-rich applications with confidence in their security and reliability.
+//!
+//! ## Features
+//!
+//! **zkpass-client** comes with a comprehensive set of features that include, but are not limited to:
+//!
+//! - **JWS Support**: Simplified interface for signing JSON Web Signatures (JWS) and verifying the authenticity of data . 
+//! - **JWE Handling**: Functions to encrypt data into JSON Web Encryption (JWE) tokens and decrypt received JWE tokens, ensuring the privacy of sensitive information.
+//! - **ZkPassProof Generation**: Mechanisms to generate ZkPassProofs as part of the data verification process without revealing the underlying user data.
+//! - **Proof Verification**: Functions to verify the validity of a ZkPassProof, confirming the integrity and authenticity of the proof without the need for a third-party verifier.
+//!
+
 pub mod interface;
 mod zkpass_client;
 //use zkpass_core::interface::*;

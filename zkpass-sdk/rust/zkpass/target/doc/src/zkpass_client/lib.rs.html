@@ -79,7 +79,39 @@
 <a href="#79" id="79">79</a>
 <a href="#80" id="80">80</a>
 <a href="#81" id="81">81</a>
-</pre></div><pre class="rust"><code><span class="kw">pub mod </span>interface;
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
+<a href="#86" id="86">86</a>
+<a href="#87" id="87">87</a>
+<a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+</pre></div><pre class="rust"><code><span class="doccomment">//! # zkPass-client SDK Library
+//!
+//! The **zkpass-client** crate is the official Rust SDK for integrating with the zkPass ecosystem. It offers a suite of functionalities designed to facilitate the interaction between applications and the zkPass platform via its RESTful API.
+//!
+//! This SDK abstracts the complexity of direct API calls and provides a robust, idiomatic Rust interface for the zkPass Service. By handling lower-level details, zkpass-client allows developers to focus on building feature-rich applications with confidence in their security and reliability.
+//!
+//! ## Features
+//!
+//! **zkpass-client** comes with a comprehensive set of features that include, but are not limited to:
+//!
+//! - **JWS Support**: Simplified interface for signing JSON Web Signatures (JWS) and verifying the authenticity of data . 
+//! - **JWE Handling**: Functions to encrypt data into JSON Web Encryption (JWE) tokens and decrypt received JWE tokens, ensuring the privacy of sensitive information.
+//! - **ZkPassProof Generation**: Mechanisms to generate ZkPassProofs as part of the data verification process without revealing the underlying user data.
+//! - **Proof Verification**: Functions to verify the validity of a ZkPassProof, confirming the integrity and authenticity of the proof without the need for a third-party verifier.
+//!
+
+</span><span class="kw">pub mod </span>interface;
 <span class="kw">mod </span>zkpass_client;
 <span class="comment">//use zkpass_core::interface::*;
 </span><span class="kw">pub mod </span>core {
