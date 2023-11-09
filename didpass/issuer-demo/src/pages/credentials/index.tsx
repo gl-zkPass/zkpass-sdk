@@ -54,7 +54,7 @@ const Credentials = () => {
     });
   };
 
-  const fetchClaims = async (offset = 0, limit = 1) => {
+  const fetchClaims = async () => {
     try {
       const token = getToken();
       const req = await fetch(
@@ -80,7 +80,7 @@ const Credentials = () => {
 
   useEffect(() => {
     Cookies.set("limit", JSON.stringify(pageConfig.limit));
-    fetchClaims(pageConfig.offset, pageConfig.limit);
+    fetchClaims();
   }, [pageConfig]);
 
   useEffect(() => {
@@ -178,16 +178,7 @@ const Credentials = () => {
             handleClose={handleQrModalClose}
           />
         )}
-
-        {/* <CredentialDataTable
-          setPageConfig={setPageConfig}
-          pageConfig={pageConfig}
-          totalClaims={totalClaims}
-          qrModalConfig={qrModalConfig}
-          claims={claims}
-          setQrModalConfig={setQrModalConfig}
-          setClaimQr={setClaimQr}
-        /> */}
+        
         {claims &&  (
           <CredentialWidget 
             claim={claims}

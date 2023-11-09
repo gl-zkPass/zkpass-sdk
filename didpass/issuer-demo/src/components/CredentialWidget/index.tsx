@@ -9,7 +9,7 @@ import { PageConfig } from "@/backend/types/PageConfig";
 
 const IndividualCredential = (key: string, value: string) => {
   return (
-    <div>
+    <div key={key}>
       <p>
         <b>{key}: </b>
         {value}
