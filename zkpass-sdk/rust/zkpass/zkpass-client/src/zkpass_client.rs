@@ -1,10 +1,9 @@
 use async_trait::async_trait;
 use serde_json::{json, Value};
-pub use zkpass_core::interface::*;
-//use futures::executor::block_on;
-use crate::interface::{ZkPassClient, ZkPassProofGenerator, ZkPassUtility};
+use zkpass_core::interface::{sign_data_to_jws_token, verify_jws_token, encrypt_data_to_jwe_token, decrypt_jwe_token};
+use crate::core::{*};
+use crate::interface::{*};
 
-//#[async_trait]
 impl ZkPassUtility for ZkPassClient {
     fn sign_data_to_jws_token(
         &self,

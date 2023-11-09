@@ -1,20 +1,33 @@
 pub mod interface;
 mod zkpass_client;
-use zkpass_core::interface::*;
+//use zkpass_core::interface::*;
 pub mod core {
+    use serde::{Deserialize, Serialize};
     // Re-export all types from zkpass-core
-    pub use zkpass_core::interface::*;
+    pub use zkpass_core::interface::{
+        DataVerificationRequest, KeysetEndpoint, PublicKey, ZkPassProof,
+        PublicKeyOption, ZkPassError,
+        KeysetEndpointResolver,
+        get_current_timestamp,
+    };
+
+    ///
+    /// <span style="font-size: 1.1em; color: #996515;"> ***The `ProofMethodOutput` struct represents the result of a zkPass query.*** </span>
+    /// 
+    #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+    pub struct ProofMethodOutput {
+        /// `result` is a boolean value for the result of the query
+        pub result: bool
+    }
 }
-pub use crate::interface::{*};
-use serde::{Deserialize, Serialize};
+
+use zkpass_core::interface::verify_jws_token;
+use crate::interface::{*};
+use crate::core::{*};
 
 const ZKPASS_DSA_PUBKEY_X: &str = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU";
 const ZKPASS_DSA_PUBKEY_Y: &str ="IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==";
 
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-pub struct ProofMethodOutput {
-    pub result: bool
-}
 
 fn verify_zkproof_internal(receipt: &str) -> ProofMethodOutput {
     unsafe {
