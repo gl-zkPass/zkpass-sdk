@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import type { ISessionStorage } from "../storage/ISessionStorage";
 import { ICredentialDatabase } from "./dto/ICredentialDatabase";
 import userDataMock from "../mocks/userDataMock.json"
-import {  IssuerScanStatus } from "./dto/IssuerScanStatus";
+import {  IIssuerScanResponse, IssuerScanStatus } from "./dto/IssuerScanStatus";
 import { v4 as uuidv4 } from "uuid";
 import {
     Credential,
@@ -22,6 +22,7 @@ import {
     TokenizePayload,
 } from "@didpass/issuer-sdk/lib/types/JWSDetailsDTO";
 import { IIssue } from "./IIssue";
+import { StatusCodes } from "http-status-codes";
 
 export enum DidUtility {
     POLYGON,
@@ -274,5 +275,49 @@ export class IssuerService implements IIssue {
             console.log("Error claim vc: ", error);
             throw new Error("Error while getting vc");
         }
+    }
+
+    public async checkScanStatus(
+        userDid: string,
+        credentialId: string
+    ): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const cacheKey = `${userDid}${this.SCAN_STATUS_KEY_SUFFIX}`;
+                const scanStatus = await this.sessionStorage.get(cacheKey);
+
+                let response: IIssuerScanResponse;
+
+                if (!scanStatus) {
+                    response = {
+                        status: StatusCodes.BAD_REQUEST,
+                        statusType: IssuerScanStatus.NOT_FOUND,
+                        message: `Credential is not found`,
+                    };
+                    return resolve(response);
+                }
+
+                if (scanStatus === IssuerScanStatus.SCANNED) {
+                    response = {
+                        status: StatusCodes.OK,
+                        statusType: IssuerScanStatus.SCANNED,
+                        message: `Credential is scanned`,
+                    };
+
+                    await this.sessionStorage.delete(cacheKey);
+                } else {
+                    response = {
+                        status: StatusCodes.OK,
+                        statusType: IssuerScanStatus.PENDING,
+                        message: `Credential is waiting to be scanned`,
+                    };
+                }
+
+                return resolve(response);
+            } catch (error) {
+                console.log(error);
+                return reject(error);
+            }
+        });
     }
 }
