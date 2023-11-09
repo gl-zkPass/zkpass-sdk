@@ -1,0 +1,27 @@
+{
+  "john": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "dateOfBirth": "1985-12-12"
+  },
+  "jane": {
+    "firstName": "Jane",
+    "lastName": "Dee",
+    "dateOfBirth": "1990-1-1"
+  },
+  "jake": {
+    "firstName": "Jake",
+    "lastName": "Mae",
+    "dateOfBirth": "1989-2-1"
+  },
+  "rob": {
+    "firstName": "Rob",
+    "lastName": "Yoder",
+    "dateOfBirth": "1980-2-10"
+  },
+  "kyle": {
+    "firstName": "Kyle",
+    "lastName": "Morton",
+    "dateOfBirth": "1988-5-20"
+  }
+}
