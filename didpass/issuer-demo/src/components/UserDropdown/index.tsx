@@ -69,7 +69,7 @@ const UserDropdown = () => {
     handleClose(event);
     disconnect();
     removeUserCookie();
-    router.push("/issuer");
+    router.push("/");
   };
 
   const handleListKeyDown = (event: React.KeyboardEvent) => {

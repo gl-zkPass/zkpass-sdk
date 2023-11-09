@@ -20,7 +20,7 @@
     transform: translate(-50%, -50%);
     background-color: var(--color-gray-400);
     border-radius: 8px;
-    width: 37%;
+    width: 75%;
 }
 
 @media screen and (min-width: 1800px) and (min-height: 800px) {

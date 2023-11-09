@@ -54,7 +54,7 @@ const Credentials = () => {
     });
   };
 
-  const fetchClaims = async (offset = 0, limit = 1) => {
+  const fetchClaims = async () => {
     try {
       const token = getToken();
       const req = await fetch(
@@ -80,7 +80,7 @@ const Credentials = () => {
 
   useEffect(() => {
     Cookies.set("limit", JSON.stringify(pageConfig.limit));
-    fetchClaims(pageConfig.offset, pageConfig.limit);
+    fetchClaims();
   }, [pageConfig]);
 
   useEffect(() => {
@@ -123,7 +123,7 @@ const Credentials = () => {
         body: JSON.stringify({ credentialId: claimQr.id }),
       };
       const req = await fetch(
-        `/api/ssi/issuer/credentials/qrcode/status`,
+        `/api/issuer/credentials/qrcode/status`,
         config
       );
       const res: IIssuerScanResponse = await req.json();
@@ -139,7 +139,7 @@ const Credentials = () => {
             open: true,
           });
           clearInterval(interval);
-        //   handleQrModalClose();
+          handleQrModalClose();
         } else if (res.statusType === IssuerScanStatus.NOT_FOUND) {
           setToastConfig({
             severity: "error",
@@ -149,7 +149,7 @@ const Credentials = () => {
             open: true,
           });
           clearInterval(interval);
-        //   handleQrModalClose();
+          handleQrModalClose();
         }
       }
     }, 1000);
@@ -158,18 +158,10 @@ const Credentials = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [claimQr, token]);
 
-  const breadcrumbs = [
-    <Link underline="hover" className="breadcrumbLink" key="1" href="#">
-      Credential List
-    </Link>,
-  ];
-
-  const redirectToCreateCredentials = () => {
-    router.push("/issuer/create-credentials");
-  };
+  
 
   return (
-    <MainContainer breadcrumbs={breadcrumbs} title="Credential List">
+    <MainContainer title="Credential List">
       <div>
         {claimQr && (
           <QrModal
@@ -179,15 +171,6 @@ const Credentials = () => {
           />
         )}
 
-        {/* <CredentialDataTable
-          setPageConfig={setPageConfig}
-          pageConfig={pageConfig}
-          totalClaims={totalClaims}
-          qrModalConfig={qrModalConfig}
-          claims={claims}
-          setQrModalConfig={setQrModalConfig}
-          setClaimQr={setClaimQr}
-        /> */}
         {claims &&  (
           <CredentialWidget 
             claim={claims}
