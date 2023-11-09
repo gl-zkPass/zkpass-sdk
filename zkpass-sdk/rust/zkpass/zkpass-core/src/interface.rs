@@ -13,6 +13,9 @@ use sha2::{Digest, Sha256};
 use std::time::{SystemTime, UNIX_EPOCH};
 use thiserror::Error;
 
+///
+/// <span style="font-size: 1.1em; color: #996515;"> ***The `ZkPassError` enum defines the various errors that come from the zkPass Service.*** </span>
+/// 
 #[derive(Debug, Error)]
 pub enum ZkPassError {
     #[error("Missing Root Data Element")]
@@ -50,9 +53,13 @@ pub enum ZkPassError {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+/// <span style="font-size: 1.1em; color: #996515;"> ***The `PublicKey` is used to represent a public key.*** </span>
 pub struct PublicKey {
+    /// `x` represents the x parameter of the public key.
     pub x: String,
-    pub y: String,
+
+    /// `y` represents the y parameter of the public key.
+    pub y: String
 }
 
 impl PublicKey {
@@ -65,37 +72,101 @@ impl PublicKey {
     }
 }
 
+///
+/// <span style="font-size: 1.1em; color: #996515;"> ***The `KeysetEndpoint` is used to represent the JWKS (JSON Web Key Set) end points.*** </span>
+/// 
+///  The JWKS endpoint serves a set of public keys.
+///
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct KeysetEndpoint {
+    /// The url of the end point.
     pub jku: String,
-    pub kid: String,
+    /// The key to locate the public key.
+    pub kid: String
 }
 
+///
+/// <span style="font-size: 1.1em; color: #996515;"> ***The `PublicKeyOption` variant provides alternative ways to represent a public key.*** </span>
+/// 
+/// Either the `PublicKey` or the `KeysetEndpoint` can be used as a public key.
+/// This is useful for sites which do not support JWKS and opts to provide the public key using `PublicKey` directly.
+///
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub enum PublicKeyOption {
+    /// Using PublicKey as a public key
     PublicKey(PublicKey),
+    /// Using KeysetEndpoint as the reference to a public key
     KeysetEndpoint(KeysetEndpoint),
 }
 
+///
+/// <span style="font-size: 1.1em; color: #996515;"> ***The `ZkPassProof` is the value returned by the `generate_zkpass_proof` API of the zkPass Service.*** </span>
+/// 
+///  This struct contains the ZK Proof, plus other metadata related to:
+///  - Information about the DVR whose query was run by the zkPass Service
+///  - The public keys used by the zkPass Service for digital signature verification
+///  - The timestamp of the proof
+///
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ZkPassProof {
+    /// The Cryptographic data blob which contains the ZK Proof
     pub zkproof: String,
+
+    /// The title of the DVR
     pub dvr_title: String,
+
+    /// The unique id of the DVR
     pub dvr_id: String,
+
+    /// The hash digest of the DVR
     pub dvr_digest: String,
+
+    /// The public key actually used by the zkPass Service to verify the signature of the user data
     pub user_data_verifying_key: PublicKey,
+
+    /// The public key actually used by the zkPass Service to verify the signature of the DVR
     pub dvr_verifying_key: PublicKey,
+
+    /// The time stamp of the ZkPassProof as created by the zkPass Service
     pub time_stamp: u64,
 }
 
+///
+/// <span style="font-size: 1.1em; color: #996515;"> ***The `DataVerificationRequest` captures all information contained in a DVR.*** </span>
+/// 
+///  This struct is typically created by the Proof Verifier client, and the DVR
+///  represents a request to verify certain attributes or properties of a user data.
+/// 
+///
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct DataVerificationRequest {
+    /// The title of the DVR
     pub dvr_title: String,
+
+    /// The unique id of the DVR
     pub dvr_id: String,
+
+    /// The version of the zkpass query engine used to create the DVR
     pub query_engine_ver: String,
+
+    /// The version of the zkpass query method used to create the DVR
     pub query_method_ver: String,
+
+    /// The zkPass Query script, which is encoded in JSON string format
     pub query: String,
+
+    /// The url to retrieve the user data referenced by the query.
+    /// 
+    /// This field is optional. If this is None is present then the recipient
+    /// of the DVR, which typically is the Data Holder, is supposed to know
+    /// where to get the user data needed by the query of this DVR.
     pub user_data_url: Option<String>,
+
+    /// The public key information used to verify the signature of the user data.
+    /// 
+    /// This field is set by Proof Verifier to inform the
+    /// zkPass Service the public key it needs to use when verifying
+    /// the signature of the user data.
     pub user_data_verifying_key: PublicKeyOption,
 }
 
@@ -122,11 +193,34 @@ pub struct VerifiedNestedTokenDvr {
     pub dvr_verifying_key: PublicKey,
 }
 
+///
+/// <span style="font-size: 1.1em; color: #996515;"> ***The `KeysetEndpointResolver` trait defines a function for retrieving a public key from a JWKS endpoint.*** </span>
+/// 
 #[async_trait]
 pub trait KeysetEndpointResolver {
-    async fn get_key(&self, jku: &str, kid: &str) -> PublicKey;
+    /// # **Description**
+    /// <span style="font-size: 1.2em; color: #996515;"> ***Retrieves a public key from JWKT endpoint params.*** </span>
+    /// 
+    /// # **Parameters**
+    /// 
+    /// | Argument                                                       | Description                               |
+    /// |----------------------------------------------------------------|-------------------------------------------|
+    /// | <span style="color: blue;"> **`jku`** </span>            | The url of the JWKS endpoint service |
+    /// | <span style="color: blue;"> **`kid`** </span>               | The key for the public key |
+    /// 
+    /// | Return Value                                                   | Description                               |
+    /// |----------------------------------------------------------------|-------------------------------------------|
+    /// |<span style="color: green;"> **`PublicKey`** </span> | The PublicKey value is returned |
+        async fn get_key(&self, jku: &str, kid: &str) -> PublicKey;
 }
 
+/// <span style="font-size: 1.2em; color: #996515;"> ***Gets the number of seconds that has elapsed since the Unix Epoch time.*** </span>
+/// 
+/// # **Parameters**
+/// 
+/// | Return Value                                                   | Description                               |
+/// |----------------------------------------------------------------|-------------------------------------------|
+/// |<span style="color: green;"> **`u64`** </span> | The elapsed time since the Unix Epoch time (January 1, 1970) expressed in seconds|
 pub fn get_current_timestamp() -> u64 {
     let now = SystemTime::now();
     let duration_since_epoch = now.duration_since(UNIX_EPOCH).expect("Time went backwards");

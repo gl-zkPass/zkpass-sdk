@@ -95,7 +95,8 @@ impl ZkPassProofMetadataValidator for MyMetadataValidator {
         // checking for proof token timeout
         //
         if zkpass_proof_ttl > 0 {
-            let diff = get_current_timestamp() - zkpass_proof_ttl;
+            let diff: i64 = (get_current_timestamp() as i64) - (zkpass_proof_ttl as i64);
+            //println!("time-diff={}", diff);
             if diff >= 10000000 {
                 return Err(ZkPassError::ExpiredZkPassProof);
             }
