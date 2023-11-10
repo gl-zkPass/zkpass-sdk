@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["DVR_TABLE","MyMetadataValidator","ProofVerifier"]};

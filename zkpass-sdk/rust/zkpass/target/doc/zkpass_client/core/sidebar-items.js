@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["PublicKeyOption","ZkPassError"],"fn":["get_current_timestamp"],"struct":["DataVerificationRequest","KeysetEndpoint","ProofMethodOutput","PublicKey","ZkPassProof"],"trait":["KeysetEndpointResolver"]};
