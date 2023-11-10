@@ -1,0 +1,40 @@
+{
+    "and": [
+      {
+        "==": [
+          "bcaDocID",
+          "DOC897923CP"
+        ]
+      },
+      {
+        "~==": [
+          "personalInfo.firstName",
+          "Dewi"
+        ]
+      },
+      {
+        "~==": [
+          "personalInfo.lastName",
+          "Putri"
+        ]
+      },
+      {
+        "~==": [
+          "personalInfo.driverLicenseNumber",
+          "DL123456789"
+        ]
+      },
+      {
+        ">=": [
+          "financialInfo.creditRatings.pefindo",
+          650
+        ]
+      },
+      {
+        ">=": [
+          "financialInfo.accounts.savings.balance",
+          30000000
+        ]
+      }
+    ]
+}
