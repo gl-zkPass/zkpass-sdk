@@ -1,11 +1,14 @@
 import styles from "./credentials.module.css";
-import { IssuerScanStatus,IIssuerScanResponse } from "@/backend/issuer/dto/IssuerScanStatus";
+import {
+  IssuerScanStatus,
+  IIssuerScanResponse,
+} from "@/backend/issuer/dto/IssuerScanStatus";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { QR } from "@/backend/types/QR";
 import MainContainer from "@/components/Container/MainContainer";
-import Toast,{ToastConfig} from "@/components/Toast";
+import Toast, { ToastConfig } from "@/components/Toast";
 import { Claim } from "@/backend/types/Claims";
 import { getToken, removeUserCookie } from "@/utils/cookie";
 import CredentialWidget from "@/components/CredentialWidget";
@@ -42,14 +45,11 @@ const Credentials = () => {
   const fetchClaims = async () => {
     try {
       const token = getToken();
-      const req = await fetch(
-        `/api/issuer/credentials`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const req = await fetch(`/api/issuer/credentials`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const claims = await req.json();
       if (req.ok) {
         setClaims(claims.credential);
@@ -64,7 +64,7 @@ const Credentials = () => {
   };
 
   useEffect(() => {
-    if(!userCookie) router.push("/");
+    if (!userCookie) router.push("/");
     fetchClaims();
   }, []);
 
@@ -107,10 +107,7 @@ const Credentials = () => {
         },
         body: JSON.stringify({ credentialId: claimQr.id }),
       };
-      const req = await fetch(
-        `/api/issuer/credentials/qrcode/status`,
-        config
-      );
+      const req = await fetch(`/api/issuer/credentials/qrcode/status`, config);
       const res: IIssuerScanResponse = await req.json();
       if (req.ok) {
         if (res.statusType === IssuerScanStatus.SCANNED) {
@@ -154,8 +151,8 @@ const Credentials = () => {
           />
         )}
 
-        {claims &&  (
-          <CredentialWidget 
+        {claims && (
+          <CredentialWidget
             claim={claims}
             qrModalConfig={qrModalConfig}
             setQrModalConfig={setQrModalConfig}

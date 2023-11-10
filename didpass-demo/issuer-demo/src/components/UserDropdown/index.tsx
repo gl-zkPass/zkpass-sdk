@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import * as React from "react";
 import { getToken, removeUserCookie } from "@/utils/cookie";
 import { OutlinedButton } from "../Button/OutlinedButton";
-import Toast, {ToastConfig} from "../Toast";
+import Toast, { ToastConfig } from "../Toast";
 import styles from "./UserDropdown.module.css";
 
 const UserDropdown = () => {
@@ -166,9 +166,7 @@ const UserDropdown = () => {
                           Click to copy identifier
                         </p>
 
-                        <p className={styles.identifierText}>
-                          {wildcardDid}
-                        </p>
+                        <p className={styles.identifierText}>{wildcardDid}</p>
                       </div>
                     </MenuItem>
 
