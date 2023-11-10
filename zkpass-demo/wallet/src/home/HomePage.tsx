@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Clipboard, Alert } from 'react-native';
 import { styles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -6,7 +6,7 @@ import {
   generateZkPassProof 
 } from '@didpass/zkpass-client-react-native';
 import Config from 'react-native-config';
-import { decode } from 'jsonwebtoken';
+import { JwtPayload, decode } from 'jsonwebtoken';
 import { DownloadDirectoryPath, exists, readFile, unlink, writeFile } from 'react-native-fs';
 import JsonDisplayer from './components/json-displayer/JsonDisplayer';
 
@@ -27,10 +27,12 @@ const HomePage = () => {
     if (!Config.USER_DATA_TOKEN || !Config.DVR_TOKEN) {
       setIsError(true);
     }
-    const decodedUserData = decode(Config.USER_DATA_TOKEN).data;
+    const userData = decode(Config.USER_DATA_TOKEN!) as JwtPayload;
+    const decodedUserData = userData?.data;
     setUserData(decodedUserData);
 
-    const decodedDvr = decode(Config.DVR_TOKEN).data;
+    const Dvr = decode(Config.DVR_TOKEN!) as JwtPayload;
+    const decodedDvr = Dvr?.data;
     const decodedDvrQuery = JSON.parse(decodedDvr.query);
     setDvr(decodedDvrQuery);
   }, []);
@@ -67,7 +69,7 @@ const HomePage = () => {
     setProofState('DVR');
     setProofToken('');
     setIsError(false);
-  }
+  };
 
   const downloadProofAsFile = async () => {
     const path = DownloadDirectoryPath + '/proof_token.json';
@@ -117,7 +119,7 @@ const HomePage = () => {
       );
 
       if (result.status == 200 && result.proof) {
-        console.log('Proof Token: ', result.proof)
+        console.log('Proof Token: ', result.proof);
         setProofState('ShowTokenProof');
         setProofToken(result.proof);
         setIsError(false);     
@@ -128,11 +130,11 @@ const HomePage = () => {
       setProofToken('');
       setIsError(true);
     }
-  }
+  };
 
   const retryGenerateProof = async () => {
     await generateProof();
-  }
+  };
 
   useEffect(() => {
     (async () => {
