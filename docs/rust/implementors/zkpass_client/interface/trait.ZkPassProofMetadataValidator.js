@@ -1,0 +1,3 @@
+(function() {var implementors = {
+"zkpass_demo":[["impl ZkPassProofMetadataValidator for <a class=\"struct\" href=\"zkpass_demo/proof_verifier/struct.MyMetadataValidator.html\" title=\"struct zkpass_demo::proof_verifier::MyMetadataValidator\">MyMetadataValidator</a>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

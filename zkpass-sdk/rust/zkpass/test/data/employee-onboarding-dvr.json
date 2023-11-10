@@ -1,0 +1,47 @@
+{
+    "and": [
+      {
+        "==": [
+          "lab.ID",
+          "QH801874"
+        ]
+      },
+      {
+        "==": [
+          "testID",
+          "SCREEN-7083-12345"
+        ]
+      },
+      {
+        "~==": [
+          "subject.firstName",
+          "jane"
+        ]
+      },
+      {
+        "~==": [
+          "subject.lastName",
+          "doe"
+        ]
+      },
+      {
+        "==": [
+          "subject.dateOfBirth",
+          "1985-12-12"
+        ]
+      },
+      {
+        "==": [
+          "measuredPanelsNgML.amphetamines",
+          0
+        ]
+      },
+      {
+        "<=": [
+          "measuredPanelsNgML.cocaine",
+          10
+        ]
+      }
+    ]
+}
+
