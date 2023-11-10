@@ -1,5 +1,5 @@
 .appBar {
-    background-color: var(--color-gray);
+    background-color: #131313;
 }
 
 .logo {
@@ -18,10 +18,16 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
+    position: relative;
 }
 
 .logo {
     gap: var(--gap-5xs);
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .navigation {
@@ -36,6 +42,9 @@
     color: var(--white50);
 }
 
-.title {
-    margin-top: 1rem;
+.drawerContainer{
+    display: flex;
+    justify-content: center;
 }
+
+

@@ -1,16 +1,15 @@
 import { PrimaryButton } from "../Button/PrimaryButton";
 import styles from "./CredentialWidget.module.css";
-import { Tooltip } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 import { QrCodeScanner } from "@mui/icons-material";
 import { getToken } from "@/utils/cookie";
 import { QR } from "@/backend/types/QR";
 import { QrModalConfig } from "@/backend/types/QRModalConfig";
-import { PageConfig } from "@/backend/types/PageConfig";
 
 const IndividualCredential = (key: string, value: string) => {
   return (
     <div key={key}>
-      <p>
+      <p className={styles.individualCredential}>
         <b>{key}: </b>
         {value}
       </p>
@@ -23,12 +22,9 @@ type Props = {
   qrModalConfig: QrModalConfig;
   setQrModalConfig: (config: QrModalConfig) => void;
   setClaimQr: (qr: QR) => void;
-  pageConfig: PageConfig;
-  setPageConfig: (config: PageConfig) => void;
 };
 
 const CredentialWidget = (props: Props) => {
-  //map over props and return IndividualCredential\
   const { setClaimQr, qrModalConfig, setQrModalConfig, claim } = props;
   const userData = JSON.parse(claim.user_data).credentialSubject;
 
@@ -49,7 +45,7 @@ const CredentialWidget = (props: Props) => {
     const claimData = await req.json();
     if (req.ok) {
       let purpose = `add your ${title} credential to`;
-      
+
       setClaimQr({
         id: claimId,
         qrCode: claimData.result,
@@ -64,9 +60,15 @@ const CredentialWidget = (props: Props) => {
   };
   return (
     <>
-      {Object.keys(userData).map((key) => {
-        return IndividualCredential(key, userData[key]);
-      })}
+      <Box
+        component="div"
+        sx={{ width: { sm: "90vw", md: "50vw" } }}
+        className={styles.credentialSubject}
+      >
+        {Object.keys(userData).map((key) => {
+          return IndividualCredential(key, userData[key]);
+        })}
+      </Box>
       <div className={styles.actionButtonContainer}>
         <Tooltip
           title={"Sync to wallet using VC"}
@@ -89,6 +91,7 @@ const CredentialWidget = (props: Props) => {
             className={styles.actionButton}
             onClick={() => getClaimQR("KYC eKTP", claim.id, "VC")}
           >
+            Claim by VC&nbsp;
             <QrCodeScanner />
           </PrimaryButton>
         </Tooltip>
@@ -113,6 +116,7 @@ const CredentialWidget = (props: Props) => {
             className={styles.actionButton}
             onClick={() => getClaimQR("KYC eKTP", claim.id, "JWT")}
           >
+            Claim by JWT&nbsp;
             <QrCodeScanner />
           </PrimaryButton>
         </Tooltip>

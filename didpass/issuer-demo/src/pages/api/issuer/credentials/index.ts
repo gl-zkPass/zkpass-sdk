@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
-import userDataMock from "@/backend/mocks/userDataMock.json"
+import detailCredentialMock from "@/backend/mocks/detailCredentialMock.json"
 
 export default async function handler(
     req: NextApiRequest,
@@ -16,15 +16,11 @@ export default async function handler(
 }
 
 async function getCredentials(req: NextApiRequest, res: NextApiResponse) {
-    //below is mock
     const response = {
         credential: {
-            id: 6,
-            user_data: JSON.stringify({
-                'credentialSubject': userDataMock
-            }),
-        }
-        ,
+            id: detailCredentialMock.id,
+            user_data: JSON.stringify(detailCredentialMock.user_data),
+        },
         "total": 1
     }
 

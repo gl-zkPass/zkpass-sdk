@@ -5,7 +5,6 @@ type Props = {
 };
 
 const ConnectWidget = (props: Props) => {
-
   const onConnectClick = async () => {
     const req = await fetch(`/api/issuer/connect`);
     const qrData = await req.json();

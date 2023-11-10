@@ -76,16 +76,17 @@
 }
 
 .connectWidget {
-    margin-top: 2rem;
     border-radius: var(--br-xl);
     display: flex;
     flex-direction: column;
     padding: 0 var(--padding-13xl);
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     gap: var(--gap-5xl);
     text-align: center;
     font-size: var(--font-size-sm);
     color: var(--white);
     font-family: var(--font-roboto);
+    width: 100vw;
+    height: 100vh;
 }

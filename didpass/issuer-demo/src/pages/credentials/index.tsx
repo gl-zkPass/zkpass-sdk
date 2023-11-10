@@ -1,38 +1,23 @@
+import styles from "./credentials.module.css";
 import { IssuerScanStatus,IIssuerScanResponse } from "@/backend/issuer/dto/IssuerScanStatus";
-import Link from "@mui/material/Link";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { QR } from "@/backend/types/QR";
-import { PrimaryButton } from "@/components/Button/PrimaryButton";
 import MainContainer from "@/components/Container/MainContainer";
-// import CredentialDataTable from "../../../components/DataTable/CredentialDataTable";
 import Toast,{ToastConfig} from "@/components/Toast";
 import { Claim } from "@/backend/types/Claims";
 import { getToken, removeUserCookie } from "@/utils/cookie";
-import styles from "./index.module.css";
 import CredentialWidget from "@/components/CredentialWidget";
 import { QrModalConfig } from "@/backend/types/QRModalConfig";
 import QrModal from "@/components/QrModal";
 
-
-
-export type PageConfig = {
-  limit: number;
-  offset: number;
-};
-
-const INITIAL_LIMIT = 10;
-const INTIIAL_OFFSET = 0;
-
 const Credentials = () => {
   const router = useRouter();
   const token = getToken();
+  const userCookie = Cookies.get("_user");
+
   const [claims, setClaims] = useState<Claim>();
-  const [pageConfig, setPageConfig] = useState<PageConfig>({
-    limit: Number(Cookies.get("limit")) || INITIAL_LIMIT,
-    offset: INTIIAL_OFFSET,
-  });
   const [claimQr, setClaimQr] = useState<QR | undefined>();
   const [qrModalConfig, setQrModalConfig] = useState<QrModalConfig>({
     open: false,
@@ -79,9 +64,9 @@ const Credentials = () => {
   };
 
   useEffect(() => {
-    Cookies.set("limit", JSON.stringify(pageConfig.limit));
+    if(!userCookie) router.push("/");
     fetchClaims();
-  }, [pageConfig]);
+  }, []);
 
   useEffect(() => {
     if (Object.keys(router.query).length != 0) {
@@ -177,8 +162,6 @@ const Credentials = () => {
             qrModalConfig={qrModalConfig}
             setQrModalConfig={setQrModalConfig}
             setClaimQr={setClaimQr}
-            pageConfig={pageConfig}
-            setPageConfig={setPageConfig}
           />
         )}
       </div>
