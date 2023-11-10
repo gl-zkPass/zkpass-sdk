@@ -175,13 +175,43 @@
 <a href="#175" id="175">175</a>
 <a href="#176" id="176">176</a>
 <a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
+<a href="#181" id="181">181</a>
+<a href="#182" id="182">182</a>
+<a href="#183" id="183">183</a>
+<a href="#184" id="184">184</a>
+<a href="#185" id="185">185</a>
+<a href="#186" id="186">186</a>
+<a href="#187" id="187">187</a>
+<a href="#188" id="188">188</a>
+<a href="#189" id="189">189</a>
+<a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+<a href="#192" id="192">192</a>
+<a href="#193" id="193">193</a>
+<a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>async_trait::async_trait;
 <span class="kw">use </span>serde_json::{json, Value};
 <span class="kw">use </span>zkpass_core::interface::{sign_data_to_jws_token, verify_jws_token, encrypt_data_to_jwe_token, decrypt_jwe_token};
 <span class="kw">use </span><span class="kw">crate</span>::core::{<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::interface::{<span class="kw-2">*</span>};
+<span class="comment">//use zkpass_core::interface::verify_jws_token;
 
-<span class="kw">impl </span>ZkPassUtility <span class="kw">for </span>ZkPassClient {
+</span><span class="kw">impl </span>ZkPassUtility <span class="kw">for </span>ZkPassClient {
     <span class="kw">fn </span>sign_data_to_jws_token(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         signing_key: <span class="kw-2">&amp;</span>str,
@@ -259,6 +289,36 @@ IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==
     }
 }
 
+<span class="kw">impl </span>ZkPassProofVerifier <span class="kw">for </span>ZkPassClient {
+    <span class="kw">fn </span>verify_zkpass_proof_internal(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        zkpass_proof_token:                 <span class="kw-2">&amp;</span>str
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(bool, ZkPassProof), ZkPassError&gt; {
+        <span class="kw">const </span>ZKPASS_DSA_PUBKEY_X: <span class="kw-2">&amp;</span>str = <span class="string">&quot;MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU&quot;</span>;
+        <span class="kw">const </span>ZKPASS_DSA_PUBKEY_Y: <span class="kw-2">&amp;</span>str =<span class="string">&quot;IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==&quot;</span>;
+
+        <span class="kw">let </span>zkpass_proof_verifying_key = PublicKey {
+            x: String::from(ZKPASS_DSA_PUBKEY_X),
+            y: String::from(ZKPASS_DSA_PUBKEY_Y)
+        };
+
+        <span class="kw">let </span>(zkpass_proof, _header) = verify_jws_token(
+            zkpass_proof_verifying_key.to_pem().as_str(),
+            zkpass_proof_token)<span class="question-mark">?</span>;
+        <span class="kw">let </span>zkpass_proof: ZkPassProof = serde_json::from_value(zkpass_proof).unwrap();
+        <span class="comment">//
+        //  zkp verification
+        //
+        </span><span class="kw">let </span>output = <span class="kw">crate</span>::import::verify_zkproof(<span class="kw-2">&amp;</span>zkpass_proof.zkproof);
+
+        <span class="prelude-val">Ok</span>((output.result, zkpass_proof))
+    }
+
+    <span class="kw">fn </span>get_query_engine_version_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (String, String) {
+        (<span class="kw">crate</span>::import::get_query_engine_version(), <span class="kw">crate</span>::import::get_query_method_version())
+    }
+}
+
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
@@ -331,25 +391,23 @@ IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==
         <span class="macro">println!</span>(<span class="string">&quot;Result: {:?}&quot;</span>, result);
     }
 
-    <span class="kw">struct </span>DummyResolver;
-    <span class="attr">#[async_trait]
-    </span><span class="kw">impl </span>KeysetEndpointResolver <span class="kw">for </span>DummyResolver {
-        <span class="kw">async fn </span>get_key(<span class="kw-2">&amp;</span><span class="self">self</span>, jku: <span class="kw-2">&amp;</span>str, kid: <span class="kw-2">&amp;</span>str) -&gt; PublicKey {
-            <span class="kw">let </span>future = <span class="kw">async </span>{
+    <span class="comment">/* 
+    struct DummyResolver;
+    #[async_trait]
+    impl KeysetEndpointResolver for DummyResolver {
+        async fn get_key(&amp;self, jku: &amp;str, kid: &amp;str) -&gt; PublicKey {
+            let future = async {
                 PublicKey {
                     x: String::from(
-                        <span class="string">&quot;MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU&quot;</span>,
+                        &quot;MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU&quot;,
                     ),
-                    y: String::from(<span class="string">&quot;IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==&quot;</span>),
+                    y: String::from(&quot;IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==&quot;),
                 }
             };
 
-            future.<span class="kw">await
-        </span>}
+            future.await
+        }
     }
-
-    <span class="kw">fn </span>get_resolver() -&gt; Box&lt;<span class="kw">dyn </span>KeysetEndpointResolver&gt; {
-        Box::new(DummyResolver) <span class="kw">as </span>Box&lt;<span class="kw">dyn </span>KeysetEndpointResolver&gt;
-    }
-}
+    */
+</span>}
 </code></pre></div></section></main></body></html>

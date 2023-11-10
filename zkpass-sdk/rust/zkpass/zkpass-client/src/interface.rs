@@ -4,7 +4,7 @@ use crate::core::*;
 
 #[async_trait]
 ///
-/// <span style="font-size: 1.1em; color: #996515;"> ***The `ZkPassProofGenerator` trait defines a function for generating ZkPass Proof.*** </span>
+/// <span style="font-size: 1.1em; color: #996515;"> ***Defines a function for generating ZkPass Proof.*** </span>
 /// 
 /// `ZkPassProofGenerator` provides an asynchronous abstraction for generating
 /// ZkPass Proofs Implement this trait to define custom proof generation logic
@@ -46,7 +46,7 @@ pub trait ZkPassProofGenerator {
 }
 
 ///
-/// <span style="font-size: 1.1em; color: #996515;"> ***The `ZkPassUtility` trait defines functions for digital signature and encryptions.*** </span>
+/// <span style="font-size: 1.1em; color: #996515;"> ***Defines functions for digital signature and encryption.*** </span>
 /// 
 /// Speficially it has functions for:
 /// - signing/verifying the signature of JWT (JSON Web Signature) tokens 
@@ -117,7 +117,8 @@ pub trait ZkPassUtility {
 
 }
 
-/// <span style="font-size: 1.1em; color: #996515;"> ***The `ZkPassProofMetadataValidator` trait defines a function for DVR metadata validation.*** </span>
+//
+/// <span style="font-size: 1.1em; color: #996515;"> ***Defines a function for DVR metadata validation.*** </span>
 /// 
 pub trait ZkPassProofMetadataValidator {
     /// # **Description**
@@ -151,7 +152,7 @@ pub trait ZkPassProofMetadataValidator {
     ) -> Result<(), ZkPassError>;
 }
 
-/// <span style="font-size: 1.1em; color: #996515;"> ***The `ZkPassProofVerifier` trait consists of functions proof verification.*** </span>
+/// <span style="font-size: 1.1em; color: #996515;"> ***Defines functions for proof verification.*** </span>
 /// 
 pub trait ZkPassProofVerifier {
     /// # **Description**
@@ -222,4 +223,7 @@ pub trait ZkPassProofVerifier {
     fn get_query_engine_version_info(&self) -> (String, String);
 }
 
+//
+/// <span style="font-size: 1.1em; color: #996515;"> ***The main struct which implements all of the traits defined in this module.*** </span>
+/// 
 pub struct ZkPassClient;

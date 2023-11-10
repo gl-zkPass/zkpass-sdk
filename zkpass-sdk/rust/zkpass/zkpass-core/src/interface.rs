@@ -14,7 +14,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use thiserror::Error;
 
 ///
-/// <span style="font-size: 1.1em; color: #996515;"> ***The `ZkPassError` enum defines the various errors that come from the zkPass Service.*** </span>
+/// <span style="font-size: 1.1em; color: #996515;"> ***Defines various errors that come from the zkPass Service.*** </span>
 /// 
 #[derive(Debug, Error)]
 pub enum ZkPassError {
@@ -53,7 +53,7 @@ pub enum ZkPassError {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
-/// <span style="font-size: 1.1em; color: #996515;"> ***The `PublicKey` is used to represent a public key.*** </span>
+/// <span style="font-size: 1.1em; color: #996515;"> ***Represents a public key.*** </span>
 pub struct PublicKey {
     /// `x` represents the x parameter of the public key.
     pub x: String,
@@ -73,7 +73,7 @@ impl PublicKey {
 }
 
 ///
-/// <span style="font-size: 1.1em; color: #996515;"> ***The `KeysetEndpoint` is used to represent the JWKS (JSON Web Key Set) end points.*** </span>
+/// <span style="font-size: 1.1em; color: #996515;"> ***Represents a JWKS (JSON Web Key Set) end point.*** </span>
 /// 
 ///  The JWKS endpoint serves a set of public keys.
 ///
@@ -86,7 +86,7 @@ pub struct KeysetEndpoint {
 }
 
 ///
-/// <span style="font-size: 1.1em; color: #996515;"> ***The `PublicKeyOption` variant provides alternative ways to represent a public key.*** </span>
+/// <span style="font-size: 1.1em; color: #996515;"> ***Provides alternative ways to represent a public key.*** </span>
 /// 
 /// Either the `PublicKey` or the `KeysetEndpoint` can be used as a public key.
 /// This is useful for sites which do not support JWKS and opts to provide the public key using `PublicKey` directly.
@@ -100,7 +100,7 @@ pub enum PublicKeyOption {
 }
 
 ///
-/// <span style="font-size: 1.1em; color: #996515;"> ***The `ZkPassProof` is the value returned by the `generate_zkpass_proof` API of the zkPass Service.*** </span>
+/// <span style="font-size: 1.1em; color: #996515;"> ***The value returned by the `generate_zkpass_proof` API of the zkPass Service.*** </span>
 /// 
 ///  This struct contains the ZK Proof, plus other metadata related to:
 ///  - Information about the DVR whose query was run by the zkPass Service
@@ -132,7 +132,7 @@ pub struct ZkPassProof {
 }
 
 ///
-/// <span style="font-size: 1.1em; color: #996515;"> ***The `DataVerificationRequest` captures all information contained in a DVR.*** </span>
+/// <span style="font-size: 1.1em; color: #996515;"> ***Represents a request that contains information needed to verify user data.*** </span>
 /// 
 ///  This struct is typically created by the Proof Verifier client, and the DVR
 ///  represents a request to verify certain attributes or properties of a user data.
@@ -194,7 +194,7 @@ pub struct VerifiedNestedTokenDvr {
 }
 
 ///
-/// <span style="font-size: 1.1em; color: #996515;"> ***The `KeysetEndpointResolver` trait defines a function for retrieving a public key from a JWKS endpoint.*** </span>
+/// <span style="font-size: 1.1em; color: #996515;"> ***Defines a function for retrieving a public key from a JWKS endpoint.*** </span>
 /// 
 #[async_trait]
 pub trait KeysetEndpointResolver {

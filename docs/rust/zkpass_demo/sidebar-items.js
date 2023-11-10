@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["main","run_data_holder"],"mod":["data_holder","data_issuer","proof_verifier","test"]};

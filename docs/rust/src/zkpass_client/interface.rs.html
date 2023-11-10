@@ -223,13 +223,17 @@
 <a href="#223" id="223">223</a>
 <a href="#224" id="224">224</a>
 <a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>serde_json::Value;
 <span class="kw">use </span>async_trait::async_trait;
 <span class="kw">use </span><span class="kw">crate</span>::core::<span class="kw-2">*</span>;
 
 <span class="attr">#[async_trait]
 </span><span class="doccomment">///
-/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***The `ZkPassProofGenerator` trait defines a function for generating ZkPass Proof.*** &lt;/span&gt;
+/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***Defines a function for generating ZkPass Proof.*** &lt;/span&gt;
 /// 
 /// `ZkPassProofGenerator` provides an asynchronous abstraction for generating
 /// ZkPass Proofs Implement this trait to define custom proof generation logic
@@ -271,7 +275,7 @@
 }
 
 <span class="doccomment">///
-/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***The `ZkPassUtility` trait defines functions for digital signature and encryptions.*** &lt;/span&gt;
+/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***Defines functions for digital signature and encryption.*** &lt;/span&gt;
 /// 
 /// Speficially it has functions for:
 /// - signing/verifying the signature of JWT (JSON Web Signature) tokens 
@@ -342,7 +346,8 @@
 
 }
 
-<span class="doccomment">/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***The `ZkPassProofMetadataValidator` trait defines a function for DVR metadata validation.*** &lt;/span&gt;
+<span class="comment">//
+</span><span class="doccomment">/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***Defines a function for DVR metadata validation.*** &lt;/span&gt;
 /// 
 </span><span class="kw">pub trait </span>ZkPassProofMetadataValidator {
     <span class="doccomment">/// # **Description**
@@ -376,7 +381,7 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ZkPassError&gt;;
 }
 
-<span class="doccomment">/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***The `ZkPassProofVerifier` trait consists of functions proof verification.*** &lt;/span&gt;
+<span class="doccomment">/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***Defines functions for proof verification.*** &lt;/span&gt;
 /// 
 </span><span class="kw">pub trait </span>ZkPassProofVerifier {
     <span class="doccomment">/// # **Description**
@@ -447,5 +452,8 @@
     </span><span class="kw">fn </span>get_query_engine_version_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (String, String);
 }
 
-<span class="kw">pub struct </span>ZkPassClient;
+<span class="comment">//
+</span><span class="doccomment">/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***The main struct which implements all of the traits defined in this module.*** &lt;/span&gt;
+/// 
+</span><span class="kw">pub struct </span>ZkPassClient;
 </code></pre></div></section></main></body></html>

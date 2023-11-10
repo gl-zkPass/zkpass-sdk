@@ -65,50 +65,21 @@
 <a href="#65" id="65">65</a>
 <a href="#66" id="66">66</a>
 <a href="#67" id="67">67</a>
-<a href="#68" id="68">68</a>
-<a href="#69" id="69">69</a>
-<a href="#70" id="70">70</a>
-<a href="#71" id="71">71</a>
-<a href="#72" id="72">72</a>
-<a href="#73" id="73">73</a>
-<a href="#74" id="74">74</a>
-<a href="#75" id="75">75</a>
-<a href="#76" id="76">76</a>
-<a href="#77" id="77">77</a>
-<a href="#78" id="78">78</a>
-<a href="#79" id="79">79</a>
-<a href="#80" id="80">80</a>
-<a href="#81" id="81">81</a>
-<a href="#82" id="82">82</a>
-<a href="#83" id="83">83</a>
-<a href="#84" id="84">84</a>
-<a href="#85" id="85">85</a>
-<a href="#86" id="86">86</a>
-<a href="#87" id="87">87</a>
-<a href="#88" id="88">88</a>
-<a href="#89" id="89">89</a>
-<a href="#90" id="90">90</a>
-<a href="#91" id="91">91</a>
-<a href="#92" id="92">92</a>
-<a href="#93" id="93">93</a>
-<a href="#94" id="94">94</a>
-<a href="#95" id="95">95</a>
-<a href="#96" id="96">96</a>
-<a href="#97" id="97">97</a>
-</pre></div><pre class="rust"><code><span class="doccomment">//! # zkPass-client SDK Library
+</pre></div><pre class="rust"><code><span class="doccomment">//! # zkPass Client SDK Library
 //!
-//! The **zkpass-client** crate is the official Rust SDK for integrating with the zkPass ecosystem. It offers a suite of functionalities designed to facilitate the interaction between applications and the zkPass platform via its RESTful API.
+//! The **zkpass-client** crate is the official Rust SDK library for integrating with the zkPass ecosystem. It offers a suite of functionalities designed to facilitate the interaction between applications and the zkPass platform via its RESTful API.
 //!
-//! This SDK abstracts the complexity of direct API calls and provides a robust, idiomatic Rust interface for the zkPass Service. By handling lower-level details, zkpass-client allows developers to focus on building feature-rich applications with confidence in their security and reliability.
+//! This SDK abstracts the complexity of signing and encrypting data, and simplifies the direct RESTful API call by providing a robust, idiomatic Rust interface for the zkPass Service. By handling lower-level details, zkpass-client allows developers to focus on building feature-rich applications with confidence in their security and reliability.
 //!
 //! ## Features
 //!
-//! **zkpass-client** comes with a comprehensive set of features that include, but are not limited to:
+//! **zkpass-client** comes with a comprehensive set of features that include:
 //!
-//! - **JWS Support**: Simplified interface for signing JSON Web Signatures (JWS) and verifying the authenticity of data . 
-//! - **JWE Handling**: Functions to encrypt data into JSON Web Encryption (JWE) tokens and decrypt received JWE tokens, ensuring the privacy of sensitive information.
-//! - **ZkPassProof Generation**: Mechanisms to generate ZkPassProofs as part of the data verification process without revealing the underlying user data.
-//! - **Proof Verification**: Functions to verify the validity of a ZkPassProof, confirming the integrity and authenticity of the proof without the need for a third-party verifier.
+//! - **ZkPass Proof Generation** &lt;br&gt;Mechanism to generate ZkPassProofs as part of the data verification process without revealing the underlying user data. This abstracts the call to the RESTful API of the zkPass Service.
+//! - **ZkPass Proof Verification** &lt;br&gt; Function to verify the validity of a ZkPassProof, confirming the integrity and authenticity of the proof without the
+//!  need for a third-party verifier. Unlike the proof generation, the proof verification is computed locally, having no dependency on external services.
+//! - **JWS Support** &lt;br&gt; Simplified interface for signing JSON Web Signatures (JWS) and verifying the authenticity of data . 
+//! - **JWE Handling** &lt;br&gt; Functions to encrypt data into JSON Web Encryption (JWE) tokens and decrypt received JWE tokens, ensuring the privacy of sensitive information.
 //!
 
 </span><span class="kw">pub mod </span>interface;
@@ -121,11 +92,10 @@
         DataVerificationRequest, KeysetEndpoint, PublicKey, ZkPassProof,
         PublicKeyOption, ZkPassError,
         KeysetEndpointResolver,
-        get_current_timestamp,
     };
 
     <span class="doccomment">///
-    /// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***The `ProofMethodOutput` struct represents the result of a zkPass query.*** &lt;/span&gt;
+    /// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***Contains the result of a zkPass query.*** &lt;/span&gt;
     /// 
     </span><span class="attr">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
     </span><span class="kw">pub struct </span>ProofMethodOutput {
@@ -134,61 +104,31 @@
     }
 }
 
-<span class="kw">use </span>zkpass_core::interface::verify_jws_token;
-<span class="kw">use </span><span class="kw">crate</span>::interface::{<span class="kw-2">*</span>};
-<span class="kw">use </span><span class="kw">crate</span>::core::{<span class="kw-2">*</span>};
+<span class="kw">mod </span>import {
+    <span class="kw">use </span><span class="kw">crate</span>::core::{<span class="kw-2">*</span>};
+    <span class="kw">const </span>ZKPASS_QUERY_DLL: <span class="kw-2">&amp;</span>str = <span class="string">&quot;libr0_zkpass_query.so&quot;</span>;
 
-<span class="kw">const </span>ZKPASS_DSA_PUBKEY_X: <span class="kw-2">&amp;</span>str = <span class="string">&quot;MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU&quot;</span>;
-<span class="kw">const </span>ZKPASS_DSA_PUBKEY_Y: <span class="kw-2">&amp;</span>str =<span class="string">&quot;IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==&quot;</span>;
-
-
-<span class="kw">fn </span>verify_zkproof_internal(receipt: <span class="kw-2">&amp;</span>str) -&gt; ProofMethodOutput {
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>lib = libloading::Library::new(<span class="string">&quot;libr0_zkpass_query.so&quot;</span>).unwrap();
-        <span class="kw">let </span>func: libloading::Symbol&lt;<span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>str) -&gt; ProofMethodOutput&gt; = lib.get(<span class="string">b&quot;verify_zkproof_internal&quot;</span>).unwrap();
-        func(receipt)
-    }
-}
-
-<span class="kw">fn </span>get_query_method_version_internal() -&gt; String {
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>lib = libloading::Library::new(<span class="string">&quot;libr0_zkpass_query.so&quot;</span>).unwrap();
-        <span class="kw">let </span>func: libloading::Symbol&lt;<span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>() -&gt; String&gt; = lib.get(<span class="string">b&quot;get_query_method_version_internal&quot;</span>).unwrap();
-        func()
-    }
-}
-
-<span class="kw">fn </span>get_query_engine_version_internal() -&gt; String {
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>lib = libloading::Library::new(<span class="string">&quot;libr0_zkpass_query.so&quot;</span>).unwrap();
-        <span class="kw">let </span>func: libloading::Symbol&lt;<span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>() -&gt; String&gt; = lib.get(<span class="string">b&quot;get_query_engine_version_internal&quot;</span>).unwrap();
-        func()
-    }
-}
-
-<span class="kw">impl </span>ZkPassProofVerifier <span class="kw">for </span>ZkPassClient {
-    <span class="kw">fn </span>verify_zkpass_proof_internal(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        zkpass_proof_token:                 <span class="kw-2">&amp;</span>str
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(bool, ZkPassProof), ZkPassError&gt; {
-        <span class="kw">let </span>zkpass_proof_verifying_key = PublicKey {
-            x: String::from(ZKPASS_DSA_PUBKEY_X),
-            y: String::from(ZKPASS_DSA_PUBKEY_Y)
-        };
-
-        <span class="kw">let </span>(zkpass_proof, _header) = verify_jws_token(
-            zkpass_proof_verifying_key.to_pem().as_str(),
-            zkpass_proof_token)<span class="question-mark">?</span>;
-        <span class="kw">let </span>zkpass_proof: ZkPassProof = serde_json::from_value(zkpass_proof).unwrap();
-        <span class="comment">//
-        //  zkp verification
-        //
-        </span><span class="kw">let </span>output = verify_zkproof_internal(<span class="kw-2">&amp;</span>zkpass_proof.zkproof);
-
-        <span class="prelude-val">Ok</span>((output.result, zkpass_proof))
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>verify_zkproof(receipt: <span class="kw-2">&amp;</span>str) -&gt; ProofMethodOutput {
+        <span class="kw">unsafe </span>{
+            <span class="kw">let </span>lib = libloading::Library::new(ZKPASS_QUERY_DLL).unwrap();
+            <span class="kw">let </span>func: libloading::Symbol&lt;<span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>str) -&gt; ProofMethodOutput&gt; = lib.get(<span class="string">b&quot;verify_zkproof_internal&quot;</span>).unwrap();
+            func(receipt)
+        }
     }
 
-    <span class="kw">fn </span>get_query_engine_version_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (String, String) {
-        (get_query_engine_version_internal(), get_query_method_version_internal())
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_query_method_version() -&gt; String {
+        <span class="kw">unsafe </span>{
+            <span class="kw">let </span>lib = libloading::Library::new(ZKPASS_QUERY_DLL).unwrap();
+            <span class="kw">let </span>func: libloading::Symbol&lt;<span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>() -&gt; String&gt; = lib.get(<span class="string">b&quot;get_query_method_version_internal&quot;</span>).unwrap();
+            func()
+        }
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_query_engine_version() -&gt; String {
+        <span class="kw">unsafe </span>{
+            <span class="kw">let </span>lib = libloading::Library::new(ZKPASS_QUERY_DLL).unwrap();
+            <span class="kw">let </span>func: libloading::Symbol&lt;<span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>() -&gt; String&gt; = lib.get(<span class="string">b&quot;get_query_engine_version_internal&quot;</span>).unwrap();
+            func()
+        }
     }
 }</code></pre></div></section></main></body></html>

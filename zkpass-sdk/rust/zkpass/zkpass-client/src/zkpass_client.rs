@@ -3,6 +3,7 @@ use serde_json::{json, Value};
 use zkpass_core::interface::{sign_data_to_jws_token, verify_jws_token, encrypt_data_to_jwe_token, decrypt_jwe_token};
 use crate::core::{*};
 use crate::interface::{*};
+//use zkpass_core::interface::verify_jws_token;
 
 impl ZkPassUtility for ZkPassClient {
     fn sign_data_to_jws_token(
@@ -82,6 +83,36 @@ IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==
     }
 }
 
+impl ZkPassProofVerifier for ZkPassClient {
+    fn verify_zkpass_proof_internal(
+        &self,
+        zkpass_proof_token:                 &str
+    ) -> Result<(bool, ZkPassProof), ZkPassError> {
+        const ZKPASS_DSA_PUBKEY_X: &str = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU";
+        const ZKPASS_DSA_PUBKEY_Y: &str ="IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==";
+
+        let zkpass_proof_verifying_key = PublicKey {
+            x: String::from(ZKPASS_DSA_PUBKEY_X),
+            y: String::from(ZKPASS_DSA_PUBKEY_Y)
+        };
+
+        let (zkpass_proof, _header) = verify_jws_token(
+            zkpass_proof_verifying_key.to_pem().as_str(),
+            zkpass_proof_token)?;
+        let zkpass_proof: ZkPassProof = serde_json::from_value(zkpass_proof).unwrap();
+        //
+        //  zkp verification
+        //
+        let output = crate::import::verify_zkproof(&zkpass_proof.zkproof);
+
+        Ok((output.result, zkpass_proof))
+    }
+
+    fn get_query_engine_version_info(&self) -> (String, String) {
+        (crate::import::get_query_engine_version(), crate::import::get_query_method_version())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -154,6 +185,7 @@ mod tests {
         println!("Result: {:?}", result);
     }
 
+    /* 
     struct DummyResolver;
     #[async_trait]
     impl KeysetEndpointResolver for DummyResolver {
@@ -170,8 +202,5 @@ mod tests {
             future.await
         }
     }
-
-    fn get_resolver() -> Box<dyn KeysetEndpointResolver> {
-        Box::new(DummyResolver) as Box<dyn KeysetEndpointResolver>
-    }
+    */
 }
