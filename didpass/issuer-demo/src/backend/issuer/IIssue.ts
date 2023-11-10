@@ -4,7 +4,6 @@ import {
 import { ICredentialQRPayload } from "@didpass/issuer-sdk/lib/types/WalletDTO";
 
 export interface IIssue {
-
     getCredentialQRCode(
         did: string,
         credentialId: string,

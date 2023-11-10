@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
 import type { ISessionStorage } from "../storage/ISessionStorage";
 import { ICredentialDatabase } from "./dto/ICredentialDatabase";
-import userDataMock from "../mocks/userDataMock.json"
-import {  IIssuerScanResponse, IssuerScanStatus } from "./dto/IssuerScanStatus";
+import detailCredentialMock from "../mocks/detailCredentialMock.json"
+import { IIssuerScanResponse, IssuerScanStatus } from "./dto/IssuerScanStatus";
 import { v4 as uuidv4 } from "uuid";
 import {
     Credential,
@@ -62,17 +62,13 @@ export class IssuerService implements IIssue {
         result: ICredentialQR;
     }> {
         return new Promise(async (resolve, reject) => {
-            const detailCredential:ICredentialDatabase = {
-                id: 1,
+            /**
+             * First, we need to get the credential from database (in this case, we use mock data)
+             */
+            const detailCredential: ICredentialDatabase = {
+                ...detailCredentialMock,
                 user_did: did,
-                credential_id: "63918bf3-fb19-4079-b93a-e92b43927212",
-                credential_type: "KtpCred",
-                user_data: JSON.stringify({
-                    'credentialSubject': userDataMock
-                }),
-                signed_vc: "",
-                jws_credential: "",
-                is_revoked: false,
+                user_data: JSON.stringify(detailCredentialMock.user_data),
             };
 
             if (!detailCredential) {
@@ -116,6 +112,10 @@ export class IssuerService implements IIssue {
 
             const id = uuidv4();
             const callbackUrl = `${process.env.NEXT_PUBLIC_URL}/api/issuer/agent`;
+
+            /**
+             * After creating the credential, we need to generate the QR Code
+             */
             const qrCode: ICredentialQR = await this.qrGenerator.credentialQR(
                 callbackUrl,
                 did,
@@ -125,7 +125,7 @@ export class IssuerService implements IIssue {
             );
 
             if (qrCode.to == did) {
-                await this.setCredentialScanStatus( qrCode.id, qrCode.to);
+                await this.setCredentialScanStatus(qrCode.id, qrCode.to);
                 return resolve({ result: qrCode });
             } else {
                 return reject("Credential DID is not match with your DID");
@@ -134,7 +134,6 @@ export class IssuerService implements IIssue {
     }
 
     async setCredentialScanStatus(
-        
         qrcodeId: string,
         userDid: string
     ): Promise<void> {
@@ -183,28 +182,21 @@ export class IssuerService implements IIssue {
     async signedVC(credentialPayload: ICredentialQRPayload) {
         try {
             const { did, message, signature } = credentialPayload;
-            const credential = {
-                id: 1,
+            const detailCredential: ICredentialDatabase = {
+                ...detailCredentialMock,
                 user_did: did,
-                credential_id: "63918bf3-fb19-4079-b93a-e92b43927212",
-                credential_type: "KtpCred",
-                user_data: JSON.stringify({
-                    'credentialSubject': userDataMock
-                }), 
-                signed_vc: "",
-                jws_credential: "",
-                is_revoked: false,
-            }
+                user_data: JSON.stringify(detailCredentialMock.user_data),
+            };
 
-            if (credential?.signed_vc) {
-                return credential.signed_vc;
+            if (detailCredential?.signed_vc) {
+                return detailCredential.signed_vc;
             }
 
             const credentialSubject = JSON.parse(
-                credential?.user_data!
+                detailCredential?.user_data!
             ).credentialSubject;
 
-            const type = credential?.credential_type!;
+            const type = detailCredential?.credential_type!;
             const issuanceDetails: IssuanceDetails = {
                 issuer: this.didAccount,
                 metadata: {
@@ -229,26 +221,20 @@ export class IssuerService implements IIssue {
 
     async jwsCredential(credentialPayload: ICredentialQRPayload) {
         try {
-            const { did, credentialId, message, signature } = credentialPayload;
-            const credential = {
-                id: 1,
+            const { did, message, signature } = credentialPayload;
+
+            const detailCredential: ICredentialDatabase = {
+                ...detailCredentialMock,
                 user_did: did,
-                credential_id: "63918bf3-fb19-4079-b93a-e92b43927212",
-                credential_type: "KtpCred",
-                user_data: JSON.stringify({
-                    'credentialSubject': userDataMock
-                }),
-                signed_vc: "",
-                jws_credential: "",
-                is_revoked: false,
+                user_data: JSON.stringify(detailCredentialMock.user_data),
             };
 
-            if (credential?.jws_credential) {
-                return credential.jws_credential;
+            if (detailCredential?.jws_credential) {
+                return detailCredential.jws_credential;
             }
 
             const credentialSubject = JSON.parse(
-                credential?.user_data!
+                detailCredential?.user_data!
             ).credentialSubject;
 
             const keyPem = process.env.KEY_PEM!;
@@ -260,7 +246,7 @@ export class IssuerService implements IIssue {
             const payload: TokenizePayload = {
                 issuer: this.didAccount,
                 receiverDID: did,
-                type: credential?.credential_type!,
+                type: detailCredential?.credential_type!,
                 userData: credentialSubject,
                 message,
                 signature,
@@ -279,7 +265,6 @@ export class IssuerService implements IIssue {
 
     public async checkScanStatus(
         userDid: string,
-        credentialId: string
     ): Promise<any> {
         return new Promise(async (resolve, reject) => {
             try {

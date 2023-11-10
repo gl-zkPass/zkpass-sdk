@@ -1,23 +1,6 @@
 import jwt from "jsonwebtoken";
 import { NextApiRequest } from "next/types";
 
-export const doRequest = async (
-    url: string,
-    config: RequestInit
-): Promise<{
-    result: any;
-    statusCode: number | undefined;
-}> => {
-    return new Promise(async (resolve, reject) => {
-        const response: Response = await fetch(url, config);
-        const result = await response.json().then((data) => data);
-        resolve({
-            result: result,
-            statusCode: response.status,
-        });
-    });
-};
-
 async function decodeJwt(token: string): Promise<any> {
     try {
         const secretKey = process.env.SECRET_KEY || "secret";
@@ -71,7 +54,3 @@ export const authToken = async (req: NextApiRequest): Promise<any> => {
 
     return decoded;
 };
-
-export interface ErrorResponse {
-    message: string;
-}

@@ -9,7 +9,6 @@ import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import Toolbar from "@mui/material/Toolbar";
-import Image from "next/image";
 import * as React from "react";
 import UserDropdown from "../UserDropdown";
 import styles from "./MainContainer.module.css";
@@ -31,7 +30,6 @@ export default function MainContainer(props: Props) {
 
   const drawer = (
     <Box
-      // onClick={handleDrawerToggle}
       sx={{ textAlign: "center", background: "#131313" }}
     >
       <div className={styles.logo}>
@@ -39,7 +37,7 @@ export default function MainContainer(props: Props) {
         <i className={styles.issuer}>Issuer</i>
       </div>
       <Divider />
-      <List>
+      <List className={styles.drawerContainer}>
         <UserDropdown />
       </List>
     </Box>
@@ -64,7 +62,13 @@ export default function MainContainer(props: Props) {
               <b className={styles.ssiid}>didPass</b>
               <i className={styles.issuer}>Issuer</i>
             </div>
-            <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            <Box
+              sx={{
+                display: { xs: "none", sm: "block" },
+                position: "absolute",
+                right: "1rem",
+              }}
+            >
               <UserDropdown />
             </Box>
           </Toolbar>
@@ -90,24 +94,10 @@ export default function MainContainer(props: Props) {
           </Drawer>
         </Box>
       </Box>
-      <Box component="main" sx={{ pt: 9, px: 3, pb: 5, background: "#131313" }}>
-        <Breadcrumbs
-          className={styles.breadcrumbs}
-          separator={
-            <NavigateNextIcon
-              fontSize="small"
-              className={styles.breadcrumbSeparator}
-            />
-          }
-          aria-label="breadcrumb"
-        >
-          {props.breadcrumbs}
-        </Breadcrumbs>
-        <Typography className={styles.title} variant="h5" color={"#ffffff"}>
-          {props.title}
-        </Typography>
-      </Box>
-      <Box component="div" sx={{ px: 3, pt: 3 }}>
+      <Box
+        component="div"
+        sx={{ px: 3, pt: 3, display: "flex", justifyContent: "center" }}
+      >
         {props.children}
       </Box>
     </div>
