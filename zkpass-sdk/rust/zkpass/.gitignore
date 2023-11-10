@@ -1,5 +1,2 @@
-target/CACHEDIR.TAG
-target/debug/
-target/release/
-target/.rust*
+target/
 .idea

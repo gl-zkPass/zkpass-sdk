@@ -22,7 +22,7 @@ impl DataHolder {
         let proof_verifier = ProofVerifier;
         let dvr_token = proof_verifier.get_dvr_token(dvr_file);
 
-        let zkpass_service_url = String::from("https://stag-zkpass-ws.ssi.id/proof");
+        let zkpass_service_url = String::from("https://playground-zkpass.ssi.id/proof");
         //let zkpass_service_url = String::from("http://localhost:10888/proof");
         println!("\n#### starting zkpass proof generation...");
         let start = Instant::now();

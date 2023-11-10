@@ -3,11 +3,11 @@ use std::time::Instant;
 use serde_json::{json, Value};
 use lazy_static::lazy_static;
 use std::collections::HashMap;
+use std::time::{SystemTime, UNIX_EPOCH};
 use std::sync::Mutex;
 use uuid::Uuid;
 use zkpass_client::core::{
-    DataVerificationRequest, KeysetEndpoint, PublicKey, PublicKeyOption,
-    get_current_timestamp, ZkPassError,
+    DataVerificationRequest, KeysetEndpoint, PublicKey, PublicKeyOption, ZkPassError,
 };
 use zkpass_client::interface::{
     ZkPassClient, ZkPassProofMetadataValidator, ZkPassProofVerifier, ZkPassUtility
@@ -27,6 +27,12 @@ lazy_static! {
 }
 
 struct MyMetadataValidator;
+
+fn get_current_timestamp() -> u64 {
+    let now = SystemTime::now();
+    let duration_since_epoch = now.duration_since(UNIX_EPOCH).expect("Time went backwards");
+    duration_since_epoch.as_secs()
+}
 
 impl ZkPassProofMetadataValidator for MyMetadataValidator {
     fn validate(
@@ -132,14 +138,11 @@ impl ProofVerifier {
         let kid = String::from("k-1");
         let jku = String::from("https://raw.githubusercontent.com/zulamdat/zulamdat.github.io/sample-key/zkp-key/verifier-key.json");
         let ep = KeysetEndpoint { jku, kid };
-        //let dvr_id = Uuid::new_v4().to_string().clone();
-
         // issuer's pubkey params:
-        let _issuer_pubkey = PublicKey {
+        let issuer_pubkey = PublicKey {
             x: String::from("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE7f0QoVUsccB9yMwHAR7oVk/L+ZkX"),
             y: String::from("8ZqC1Z0XTaj3BMcMnqh+VzdHZX3yGKa3+uhNAhKWWyfB/r+3E8rPSHtXXQ=="),
         };
-
         let query: Value = serde_json::from_str(&query).unwrap();
 
         //
@@ -168,11 +171,7 @@ impl ProofVerifier {
             query_method_ver: query_engine_version_info.1,
             query: serde_json::to_string(&query).unwrap(),
             user_data_url: Some(String::from("https://xyz.com")),
-            user_data_verifying_key: PublicKeyOption::KeysetEndpoint({
-                let kid = String::from("k-1");
-                let jku = String::from("https://raw.githubusercontent.com/zulamdat/zulamdat.github.io/sample-key/zkp-key/issuer-key.json");
-                KeysetEndpoint { jku, kid }
-            })
+            user_data_verifying_key: PublicKeyOption::PublicKey(issuer_pubkey)
         };
 
         //
