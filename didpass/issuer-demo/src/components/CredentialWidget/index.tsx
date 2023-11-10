@@ -1,10 +1,11 @@
 import { PrimaryButton } from "../Button/PrimaryButton";
 import styles from "./CredentialWidget.module.css";
-import { Box, Tooltip } from "@mui/material";
+import {  Tooltip } from "@mui/material";
 import { QrCodeScanner } from "@mui/icons-material";
 import { getToken } from "@/utils/cookie";
 import { QR } from "@/backend/types/QR";
 import { QrModalConfig } from "@/backend/types/QRModalConfig";
+import CardContainer from "../Container/CardContainer";
 
 const IndividualCredential = (key: string, value: string) => {
   return (
@@ -60,15 +61,15 @@ const CredentialWidget = (props: Props) => {
   };
   return (
     <>
-      <Box
-        component="div"
-        sx={{ width: { sm: "90vw", md: "50vw" } }}
-        className={styles.credentialSubject}
-      >
+      <CardContainer style={{ marginTop: "4rem" }}>
         {Object.keys(userData).map((key) => {
           return IndividualCredential(key, userData[key]);
         })}
-      </Box>
+        <p className={styles.fakeInformationText}>
+          *The displayed KTP data is fake and for demo purposes. Not for official
+          use.
+        </p>
+      </CardContainer>
       <div className={styles.actionButtonContainer}>
         <Tooltip
           title={"Sync to wallet using VC"}

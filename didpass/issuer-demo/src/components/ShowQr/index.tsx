@@ -92,36 +92,34 @@ const ShowQr = (props: Props) => {
   };
 
   return (
-    <div className={styles.showQr}>
-      <Toast handleClose={handleToastClose} config={toastConfig} />
-      <div className={styles.container}>
-        <p className={styles.info}>
-          {props.description ||
-            `Please use your wallet to scan this QR code to ${props.purpose} your SSI account.`}
-        </p>
-        <QRCode
-          id="connect-qr"
-          qrStyle="dots"
-          value={JSON.stringify(props.qr.qrCode)}
-          logoImage={LogoBlack.src}
-          removeQrCodeBehindLogo={true}
-          quietZone={10}
-          size={500}
-        />
-        {props.note ? (
-          <span className={styles.note}>{props.note}</span>
-        ) : (
-          <div className={styles.spacing}></div>
-        )}
-        <div className={styles.buttonContainer}>
-          <PrimaryButton onClick={copyQr}>Copy QR</PrimaryButton>
-          <PrimaryButton onClick={downloadQr}>Download QR</PrimaryButton>
-        </div>
-        <div className={styles.separator} />
-        <div className={styles.buttonContainer}>
+      <div className={styles.showQr}>
+        <Toast handleClose={handleToastClose} config={toastConfig} />
+        <div className={styles.container}>
+          <p className={styles.info}>
+            {props.description ||
+              `Please use your wallet to scan this QR code to ${props.purpose} your SSI account.`}
+          </p>
+          <QRCode
+            id="connect-qr"
+            qrStyle="dots"
+            value={JSON.stringify(props.qr.qrCode)}
+            logoImage={LogoBlack.src}
+            removeQrCodeBehindLogo={true}
+            quietZone={10}
+            size={props.size}
+          />
+          {props.note ? (
+            <span className={styles.note}>{props.note}</span>
+          ) : (
+            <div className={styles.spacing}></div>
+          )}
+          <div className={styles.buttonContainer}>
+            <PrimaryButton onClick={copyQr}>Copy QR</PrimaryButton>
+            <PrimaryButton onClick={downloadQr}>Download QR</PrimaryButton>
+          </div>
+          <div className={styles.buttonContainer}></div>
         </div>
       </div>
-    </div>
   );
 };
 

@@ -143,8 +143,6 @@ const Credentials = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [claimQr, token]);
 
-  
-
   return (
     <MainContainer title="Credential List">
       <div>

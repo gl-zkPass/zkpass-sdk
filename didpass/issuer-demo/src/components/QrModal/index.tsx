@@ -29,7 +29,7 @@ const QrModal = ({ config, handleClose, qr }: Props) => {
         <div className={styles.container}>
           <div className={styles.bodyContainer}>
             <ShowQr
-              size={500}
+              size={300}
               qr={qr}
               qrConnect={false}
               description={config.description}

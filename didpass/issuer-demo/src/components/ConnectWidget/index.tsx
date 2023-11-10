@@ -12,30 +12,31 @@ const ConnectWidget = (props: Props) => {
   };
 
   return (
-    <div className={styles.connectWidget} data-testid="connect-widget">
-      <div className={styles.headlineSubhead}>
-        <b className={styles.connectYourKyc}>Connect your digital wallet</b>
-        <div className={styles.thisWebsiteIsContainer}>
-          <p className={styles.thisWebsiteIs}>
-            This website is for testing only
-          </p>
-          <ul className={styles.pleaseDontUsePersonalOrS}>
-            <li className={styles.pleaseDontUse}>
-              Please don't use personal or sensitive data when creating issuer
-              or verifier proofs.
-            </li>
-            <li>Test data will be deleted within a week of creation.</li>
-          </ul>
+      <div className={styles.connectWidget} data-testid="connect-widget">
+        <div className={styles.headlineSubhead}>
+          <b className={styles.connectYourKyc}>Connect your digital wallet</b>
+          <div className={styles.thisWebsiteIsContainer}>
+            <p className={styles.thisWebsiteIs}>
+              This website is for testing only
+            </p>
+            <p className={styles.warningText}>
+              Please refrain from using personal or sensitive data when creating
+              issuer or verifier proofs on this platform. This site is
+              designated for testing purposes, and any information entered here
+              is not secure or intended for real-world use. Exercise caution and
+              avoid inputting any data that you consider private or
+              confidential.
+            </p>
+          </div>
         </div>
+        <button
+          data-testid="connect-widget-generate-button"
+          className={styles.landingPageButtonPrimary}
+          onClick={onConnectClick}
+        >
+          <b className={styles.getNotifiedAbout}>Connect</b>
+        </button>
       </div>
-      <button
-        data-testid="connect-widget-generate-button"
-        className={styles.landingPageButtonPrimary}
-        onClick={onConnectClick}
-      >
-        <b className={styles.getNotifiedAbout}>Connect</b>
-      </button>
-    </div>
   );
 };
 

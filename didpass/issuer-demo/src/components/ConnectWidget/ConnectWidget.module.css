@@ -14,15 +14,8 @@
 
 .thisWebsiteIs {
     margin: 0;
-}
-
-.pleaseDontUse {
-    margin-bottom: 0;
-}
-
-.pleaseDontUsePersonalOrS {
-    margin: 0;
-    padding-left: var(--padding-lgi);
+    font-weight: bold;
+    text-align: center;
 }
 
 .thisWebsiteIsContainer {
@@ -40,6 +33,10 @@
     align-items: center;
     justify-content: flex-start;
     gap: var(--gap-3xs);
+}
+
+.warningText{
+    text-align: center;
 }
 
 .icon {
@@ -87,6 +84,4 @@
     font-size: var(--font-size-sm);
     color: var(--white);
     font-family: var(--font-roboto);
-    width: 100vw;
-    height: 100vh;
 }

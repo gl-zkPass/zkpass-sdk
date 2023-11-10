@@ -12,6 +12,7 @@ import Toolbar from "@mui/material/Toolbar";
 import * as React from "react";
 import UserDropdown from "../UserDropdown";
 import styles from "./MainContainer.module.css";
+import ConnectHeader from "../ConnectHeader";
 
 interface Props {
   breadcrumbs?: React.ReactNode;
@@ -29,15 +30,12 @@ export default function MainContainer(props: Props) {
   };
 
   const drawer = (
-    <Box
-      sx={{ textAlign: "center", background: "#131313" }}
-    >
+    <Box sx={{ textAlign: "center", background: "#131313" }}>
       <div className={styles.logo}>
-        <b className={styles.ssiid}>didPass</b>
-        <i className={styles.issuer}>Issuer</i>
+        <ConnectHeader title="Issuer-demo" />
       </div>
       <Divider />
-      <List className={styles.drawerContainer}>
+      <List className={styles.drawerContainer} sx={{ marginTop:{xs:"4rem"} }}>
         <UserDropdown />
       </List>
     </Box>
@@ -59,8 +57,7 @@ export default function MainContainer(props: Props) {
               <MenuIcon />
             </IconButton>
             <div className={styles.logo}>
-              <b className={styles.ssiid}>didPass</b>
-              <i className={styles.issuer}>Issuer</i>
+              <ConnectHeader title="Issuer-demo" />
             </div>
             <Box
               sx={{
