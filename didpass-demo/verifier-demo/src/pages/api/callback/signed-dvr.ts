@@ -38,7 +38,7 @@ export default async function handler(
         );
       const verifyRequest = await requestService.retrieveSignedDvr(sessionId, siweDto);
 
-      res.status(StatusCodes.OK).send({
+      return res.status(StatusCodes.OK).send({
         status: StatusCodes.OK,
         statusText: "Full Dvr created",
         data: verifyRequest,
@@ -47,7 +47,6 @@ export default async function handler(
       throw "Signature is incorrect or missing";
     }
   }catch(err) {
-    console.log(err);
     return res.status(StatusCodes.BAD_REQUEST).send({
       status: StatusCodes.BAD_REQUEST,
       statusText: err as string,

@@ -11,6 +11,7 @@ import { DvrQueryCacheResponse, VerificationStatus, ZkPassQueryCriteria } from '
 import { QueryBuilderService } from './QueryBuilderService';
 import { StatusCodes } from 'http-status-codes';
 import { CheckStatusResponse } from '@backend/types/ResponseTypes';
+import { VerifierInstance } from './sdk/VerifierInstance';
 
 @injectable()
 export class VerifierService {
@@ -20,9 +21,10 @@ export class VerifierService {
 
   public constructor(
     @inject("VerifierRepository") verifierRepository: VerifierRepository,
-    @inject('QueryBuilderService') queryBuilder: QueryBuilderService
+    @inject('QueryBuilderService') queryBuilder: QueryBuilderService,
+    @inject("VerifierInstance") verifierInstance: VerifierInstance
   ) {
-    this.verifier = new Verifier();
+    this.verifier = verifierInstance.getInstance();
     this.verifierRepository = verifierRepository;
     this.queryBuilder = queryBuilder;
   }
@@ -167,8 +169,6 @@ export class VerifierService {
         if (!timeout) {
           timeout = minutesToSeconds(5);
         }
-        
-        this.verifySiwe(siweDto);
 
         if (!privateKey || !jkuIssuer || !jkuVerifier || !verifierDid) {
           throw "Missing value of private key or jku!";
@@ -208,7 +208,7 @@ export class VerifierService {
         );
 
         const hostUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
-        const callbackPath = "/api/callback/wallet-callback";
+        const callbackPath = "/api/callback/verify-proof";
         const callbackUrl = `${hostUrl}${callbackPath}?sessionId=${sessionId}`;
 
         const verifyRequest: CreateDvrResult = {

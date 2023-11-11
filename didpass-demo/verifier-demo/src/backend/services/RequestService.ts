@@ -1,18 +1,24 @@
 import { injectable, inject } from 'inversify';
-import { SIWEDTO } from '@didpass/verifier-sdk';
+import { SIWEDTO, VerifyZkpassProofOutput } from '@didpass/verifier-sdk';
+
 import { VerifierService } from './VerifierService';
+import { ProofVerifierService } from './ProofVerifierService';
 import { CreateSignedDvrParams, RequestVerifyParams } from '@backend/types/VerifierParamTypes';
-import { AuthVerificationResultWithTimeout, CreateDvrResult, CreateDvrResultWithTimeout } from '@backend/types/VerifierResultTypes';
 import { CheckStatusResponse } from '@backend/types/ResponseTypes';
+import { WalletCallbackParams } from '@backend/types/ProofVerifierTypes';
+import { AuthVerificationResultWithTimeout, CreateDvrResult, CreateDvrResultWithTimeout } from '@backend/types/VerifierResultTypes';
 
 @injectable()
 export class RequestService {
   private verifier;
+  private proofVerifier;
 
   public constructor(
-    @inject('VerifierService') verifier: VerifierService
+    @inject('VerifierService') verifier: VerifierService,
+    @inject('ProofVerifierService') proofVerifier: ProofVerifierService
   ){
     this.verifier = verifier;
+    this.proofVerifier = proofVerifier;
   };
 
   /**
@@ -48,6 +54,9 @@ export class RequestService {
     sessionId: string,
     siweDto: SIWEDTO
   ): Promise<CreateDvrResultWithTimeout> {
+    // Verify SIWE signature
+    this.verifier.verifySiwe(siweDto);
+
     // Retrieve previously cached DVR
     const cachedDvrData = await this.verifier.getDvrFromCache(sessionId);
     if (!cachedDvrData) {
@@ -84,9 +93,22 @@ export class RequestService {
     return result;
   };
 
+  /**
+   * Handle verifying proof
+   * 
+   * @param params
+   * 
+   * @returns {Promise<VerifyZkpassProofOutput | string>} 
+   */
   public async verifyProof(
+    params: WalletCallbackParams
+  ): Promise<VerifyZkpassProofOutput | string>{
+    // Verfiy SIWE signature
+    const { siweDto } = params;
+    this.verifier.verifySiwe(siweDto);
 
-  ){
+    const result = await this.proofVerifier.verifyProof(params);
 
+    return result;
   };
 };

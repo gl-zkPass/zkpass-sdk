@@ -5,6 +5,7 @@ import { VerifierService } from './services/VerifierService';
 import { RequestService } from './services/RequestService';
 import VerifierRepository from './services/VerifierRepository';
 import { QueryBuilderService } from './services/QueryBuilderService';
+import { VerifierInstance } from './services/sdk/VerifierInstance';
 import "reflect-metadata";
 
 const container = new Container();
@@ -12,6 +13,11 @@ const container = new Container();
 container
   .bind<ISessionStorage>("ISessionStorage")
   .to(RedisSessionStorage)
+  .inSingletonScope();
+
+container
+  .bind<VerifierInstance>("VerifierInstance")
+  .to(VerifierInstance)
   .inSingletonScope();
 
 container
