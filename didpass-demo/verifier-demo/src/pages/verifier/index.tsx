@@ -18,6 +18,7 @@ export default function Verifier() {
       }).then((res) => {
         return res.json();
       }).then((data) => {
+        console.log(data);
         setQrData(JSON.stringify(data.data.qrCode));
       })
     };
