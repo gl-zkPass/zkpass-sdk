@@ -1,5 +1,5 @@
 import { VerifyField, VerifyOperator } from './credentials/type';
-import { VerifyCase } from '../mocks/useCase';
+import { VerifyCase } from '../cases/useCase';
 
 export interface VerifyCaseType {
   case: VerifyCase;
@@ -14,12 +14,14 @@ export interface ZkPassQueryCriteria {
   value?: string | number;
 }
 
-export interface ErrorResponse {
-  message: string;
+export interface DvrQueryCacheResponse {
+  queryId: string;
+  dvrId: string;
+  dvrTitle: string;
 }
 
-export interface VerifierMessage {
-  status: number;
-  statusText: string;
-  data?: any;
+export enum VerificationStatus {
+  PENDING = "pending",
+  VERIFIED = "verified",
+  NOT_FOUND = "not found",
 }

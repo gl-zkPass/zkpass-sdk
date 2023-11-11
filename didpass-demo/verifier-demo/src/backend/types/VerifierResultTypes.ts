@@ -1,4 +1,16 @@
-export interface CreateDvrQueryRequest {
+import { RequestMetaform } from "@didpass/verifier-sdk";
+
+export interface AuthVerificationResult {
+  id: string;
+  qrCode: RequestMetaform;
+  requestedAt: number;
+}
+
+export interface AuthVerificationResultWithTimeout extends AuthVerificationResult {
+  expiredAt: number;
+}
+
+export interface CreateDvrResult {
   id: string;
   thid: string;
   from: string;
@@ -13,6 +25,7 @@ export interface CreateDvrQueryRequest {
   requestedAt: number;
 }
 
-export interface CreateDvrQueryRequestWithTimeout extends CreateDvrQueryRequest {
+export interface CreateDvrResultWithTimeout extends CreateDvrResult {
   expiredAt: number;
 }
+
