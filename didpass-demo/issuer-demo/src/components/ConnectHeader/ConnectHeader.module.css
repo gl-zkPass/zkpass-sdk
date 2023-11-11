@@ -1,0 +1,36 @@
+.logoIcon {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.ssiid {
+    position: relative;
+    line-height: 32px;
+}
+
+.logo {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--gap-5xs);
+}
+
+.logo,
+.navigation,
+.navigationParent {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.navigation {
+    background-color: transparent;
+    flex-direction: row;
+    padding: 16px 15px;
+    align-items: center;
+}
+
+.navigationParent {
+    flex-direction: column;
+    align-items: flex-start;
+}
