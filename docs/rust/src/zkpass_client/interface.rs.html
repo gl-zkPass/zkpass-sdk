@@ -227,16 +227,30 @@
 <a href="#227" id="227">227</a>
 <a href="#228" id="228">228</a>
 <a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a>
+<a href="#232" id="232">232</a>
+<a href="#233" id="233">233</a>
+<a href="#234" id="234">234</a>
+<a href="#235" id="235">235</a>
+<a href="#236" id="236">236</a>
+<a href="#237" id="237">237</a>
+<a href="#238" id="238">238</a>
+<a href="#239" id="239">239</a>
+<a href="#240" id="240">240</a>
+<a href="#241" id="241">241</a>
+<a href="#242" id="242">242</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>serde_json::Value;
 <span class="kw">use </span>async_trait::async_trait;
 <span class="kw">use </span><span class="kw">crate</span>::core::<span class="kw-2">*</span>;
+<span class="kw">use </span>zkpass_core::interface::get_current_timestamp;
 
 <span class="attr">#[async_trait]
 </span><span class="doccomment">///
-/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***Defines a function for generating ZkPass Proof.*** &lt;/span&gt;
+/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***Defines a function for generating zkPass Proof.*** &lt;/span&gt;
 /// 
 /// `ZkPassProofGenerator` provides an asynchronous abstraction for generating
-/// ZkPass Proofs Implement this trait to define custom proof generation logic
+/// zkPass Proofs Implement this trait to define custom proof generation logic
 /// for the ZkPass service.
 ///
 /// Implementors of this trait should handle communication with a zkPass service
@@ -347,52 +361,39 @@
 }
 
 <span class="comment">//
-</span><span class="doccomment">/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***Defines a function for DVR metadata validation.*** &lt;/span&gt;
+</span><span class="doccomment">/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***Defines a callback function for post-ZKP metadata validation on the DVR.*** &lt;/span&gt;
 /// 
 </span><span class="kw">pub trait </span>ZkPassProofMetadataValidator {
     <span class="doccomment">/// # **Description**
     /// &lt;span style=&quot;font-size: 1.2em; color: #996515;&quot;&gt; ***Validates the metadata of a DVR.*** &lt;/span&gt;
     /// 
     /// # **Parameters**
-    /// The parameters are passed here by the zkpass-client library as part of the verify_zkpass_proof function call.
-    /// All parameters are various metadata values which were used by zkPass when processing the DVR query, and the Proof Verifier needs
-    /// to verify the metadata to ensure the integrity of the data processing.
-    /// The struct that implements this trait is a callback function which needs to validate the DVR metadata that zkPass uses.
     /// 
     /// | Argument                                                       | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`dvr_title`** &lt;/span&gt;            | The title of the DVR|
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`dvr_id`** &lt;/span&gt;               | The unique id of the DVR |
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`dvr_digest`** &lt;/span&gt;            | The hash digest of the DVR |
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`user_data_verifying_key`** &lt;/span&gt;| The public key used by zkPass Service to verify the user data |
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`zkpass_proof_ttl`** &lt;/span&gt;       | The timestamp of the proof |
+    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`dvr_id`** &lt;/span&gt;               | The unique id of the DVR that needs to be validated. The validator needs to find the DVR and return it. |
     /// 
     /// | Return Value                                                   | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// |&lt;span style=&quot;color: green;&quot;&gt; **`Result&lt;(), ZkPassError&gt;`** &lt;/span&gt; | On Ok, nothing is returned  &lt;br&gt; On Err, the ZkPassError is returned |
+    /// |&lt;span style=&quot;color: green;&quot;&gt; **`Result&lt;(DataVerificationRequest, PublicKey, u64), ZkPassError&gt;`** &lt;/span&gt; | On Ok, the (expected DVR, expected verifying DVR key, expected ttl) are returned  &lt;br&gt; On Err, the ZkPassError is returned |
     </span><span class="kw">fn </span>validate(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        dvr_title:                 <span class="kw-2">&amp;</span>str,
-        dvr_id:                    <span class="kw-2">&amp;</span>str,
-        dvr_digest:                <span class="kw-2">&amp;</span>str,
-        user_data_verifying_key:   <span class="kw-2">&amp;</span>PublicKey,
-        dvr_verifying_key:         <span class="kw-2">&amp;</span>PublicKey,
-        zkpass_proof_ttl:          u64
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ZkPassError&gt;;
+        dvr_id:                    <span class="kw-2">&amp;</span>str
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(DataVerificationRequest, PublicKey, u64), ZkPassError&gt;;
 }
 
 <span class="doccomment">/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***Defines functions for proof verification.*** &lt;/span&gt;
 /// 
 </span><span class="kw">pub trait </span>ZkPassProofVerifier {
     <span class="doccomment">/// # **Description**
-    /// &lt;span style=&quot;font-size: 1.2em; color: #996515;&quot;&gt; ***Verifies a ZkPass Proof.*** &lt;/span&gt;
+    /// &lt;span style=&quot;font-size: 1.2em; color: #996515;&quot;&gt; ***Verifies a zkPass Proof.*** &lt;/span&gt;
     /// 
     /// # **Parameters**
     /// 
     /// | Argument                                                       | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`zkpass_proof_token`** &lt;/span&gt;   | The signed ZkPass Proof JWS token to be verified|
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`validator`** &lt;/span&gt;            | The validator callback that implements `ZkPassProofMetadataValidator`` trait |
+    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`zkpass_proof_token`** &lt;/span&gt;   | The signed zkPass Proof JWS token to be verified|
+    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`validator`** &lt;/span&gt;            | The validator callback that implements `ZkPassProofMetadataValidator` trait. The validator is used to validate the DVR metadata used by the zkPass Service.|
     /// 
     /// | Return Value                                                   | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
@@ -408,30 +409,55 @@
         </span><span class="kw">let </span>(result, zkpass_proof) = <span class="self">self</span>.verify_zkpass_proof_internal(zkpass_proof_token)<span class="question-mark">?</span>;
 
         <span class="comment">// 
-        //  zkpass proof metadata validations
-        //  done using validator callback 
+        //  post-zkp metadata validations
+        //  call the metadata validator callback, passing the dvr_id
+        //    the callback returns the expected: (dvr, dvr_verifying_key, ttl)
         //
-        </span>validator.validate(
-            zkpass_proof.dvr_title.as_str(),
-            zkpass_proof.dvr_id.as_str(),
-            zkpass_proof.dvr_digest.as_str(),
-            <span class="kw-2">&amp;</span>zkpass_proof.user_data_verifying_key,
-            <span class="kw-2">&amp;</span>zkpass_proof.dvr_verifying_key,
-            zkpass_proof.time_stamp
-            )<span class="question-mark">?</span>;
+        </span><span class="kw">let </span>(expected_dvr, expected_dvr_verifying_key, expected_ttl) = validator.validate(zkpass_proof.dvr_id.as_str())<span class="question-mark">?</span>;
+
+        <span class="comment">//
+        //  checking for valid dvr
+        //
+        </span><span class="kw">if </span>zkpass_proof.dvr_digest != expected_dvr.get_sha256_digest() {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::MistmatchedDvrDigest);
+        }
+
+        <span class="comment">//
+        //  checking for valid keys used to verify user data &amp; dvr
+        //
+        </span><span class="kw">match </span>expected_dvr.user_data_verifying_key {
+            PublicKeyOption::PublicKey(key) =&gt; {
+                <span class="kw">if </span>key != zkpass_proof.user_data_verifying_key {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::MistmatchedUserDataVerifyingKey);
+                }
+            }
+            <span class="kw">_ </span>=&gt; {} <span class="comment">// get the pubkey from endpoint
+        </span>}
+        <span class="kw">if </span>zkpass_proof.dvr_verifying_key != expected_dvr_verifying_key {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::MistmatchedDvrVerifyingKey);
+        }
+
+        <span class="comment">//
+        // checking for proof token timeout
+        //
+        </span><span class="kw">let </span>now = get_current_timestamp();
+        <span class="kw">if </span>(expected_ttl &gt; <span class="number">0</span>) &amp;&amp; (now &gt; zkpass_proof.time_stamp) {
+            <span class="kw">if </span>(now - zkpass_proof.time_stamp) &gt; expected_ttl {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::ExpiredZkPassProof);
+            }
+        }
 
         <span class="prelude-val">Ok</span>((result, zkpass_proof))
     }
 
     <span class="doccomment">/// # **Description**
-    /// &lt;span style=&quot;font-size: 1.2em; color: #996515;&quot;&gt; ***Verifies a ZkPass Proof internally.*** &lt;/span&gt;
+    /// &lt;span style=&quot;font-size: 1.2em; color: #996515;&quot;&gt; ***Verifies a zkPass Proof internally.*** &lt;/span&gt;
     /// 
     /// # **Parameters**
     /// 
     /// | Argument                                                       | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`zkpass_proof_token`** &lt;/span&gt;   | The signed ZkPass Proof JWS token to be verified|
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`validator`** &lt;/span&gt;            | The callback that implements `ZkPassProofMetadataValidator`` trait |
+    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`zkpass_proof_token`** &lt;/span&gt;   | The signed zkPass Proof JWS token to be verified|
     /// 
     /// | Return Value                                                   | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
