@@ -3,7 +3,6 @@ use std::time::Instant;
 use serde_json::{json, Value};
 use lazy_static::lazy_static;
 use std::collections::HashMap;
-use std::time::{SystemTime, UNIX_EPOCH};
 use std::sync::Mutex;
 use uuid::Uuid;
 use zkpass_client::core::{
@@ -25,25 +24,22 @@ lazy_static! {
         Mutex::new(map)
     };
 }
-
 struct MyMetadataValidator;
 
-fn get_current_timestamp() -> u64 {
-    let now = SystemTime::now();
-    let duration_since_epoch = now.duration_since(UNIX_EPOCH).expect("Time went backwards");
-    duration_since_epoch.as_secs()
-}
+impl MyMetadataValidator {
+    fn get_expected_dvr_verifying_key(&self) -> PublicKey {
+        let expected_dvr_verifying_key = PublicKey {
+            x: String::from("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU"),
+            y: String::from("IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA=="),
+        };
 
-impl ZkPassProofMetadataValidator for MyMetadataValidator {
-    fn validate(
+        expected_dvr_verifying_key
+    }
+
+    fn get_expected_dvr(
         &self,
-        dvr_title: &str,
-        dvr_id: &str,
-        dvr_digest: &str,
-        user_data_verifying_key: &PublicKey,
-        dvr_verifying_key: &PublicKey,
-        zkpass_proof_ttl: u64,
-    ) -> Result<(), ZkPassError> {
+        dvr_id: &str
+    ) -> Result<DataVerificationRequest, ZkPassError> {
         //
         //  find the DVR in the table
         //
@@ -61,54 +57,18 @@ impl ZkPassProofMetadataValidator for MyMetadataValidator {
             }
         }
 
-        let expected_user_data_verifying_key = PublicKey {
-            x: String::from("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE7f0QoVUsccB9yMwHAR7oVk/L+ZkX"),
-            y: String::from("8ZqC1Z0XTaj3BMcMnqh+VzdHZX3yGKa3+uhNAhKWWyfB/r+3E8rPSHtXXQ=="),
-        };
+        Ok(dvr)
+    }
+}
 
-        let expected_dvr_verifying_key = PublicKey {
-            x: String::from("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU"),
-            y: String::from("IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA=="),
-        };
+impl ZkPassProofMetadataValidator for MyMetadataValidator {
+    fn validate(
+        &self,
+        dvr_id: &str
+    ) -> Result<(DataVerificationRequest, PublicKey, u64), ZkPassError> {
+        let expected_ttl: u64 = 600;
 
-        //
-        //  checking for the valid dvr
-        //
-        if dvr_title != dvr.dvr_title {
-            return Err(ZkPassError::MistmatchedDvrTitle);
-        }
-
-        if dvr_id != dvr.dvr_id {
-            return Err(ZkPassError::MistmatchedDvrId);
-        }
-
-        if dvr_digest != dvr.get_sha256_digest() {
-            return Err(ZkPassError::MistmatchedDvrDigest);
-        }
-
-        if *dvr_verifying_key != expected_dvr_verifying_key {
-            return Err(ZkPassError::MistmatchedDvrVerifyingKey);
-        }
-
-        //
-        //  checking for valid key used to verify user data
-        //
-        if *user_data_verifying_key != expected_user_data_verifying_key {
-            return Err(ZkPassError::MistmatchedUserDataVerifyingKey);
-        }
-
-        //
-        // checking for proof token timeout
-        //
-        if zkpass_proof_ttl > 0 {
-            let diff: i64 = (get_current_timestamp() as i64) - (zkpass_proof_ttl as i64);
-            //println!("time-diff={}", diff);
-            if diff >= 10000000 {
-                return Err(ZkPassError::ExpiredZkPassProof);
-            }
-        }
-
-        Ok(())
+        Ok((self.get_expected_dvr(dvr_id)?, self.get_expected_dvr_verifying_key(), expected_ttl))
     }
 }
 
@@ -170,7 +130,7 @@ impl ProofVerifier {
             query_engine_ver: query_engine_version_info.0,
             query_method_ver: query_engine_version_info.1,
             query: serde_json::to_string(&query).unwrap(),
-            user_data_url: Some(String::from("https://xyz.com")),
+            user_data_url: Some(String::from("https://hostname/api/user_data/")),
             user_data_verifying_key: PublicKeyOption::PublicKey(issuer_pubkey)
         };
 
