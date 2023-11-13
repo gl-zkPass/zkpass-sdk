@@ -1,7 +1,5 @@
 import { Container }from 'inversify';
 import { ZkPassProofMetadataValidator } from '@didpass/verifier-sdk';
-import { RedisSessionStorage } from './storage/Redis/RedisSessionStorage';
-import { ISessionStorage } from './storage/ISessionStorage';
 import { VerifierService } from './services/VerifierService';
 import { RequestService } from './services/RequestService';
 import VerifierRepository from './services/VerifierRepository';
@@ -12,11 +10,6 @@ import { MetadataValidator } from './services/zkpass/MetadataValidator';
 import "reflect-metadata";
 
 const container = new Container();
-
-container
-  .bind<ISessionStorage>("ISessionStorage")
-  .to(RedisSessionStorage)
-  .inSingletonScope();
 
 container
   .bind<VerifierInstance>("VerifierInstance")

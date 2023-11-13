@@ -53,6 +53,7 @@ const ShowQr = () => {
         const status = (await req.json()).data;
 
         if (req.ok) {
+          console.log(status.statusType);
           if (status.statusType === VerificationStatus.PENDING) return;
           else if (status.statusType === VerificationStatus.VERIFIED) router.push({
             pathname: '/result',
@@ -88,7 +89,7 @@ const ShowQr = () => {
         <QRCode
           id="connect-qr"
           style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-          size={220}
+          size={340}
           qrStyle="dots"
           value={JSON.stringify(qrData?.qrCode)}
           logoImage={LogoBlack.src}

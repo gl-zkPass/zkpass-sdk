@@ -6,10 +6,6 @@ export interface AuthVerificationResult {
   requestedAt: number;
 }
 
-export interface AuthVerificationResultWithTimeout extends AuthVerificationResult {
-  expiredAt: number;
-}
-
 export interface CreateDvrResult {
   id: string;
   thid: string;
@@ -24,8 +20,3 @@ export interface CreateDvrResult {
   };
   requestedAt: number;
 }
-
-export interface CreateDvrResultWithTimeout extends CreateDvrResult {
-  expiredAt: number;
-}
-

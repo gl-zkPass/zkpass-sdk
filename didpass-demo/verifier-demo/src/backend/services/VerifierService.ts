@@ -5,7 +5,7 @@ import { DVRDTO, DataVerificationRequest, GenerateQrCodeDTO, KeysetEndpointWrapp
 import { nowInUnix } from '../helper';
 import VerifierRepository from './VerifierRepository';
 import { CreateSignedDvrParams, GenerateZkpassQueryParams, RequestVerifyParams } from '../types/VerifierParamTypes';
-import { AuthVerificationResult, AuthVerificationResultWithTimeout, CreateDvrResult, CreateDvrResultWithTimeout } from '../types/VerifierResultTypes';
+import { AuthVerificationResult, CreateDvrResult } from '../types/VerifierResultTypes';
 import { VerifyCase, retrieveCaseType, verifyCaseMap } from '../cases/UseCase';
 import { DvrQueryCacheResponse, VerificationStatus, ZkPassQueryCriteria } from '@backend/types/VerifierTypes';
 import { QueryBuilderService } from './QueryBuilderService';
@@ -41,7 +41,7 @@ export class VerifierService {
   ): Promise<CheckStatusResponse> {
     // fetch authrequest from cache
     const cachedAuthRequest =
-      await this.verifierRepository.getVerificationRequestFromCache(sessionId);
+      this.verifierRepository.getVerificationRequestFromCache(sessionId);
 
     // if found return status pending
     if (cachedAuthRequest) {
@@ -54,7 +54,7 @@ export class VerifierService {
 
     // fetch authrequest from db
     const persistentAuthRequest =
-      await this.verifierRepository.getZkpassProofFromDB(sessionId);
+      this.verifierRepository.getZkpassProofFromDB(sessionId);
 
     // if found return status verified
     if (persistentAuthRequest && persistentAuthRequest.status) {
@@ -78,11 +78,11 @@ export class VerifierService {
    * 
    * @param params 
    * 
-   * @returns {Promise<AuthVerificationResultWithTimeout | string>}
+   * @returns {Promise<AuthVerificationResult | string>}
    */
   async requestVerification(
     params: RequestVerifyParams
-  ): Promise<AuthVerificationResultWithTimeout | string> {
+  ): Promise<AuthVerificationResult | string> {
     return new Promise(async (resolve, reject) => {
       try {
         const { dvrId, dvrTitle, queryId } = params;
@@ -112,10 +112,6 @@ export class VerifierService {
           qrCode: qrCode,
           requestedAt: nowInUnix(),
         };
-        const authRequestWithTimeout: AuthVerificationResultWithTimeout = {
-          ...authRequest,
-          expiredAt: timeout + authRequest.requestedAt,
-        };
 
         // Cache Query
         const dvrRequest = {
@@ -124,15 +120,15 @@ export class VerifierService {
           queryId,
         };
 
-        await this.verifierRepository.cacheValue(
+        this.verifierRepository.cacheValue(
           `${sessionId}_query`,
           dvrRequest
         ); // Cache corresponding sessionID for a query
-        await this.verifierRepository.cacheVerificationRequest(
-          authRequestWithTimeout
+        this.verifierRepository.cacheVerificationRequest(
+          authRequest
         ); // Cache QR data
 
-        resolve(authRequestWithTimeout);
+        resolve(authRequest);
       } catch (err) {
         reject(err);
       }
@@ -144,11 +140,11 @@ export class VerifierService {
    * 
    * @param params 
    * 
-   * @returns {{Promise<CreateDvrResultWithTimeout>}} 
+   * @returns {{Promise<CreateDvrResult>}} 
    */
   public async createSignedDvr(
     params: CreateSignedDvrParams
-  ): Promise<CreateDvrResultWithTimeout> {
+  ): Promise<CreateDvrResult> {
     return new Promise(async (resolve, reject) => {
       try {
         const privateKey = process.env.VERIFIER_PRIVATE_KEY_PEM;
@@ -226,14 +222,9 @@ export class VerifierService {
           requestedAt: nowInUnix(),
         };
 
-        //Cache the signed DVR result
-        const verifyRequestWithTimeout: CreateDvrResultWithTimeout = {
-          ...verifyRequest,
-          expiredAt: timeout + verifyRequest.requestedAt,
-        };
-        await this.verifierRepository.cacheSignedDvr(verifyRequestWithTimeout); // Cache the dvr_id (id) corresponding with the query
+        this.verifierRepository.cacheSignedDvr(verifyRequest); // Cache the dvr_id (id) corresponding with the query
         
-        return resolve(verifyRequestWithTimeout);
+        return resolve(verifyRequest);
       } catch (err) {
         reject("Query is not correct");
       }

@@ -1,88 +1,84 @@
 import { injectable, inject } from 'inversify';
 import prisma from "../../lib/prisma";
 import { verification } from '@prisma/client';
-import type { ISessionStorage } from "../storage/ISessionStorage";
-import { AuthVerificationResultWithTimeout, CreateDvrResultWithTimeout } from "@backend/types/VerifierResultTypes";
+import { AuthVerificationResult, CreateDvrResult } from "@backend/types/VerifierResultTypes";
 import { VerifyZkpassProofOutput } from "@didpass/verifier-sdk";
+import { storageLookup } from '@backend/storage/StorageLookup';
 
 @injectable()
 export default class VerifierRepository {
   private prisma;
-  private sessionStorage: ISessionStorage;
+  private storageLookup;
 
-  constructor(@inject("ISessionStorage") sessionStorage: ISessionStorage) {
+  constructor() {
     this.prisma = prisma;
-    this.sessionStorage = sessionStorage;
+    this.storageLookup = storageLookup;
   }
 
-  public async cacheVerificationRequest(
-    authRequestWithTimeout: AuthVerificationResultWithTimeout
-  ): Promise<void> {
-    const { id, expiredAt } = authRequestWithTimeout;
-    await this.cacheValue(id, authRequestWithTimeout, expiredAt);
+  public cacheVerificationRequest(
+    authVerificationRequest: AuthVerificationResult
+  ): void {
+    const { id } = authVerificationRequest;
+    this.cacheValue(id, authVerificationRequest);
   }
 
-  public async uncacheVerificationRequest(sessionId: string) {
-    this.sessionStorage.delete(sessionId);
+  public uncacheVerificationRequest(sessionId: string) {
+    this.storageLookup.value.delete(sessionId);
   }
-
-  public async getVerificationRequestFromCache(
+  
+  public getVerificationRequestFromCache(
     sessionId: string
-  ): Promise<AuthVerificationResultWithTimeout | null> {
-    return await this.getCacheValue(sessionId);
+    ): AuthVerificationResult | null {
+    return  this.getCacheValue(sessionId);
   }
 
-  async cacheValue(id: string, value: any, expiredAt?: number): Promise<void> {
-    if (expiredAt) {
-      await this.sessionStorage.setWithTimeout(id, value, expiredAt);
-    } else {
-      await this.sessionStorage.set(id, value);
-    }
+  cacheValue(id: string, value: any): void {
+    this.storageLookup.value.set(id, value);
+  }
+  
+  getCacheValue(id: string): any {
+    return this.storageLookup.value.get(id);
   }
 
-  async getCacheValue(id: string): Promise<any> {
-    return await this.sessionStorage.get(id);
+  public cacheSignedDvr(
+    authRequestWithTimeout: CreateDvrResult
+  ): void {
+    const { id } = authRequestWithTimeout;
+    this.cacheValue(id, authRequestWithTimeout);
   }
 
-  public async cacheSignedDvr(
-    authRequestWithTimeout: CreateDvrResultWithTimeout
-  ): Promise<void> {
-    const { id, expiredAt } = authRequestWithTimeout;
-    await this.cacheValue(id, authRequestWithTimeout, expiredAt);
+  public uncacheSignedDvr(sessionId: string) {
+    this.storageLookup.value.delete(sessionId);
   }
 
-  public async uncacheSignedDvr(sessionId: string) {
-    this.sessionStorage.delete(sessionId);
-  }
-
-  public async getSignedDvrFromCache(
+  public getSignedDvrFromCache(
     dvrId: string
-  ): Promise<CreateDvrResultWithTimeout | null> {
-    return await this.getCacheValue(dvrId);
+  ): CreateDvrResult | null {
+    return  this.getCacheValue(dvrId);
   }
 
-  public async cacheZkpassProofOutput(
+  public cacheZkpassProofOutput(
     sessionId: string,
     authRequestWithTimeout: VerifyZkpassProofOutput
-  ): Promise<void> {
+  ): void {
     const {
       proof: { dvr_title, dvr_id },
     } = authRequestWithTimeout;
     const cacheId = `${sessionId}-VP`;
-    await this.cacheValue(cacheId, { dvr_title, dvr_id });
+    this.cacheValue(cacheId, { dvr_title, dvr_id });
   }
 
-  public async uncacheZkpassProofOutput(dvrId: string) {
-    this.sessionStorage.delete(dvrId);
+  public uncacheZkpassProofOutput(dvrId: string) {
+    this.storageLookup.value.delete(dvrId);
   }
 
-  public async getZkpassProofOutputFromCache(
+  public getZkpassProofOutputFromCache(
     dvrId: string
-  ): Promise<VerifyZkpassProofOutput | null> {
-    return await this.getCacheValue(dvrId);
+  ): VerifyZkpassProofOutput | null {
+    return  this.getCacheValue(dvrId);
   }
 
-  public async addZkpassProofToDB(
+  public addZkpassProofToDB(
     sessionId: string,
     dvr_id: string,
     dvr_title: string,
@@ -90,29 +86,21 @@ export default class VerifierRepository {
     result: boolean,
     wallet: string = "abc"
   ) {
-    await this.prisma.verification.create({
-      data: {
-        id: sessionId,
-        dvr_id,
-        dvr_title,
-        time_stamp,
-        wallet,
-        status: result,
-      },
+    this.cacheValue(sessionId, {
+      id: `${sessionId}__proof`,
+      dvr_id,
+      dvr_title,
+      time_stamp,
+      wallet,
+      status: result,
     });
   }
 
-  public async getZkpassProofFromDB(
+  public getZkpassProofFromDB(
     sessionId: string
-  ): Promise<verification | null> {
-    const verification = await this.prisma.verification.findFirst({
-      where: {
-        id: {
-          equals: sessionId,
-        },
-      },
-    });
+  ): verification | null {
+    const zkPassProof = this.getCacheValue(`${sessionId}__proof`);
 
-    return verification;
+    return zkPassProof;
   }
 }

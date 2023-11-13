@@ -6,7 +6,7 @@ import { ProofVerifierService } from './ProofVerifierService';
 import { CreateSignedDvrParams, RequestVerifyParams } from '@backend/types/VerifierParamTypes';
 import { CheckStatusResponse } from '@backend/types/ResponseTypes';
 import { WalletCallbackParams } from '@backend/types/ProofVerifierTypes';
-import { AuthVerificationResultWithTimeout, CreateDvrResult, CreateDvrResultWithTimeout } from '@backend/types/VerifierResultTypes';
+import { AuthVerificationResult, CreateDvrResult } from '@backend/types/VerifierResultTypes';
 
 @injectable()
 export class RequestService {
@@ -26,11 +26,11 @@ export class RequestService {
    * 
    * @param queryId 
    * 
-   * @returns {Promise<AuthVerificationResultWithTimeout>}
+   * @returns {Promise<AuthVerificationResult>}
    */
   public async requestVerification(
     queryId: string
-  ): Promise<AuthVerificationResultWithTimeout | string> {
+  ): Promise<AuthVerificationResult | string> {
     if (!queryId && parseInt(queryId) != 0) {
       throw "Bad Request, empty query_id";
     }
@@ -48,12 +48,12 @@ export class RequestService {
    * @param sessionId 
    * @param siweDto 
    * 
-   * @returns {Promise<CreateDvrResultWithTimeout>}
+   * @returns {Promise<CreateDvrResult>}
    */
   public async retrieveSignedDvr(
     sessionId: string,
     siweDto: SIWEDTO
-  ): Promise<CreateDvrResultWithTimeout> {
+  ): Promise<CreateDvrResult> {
     // Verify SIWE signature
     this.verifier.verifySiwe(siweDto);
 
