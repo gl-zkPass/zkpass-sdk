@@ -33,7 +33,6 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/uuid": "^9.0.7",
-    "i": "^0.3.7",
     "npm": "^10.2.3",
     "typescript": "^5"
   }
