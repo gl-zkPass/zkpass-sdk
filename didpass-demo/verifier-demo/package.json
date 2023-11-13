@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "compose:up": "docker-compose -f docker-compose.dev-dependencies.yml up --build -d"
   },
   "dependencies": {
     "@didpass/verifier-sdk": "file:didpass-verifier-sdk-1.0.1-beta.2.tgz",
