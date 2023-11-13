@@ -3,7 +3,7 @@
 
 body {
   margin: 0;
-  background-color: var(--color-gray);
+  background-color: var(--background);
   line-height: normal;
   font-family: var(--font-roboto);
 }
@@ -22,6 +22,9 @@ body {
   --font-size-5xl: 24px;
 
   /* Colors */
+  --background: #060A0E;
+  --overlay: rgba(0,0,0,0.35);
+  --black: #000;
   --color-gray: #0c0c0c;
   --color-gray-100: rgba(255, 255, 255, 0.5);
   --color-gray-200: rgba(0, 0, 0, 0.13);
@@ -32,9 +35,10 @@ body {
   --color-aqua: #1afff9;
   --color-black: #000;
   --color-pink: #ff619a;
-  --white: rgb(209, 67, 67);
+  --white: rgb(233, 233, 233);
   --white50: rgba(255, 255, 255, 0.5);
   --white30: rgba(255, 255, 255, 0.3);
+  --white10: rgba(255, 255, 255, 0.1);
 
   /* Gaps */
   --gap-5xl: 24px;
@@ -53,21 +57,21 @@ body {
 
 * {
   color: var(--white);
-}
-
-.form-label {
-  margin-bottom: 0.3rem;
-  font-weight: bold;
-}
-
-.MuiDayCalendar-weekDayLabel {
-  color: white;
+  font-family: var(--font-roboto);
 }
 
 .hidden {
   display: none;
 }
 
-.MuiDataGrid-root .MuiDataGrid-cell:focus-within {
-  outline: none !important;
+.verifier-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-container {
+  position: relative;
+  padding: 0 5vw;
+  flex-grow: 1;
 }

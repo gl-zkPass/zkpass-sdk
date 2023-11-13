@@ -1,5 +1,5 @@
 import { VerifyField, VerifyOperator } from './credentials/type';
-import { VerifyCase } from '../cases/useCase';
+import { VerifyCase } from '../cases/UseCase';
 
 export interface VerifyCaseType {
   case: VerifyCase;

@@ -3,8 +3,6 @@ import { KtpField, VerifyOperator } from '@backend/types/credentials/type';
 
 export enum CredType {
   Ktp = "KtpCred",
-  KycBank = "KycBankCred",
-  DomesticTravel = "DomesticTravelCred",
 }
 
 export enum VerifyCase {

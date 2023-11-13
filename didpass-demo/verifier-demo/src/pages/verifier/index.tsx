@@ -1,36 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { QRCode } from "react-qrcode-logo";
-import styles from './index.module.css';
+import { useState } from 'react'
+import IntroductionSection from '../../components/IntroductionSection/IntroductionSection';
+import ShowQr from '../../components/ShowQr/ShowQr';
 
 export default function Verifier() {
-  const [qrData, setQrData] = useState<string>('');
+  const [showQr, setShowQr] = useState<boolean>(false);
 
-  useEffect(() => {
-    const retrieveQr = async () => {
-      await fetch('/api/request/request-verification', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          queryId: 0
-        })
-      }).then((res) => {
-        return res.json();
-      }).then((data) => {
-        console.log(data);
-        setQrData(JSON.stringify(data.data.qrCode));
-      })
-    };
-    retrieveQr();
-  }, []);
+  const handleStartDemo = () => {
+    setShowQr(true);
+  };
 
   return (
     <>
-      <h1 className={styles.title}>
-        Verifier
-      </h1>
-      <QRCode value={qrData} qrStyle="dots" size={1000} />
+      {
+        showQr ?
+          <ShowQr />
+          :
+          <IntroductionSection handleContinue={handleStartDemo} />
+      }
     </>
   )
 };

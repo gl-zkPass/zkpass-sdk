@@ -1,0 +1,41 @@
+@keyframes spin {
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: 359deg;
+  }
+}
+
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--overlay);
+}
+
+.text {
+  position: absolute;
+  font-size: var(--font-size-sm);
+}
+
+.spinner {
+  aspect-ratio: 1/1;
+  width: 8rem;
+  padding: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border-top: 6px var(--color-aqua) solid;
+  border-bottom: 6px var(--color-aqua) solid;
+  border-left:  rgba(0,0,0,0) 6px solid;
+  border-right: 6px var(--color-aqua) solid;
+  animation: spin .8s linear 0s infinite;
+}
+
