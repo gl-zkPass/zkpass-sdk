@@ -63,7 +63,8 @@ export class IssuerService implements IIssue {
     }> {
         return new Promise(async (resolve, reject) => {
             /**
-             * First, we need to get the credential from database (in this case, we use mock data)
+             * Step 1
+             * Prepare the credential data
              */
             const detailCredential: ICredentialDatabase = {
                 ...detailCredentialMock,
@@ -114,7 +115,8 @@ export class IssuerService implements IIssue {
             const callbackUrl = `${process.env.NEXT_PUBLIC_URL}/api/issuer/agent`;
 
             /**
-             * After creating the credential, we need to generate the QR Code
+             * Step 2
+             * Generate the QR Code
              */
             const qrCode: ICredentialQR = await this.qrGenerator.credentialQR(
                 callbackUrl,
@@ -181,6 +183,10 @@ export class IssuerService implements IIssue {
 
     async signedVC(credentialPayload: ICredentialQRPayload) {
         try {
+            /**
+             * Step 1
+             * Prepare the credential data
+             */
             const { did, message, signature } = credentialPayload;
             const detailCredential: ICredentialDatabase = {
                 ...detailCredentialMock,
@@ -206,6 +212,10 @@ export class IssuerService implements IIssue {
                 },
                 credentialSubject: credentialSubject,
             };
+            /**
+             * Step 2
+             * Sign the credential using the Credential class from the SDK
+             */
             const result = await this.credential.signCredential(
                 issuanceDetails,
                 message,
@@ -221,6 +231,10 @@ export class IssuerService implements IIssue {
 
     async jwsCredential(credentialPayload: ICredentialQRPayload) {
         try {
+            /**
+             * Step 1
+             * Prepare the credential data
+             */
             const { did, message, signature } = credentialPayload;
 
             const detailCredential: ICredentialDatabase = {
@@ -252,6 +266,10 @@ export class IssuerService implements IIssue {
                 signature,
             };
 
+            /**
+             * Step 2
+             * Sign the credential using the JwsCredential class from the SDK
+             */
             const jwsCredential = new JwsCredential(keyPem, verifyEndpoint);
 
             const result = await jwsCredential.tokenizeCredential(payload);
