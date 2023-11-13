@@ -1,17 +1,16 @@
 import { ErrorResponse } from "../types/Response";
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 import jwt from "jsonwebtoken";
 import "reflect-metadata";
 import { v4 as uuidv4 } from "uuid";
-import { ISessionStorage } from "../storage/ISessionStorage";
 import { Auth, DIDAccount, QRGenerator } from "@didpass/issuer-sdk";
 import { IConnectQR } from "@didpass/issuer-sdk/lib/types/AuthDTO";
 import { IIssuerDetail } from "@didpass/issuer-sdk/lib/types/QRTypes";
 import { IConnectQRPayload } from "@didpass/issuer-sdk/lib/types/WalletDTO";
+import { lookupTable } from "../storage/LookupTable";
 
 @injectable()
 export class ConnectService {
-    private sessionStorage: ISessionStorage;
     private auth: Auth;
     private qrGenerator: QRGenerator;
 
@@ -19,8 +18,7 @@ export class ConnectService {
     private privateKey = process.env.ISSUER_PRIVATE_KEY || "";
     private baseUrl = process.env.NEXT_PUBLIC_URL || "";
 
-    constructor(@inject("ISessionStorage") sessionStorage: ISessionStorage) {
-        this.sessionStorage = sessionStorage;
+    constructor() {
         this.auth = new Auth();
 
         const didAccount = new DIDAccount(this.privateKey);
@@ -28,7 +26,7 @@ export class ConnectService {
     }
 
     public async checkStatus(uuid: string): Promise<any | ErrorResponse> {
-        const token = await this.sessionStorage.get(uuid);
+        const token = lookupTable.value.getValue(uuid); 
         try {
             const tokenParts = token.split(".");
             if (tokenParts.length !== 3) {
@@ -57,7 +55,7 @@ export class ConnectService {
         try {
             const { sessionId, did, message, signature } = connectPayload;
 
-            const validSession = await this.sessionStorage.get(`${sessionId}QR`);
+            const validSession = lookupTable.value.getValue(`${sessionId}QR`);
 
             if (!validSession) {
                 throw new Error("Session not found");
@@ -73,8 +71,8 @@ export class ConnectService {
                 const result = jwt.sign(payload, secret, {
                     expiresIn: this.expiresTime,
                 });
-                await this.sessionStorage.set(sessionId, result);
-                await this.sessionStorage.delete(`${sessionId}QR`);
+                lookupTable.value.addValue(sessionId, result);
+                lookupTable.value.deleteValue(`${sessionId}QR`);
             }
         } catch (error) {
             console.log("Error Auth : ", error);
@@ -92,19 +90,19 @@ export class ConnectService {
             restoreUrl: `${this.baseUrl}/api/restore`,
         };
 
-        await this.sessionStorage.set(sessionId, sessionId);
+        lookupTable.value.addValue(sessionId, sessionId);
         const qrCode: IConnectQR = await this.qrGenerator.connectQR(
             `${baseUrl}/api/issuer/connect/callback`,
             sessionId,
             issuerDetail
         );
 
-        await this.sessionStorage.set(`${sessionId}QR`, qrCode);
+        lookupTable.value.addValue(`${sessionId}QR`, qrCode);
 
         return [sessionId, qrCode];
     }
 
     public disconnect(did: string) {
-        this.sessionStorage.delete(did);
+        lookupTable.value.deleteValue(did);
     }
 }

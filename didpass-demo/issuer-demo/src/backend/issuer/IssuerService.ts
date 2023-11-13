@@ -1,5 +1,4 @@
-import { inject, injectable } from "inversify";
-import type { ISessionStorage } from "../storage/ISessionStorage";
+import { injectable } from "inversify";
 import { ICredentialDatabase } from "./dto/ICredentialDatabase";
 import detailCredentialMock from "../mocks/detailCredentialMock.json"
 import { IIssuerScanResponse, IssuerScanStatus } from "./dto/IssuerScanStatus";
@@ -23,6 +22,7 @@ import {
 } from "@didpass/issuer-sdk/lib/types/JWSDetailsDTO";
 import { IIssue } from "./IIssue";
 import { StatusCodes } from "http-status-codes";
+import { lookupTable } from "../storage/LookupTable";
 
 export enum DidUtility {
     POLYGON,
@@ -34,7 +34,6 @@ export enum DidSource {
 
 @injectable()
 export class IssuerService implements IIssue {
-    private sessionStorage: ISessionStorage;
     private credential: Credential;
     private qrGenerator: QRGenerator;
     private didAccount: DIDAccount;
@@ -45,11 +44,7 @@ export class IssuerService implements IIssue {
     private issuerPrivateKey = process.env.ISSUER_PRIVATE_KEY ?? "";
     private baseUrl = process.env.NEXT_PUBLIC_URL || "";
 
-    public constructor(
-        @inject("ISessionStorage") sessionStorage: ISessionStorage,
-    ) {
-        this.sessionStorage = sessionStorage;
-
+    public constructor() {
         this.didAccount = new DIDAccount(this.issuerPrivateKey);
         this.qrGenerator = new QRGenerator(this.didAccount);
         this.credential = new Credential();
@@ -140,10 +135,10 @@ export class IssuerService implements IIssue {
         userDid: string
     ): Promise<void> {
         const cacheKey = `${userDid}${this.SCAN_STATUS_KEY_SUFFIX}`;
-        const cachedQrStatus = await this.sessionStorage.get(cacheKey);
+        const cachedQrStatus = lookupTable.value.getValue(cacheKey);
 
         if (!cachedQrStatus || cachedQrStatus !== qrcodeId) {
-            await this.sessionStorage.set(cacheKey, qrcodeId);
+            lookupTable.value.addValue(cacheKey, qrcodeId);
             return;
         }
     }
@@ -155,7 +150,7 @@ export class IssuerService implements IIssue {
             const { did, qrType } = credentialPayload;
 
             const cacheKey = `${did}${this.SCAN_STATUS_KEY_SUFFIX}`;
-            const validSession = await this.sessionStorage.get(cacheKey);
+            const validSession = lookupTable.value.getValue(cacheKey);
             if (!validSession) {
                 throw new Error("Invalid session");
             }
@@ -173,7 +168,7 @@ export class IssuerService implements IIssue {
                     throw new Error("Invalid QR Type");
             }
 
-            await this.sessionStorage.set(cacheKey, IssuerScanStatus.SCANNED);
+            lookupTable.value.addValue(cacheKey, IssuerScanStatus.SCANNED);
             return { result };
         } catch (error) {
             console.log("Error claim credential: ", error);
@@ -287,7 +282,7 @@ export class IssuerService implements IIssue {
         return new Promise(async (resolve, reject) => {
             try {
                 const cacheKey = `${userDid}${this.SCAN_STATUS_KEY_SUFFIX}`;
-                const scanStatus = await this.sessionStorage.get(cacheKey);
+                const scanStatus = lookupTable.value.getValue(cacheKey);
 
                 let response: IIssuerScanResponse;
 
@@ -307,7 +302,7 @@ export class IssuerService implements IIssue {
                         message: `Credential is scanned`,
                     };
 
-                    await this.sessionStorage.delete(cacheKey);
+                    lookupTable.value.deleteValue(cacheKey);
                 } else {
                     response = {
                         status: StatusCodes.OK,
