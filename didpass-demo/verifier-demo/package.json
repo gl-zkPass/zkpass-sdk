@@ -10,8 +10,8 @@
     "compose:up": "docker-compose -f docker-compose.dev-dependencies.yml up --build -d"
   },
   "dependencies": {
-    "@didpass/verifier-sdk": "file:didpass-verifier-sdk-1.0.1-beta.2.tgz",
     "@babel/core": "^7.21.4",
+    "@didpass/verifier-sdk": "^0.1.0-beta.2",
     "@glair/vision": "^0.0.1-beta.3",
     "@iden3/js-iden3-auth": "1.0.0-beta.5",
     "@prisma/client": "^4.11.0",
