@@ -1,7 +1,6 @@
 ## Prerequisites
 1. [Node.js 18 or higher](https://nodejs.org/en/download)
-2. [Redis](https://redis.io/)
-3. [Ngrok](https://ngrok.com/download)
+2. [Ngrok](https://ngrok.com/download)
 
 ## Run Issuer Demo
 1. Install all dependencies with `npm i`
