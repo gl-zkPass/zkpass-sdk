@@ -96,7 +96,9 @@ impl ProofVerifier {
         println!("query={}", query);
 
         let kid = String::from("k-1");
-        let jku = String::from("https://raw.githubusercontent.com/zulamdat/zulamdat.github.io/sample-key/zkp-key/verifier-key.json");
+        let jku = String::from(
+            "https://gdp-admin.github.io/didPass-demo/zkpass/sample-jwks/verifier-key.json",
+        );
         let ep = KeysetEndpoint { jku, kid };
         // issuer's pubkey params:
         let issuer_pubkey = PublicKey {

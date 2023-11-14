@@ -32,7 +32,9 @@ impl DataIssuer {
         let data: Value = serde_json::from_str(&data).unwrap();
 
         let kid = String::from("k-1");
-        let jku = String::from("https://raw.githubusercontent.com/zulamdat/zulamdat.github.io/sample-key/zkp-key/issuer-key.json");
+        let jku = String::from(
+            "https://gdp-admin.github.io/didPass-demo/zkpass/sample-jwks/issuer-key.json",
+        );
         let ep = KeysetEndpoint { jku, kid };
 
         //
