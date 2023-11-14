@@ -6,7 +6,7 @@ import { nowInUnix } from '../helper';
 import VerifierRepository from './VerifierRepository';
 import { CreateSignedDvrParams, GenerateZkpassQueryParams, RequestVerifyParams } from '../types/VerifierParamTypes';
 import { AuthVerificationResult, CreateDvrResult } from '../types/VerifierResultTypes';
-import { VerifyCase, retrieveCaseType, verifyCaseMap } from '../cases/UseCase';
+import { VerifyCase, retrieveCaseType, retrieveDvrTitle, verifyCaseMap } from '../cases/useCase';
 import { DvrQueryCacheResponse, VerificationStatus, ZkPassQueryCriteria } from '@backend/types/VerifierTypes';
 import { QueryBuilderService } from './QueryBuilderService';
 import { StatusCodes } from 'http-status-codes';
@@ -288,17 +288,12 @@ export class VerifierService {
   }> {
     return new Promise((resolve, reject) => {
       const dvrId = v4();
-      let dvrTitle = "";
+      const dvrTitle = retrieveDvrTitle(queryId);
       
-      // add more use cases here
-      switch (parseInt(queryId)) {
-        case VerifyCase.KTP_AGE_ABOVE:
-          dvrTitle = "Age above 17";
-          break;
-        default:
-          reject("Use case not found");
+      if(!dvrTitle.length) {
+        reject('Use case not found!');
       }
-
+      
       resolve({
         dvrId,
         dvrTitle,
