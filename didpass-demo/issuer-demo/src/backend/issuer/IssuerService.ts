@@ -24,14 +24,6 @@ import { IIssue } from "./IIssue";
 import { StatusCodes } from "http-status-codes";
 import { lookupTable } from "../storage/LookupTable";
 
-export enum DidUtility {
-    POLYGON,
-}
-
-export enum DidSource {
-    POLYGON = "POLYGON",
-}
-
 @injectable()
 export class IssuerService implements IIssue {
     private credential: Credential;

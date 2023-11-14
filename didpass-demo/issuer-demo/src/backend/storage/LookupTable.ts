@@ -40,6 +40,10 @@ class LookupTable {
     public deleteValue(key: string): void {
         delete this.table[key];
     }
+
+    public clearTable(): void {
+        this.table = {};
+    }
 }
 
 const lookupTable = new GlobalRef<LookupTable>("didpass.issuer_demo");

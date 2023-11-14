@@ -62,7 +62,7 @@ export class ConnectService {
             }
 
             const result = await this.auth.authenticateSignature(message, signature);
-
+            
             if (result) {
                 const payload = {
                     did: did,
@@ -102,7 +102,7 @@ export class ConnectService {
         return [sessionId, qrCode];
     }
 
-    public disconnect(did: string) {
-        lookupTable.value.deleteValue(did);
+    public disconnect() {
+        lookupTable.value.clearTable();
     }
 }

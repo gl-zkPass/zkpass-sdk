@@ -21,7 +21,6 @@ export default async function handler(
         const credentialPayload: ICredentialQRPayload = req.body;
         const issuerService = container.get<IssuerService>("IssuerService");
         const result = await issuerService.getClaimCredential(credentialPayload);
-        
 
         response = {
             status: StatusCodes.OK,
