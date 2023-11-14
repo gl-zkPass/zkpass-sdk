@@ -6,7 +6,7 @@ import { nowInUnix } from '../helper';
 import VerifierRepository from './VerifierRepository';
 import { CreateSignedDvrParams, GenerateZkpassQueryParams, RequestVerifyParams } from '../types/VerifierParamTypes';
 import { AuthVerificationResult, CreateDvrResult } from '../types/VerifierResultTypes';
-import { VerifyCase, retrieveCaseType, verifyCaseMap } from '../cases/UseCase';
+import { VerifyCase, retrieveCaseType, verifyCaseMap } from '../cases/useCase';
 import { DvrQueryCacheResponse, VerificationStatus, ZkPassQueryCriteria } from '@backend/types/VerifierTypes';
 import { QueryBuilderService } from './QueryBuilderService';
 import { StatusCodes } from 'http-status-codes';

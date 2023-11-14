@@ -1,4 +1,4 @@
-import { CredType, VerifyCase } from '@backend/cases/UseCase';
+import { CredType, VerifyCase } from '@backend/cases/useCase';
 
 export enum VerifierUseCase {
   AGE_ABOVE_17 = "Age : Above 17 years old",
