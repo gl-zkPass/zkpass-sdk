@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
-import { signDataToJwsToken } from "@didpass/zkpass-client-ts";
+import { ZkPassClient } from "@didpass/zkpass-client-ts";
 
 const ASSET_PATH = "public/issuer/";
 
@@ -86,7 +86,8 @@ async function _signBloodTest(data: { [key: string]: any }) {
    * Step 3
    * Sign data to jws token
    */
-  const signedBloodTest = await signDataToJwsToken(
+  const zkPassClient = new ZkPassClient();
+  const signedBloodTest = await zkPassClient.signDataToJwsToken(
     PRIVATE_KEY_PEM,
     data,
     verifyingKeyJKWS

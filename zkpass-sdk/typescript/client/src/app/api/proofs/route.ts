@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { generateZkpassProof } from "@didpass/zkpass-client-ts";
+import { ZkPassClient } from "@didpass/zkpass-client-ts";
 
 export async function POST(req: Request) {
   try {
@@ -16,14 +16,14 @@ export async function POST(req: Request) {
      * Step 2
      * Generate the proof from blood_test and dvr
      */
-    const proofResponseBody = await generateZkpassProof(
+    const zkPassClient = new ZkPassClient();
+    const proof = await zkPassClient.generateZkpassProof(
       zkPassServiceURL,
       blood_test,
       dvr
     );
-
-    console.log({ proofResponseBody });
-    return Response.json({ status: 200, data: proofResponseBody.proof });
+    console.log({ proof });
+    return Response.json({ status: 200, data: proof });
   } catch (error) {
     console.log("== Error generating proof ==");
     console.log({ error });
