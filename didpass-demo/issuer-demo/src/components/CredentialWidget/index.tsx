@@ -1,6 +1,6 @@
 import { PrimaryButton } from "../Button/PrimaryButton";
 import styles from "./CredentialWidget.module.css";
-import {  Tooltip } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import { QrCodeScanner } from "@mui/icons-material";
 import { getToken } from "@/utils/cookie";
 import { QR } from "@/backend/types/QR";
@@ -66,8 +66,8 @@ const CredentialWidget = (props: Props) => {
           return IndividualCredential(key, userData[key]);
         })}
         <p className={styles.fakeInformationText}>
-          *The displayed KTP data is fake and for demo purposes. Not for official
-          use.
+          *The displayed KTP data is fake and for demo purposes. Not for
+          official use.
         </p>
       </CardContainer>
       <div className={styles.actionButtonContainer}>

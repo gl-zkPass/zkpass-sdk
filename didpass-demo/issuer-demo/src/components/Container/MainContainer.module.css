@@ -42,9 +42,7 @@
     color: var(--white50);
 }
 
-.drawerContainer{
+.drawerContainer {
     display: flex;
     justify-content: center;
 }
-
-

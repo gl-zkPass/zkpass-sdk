@@ -57,11 +57,8 @@ const UserDropdown = () => {
 
   const disconnect = async () => {
     const token = getToken();
-    await fetch(`/api/ssi/issuer/disconnect`, {
+    await fetch(`/api/issuer/disconnect`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
   };
 

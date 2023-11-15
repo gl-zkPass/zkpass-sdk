@@ -35,7 +35,10 @@ export default function MainContainer(props: Props) {
         <ConnectHeader title="Issuer-demo" />
       </div>
       <Divider />
-      <List className={styles.drawerContainer} sx={{ marginTop:{xs:"4rem"} }}>
+      <List
+        className={styles.drawerContainer}
+        sx={{ marginTop: { xs: "4rem" } }}
+      >
         <UserDropdown />
       </List>
     </Box>

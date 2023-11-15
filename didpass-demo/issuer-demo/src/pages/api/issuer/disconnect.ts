@@ -1,3 +1,4 @@
+import { getDidFromRequestHeaders } from "@/backend/helper";
 import { container } from "@/backend/inversify.config";
 import { ConnectService } from "@/backend/issuer/ConnectService";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
@@ -7,16 +8,19 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
-  if (req.method !== "GET") {
+  if (req.method !== "POST") {
     res.status(StatusCodes.BAD_REQUEST).send(ReasonPhrases.BAD_REQUEST);
     return;
   }
 
-  const connectService = container.get<ConnectService>("ConnectService");
-  const [id, qrCode] = await connectService.getConnectQR();
+  try {
+    const connectService = container.get<ConnectService>("ConnectService");
+    connectService.disconnect();
 
-  res.status(StatusCodes.OK).json({
-    id: id,
-    qrCode: qrCode,
-  });
+    res.status(StatusCodes.OK).json({ result: "disconnected" });
+  } catch (error) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .send({ message: ReasonPhrases.BAD_REQUEST });
+  }
 }

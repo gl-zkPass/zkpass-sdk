@@ -7,8 +7,8 @@ const container = new Container();
 container.bind<ConnectService>("ConnectService").to(ConnectService);
 
 container
-    .bind<IssuerService>("IssuerService")
-    .to(IssuerService)
-    .inSingletonScope()
+  .bind<IssuerService>("IssuerService")
+  .to(IssuerService)
+  .inSingletonScope();
 
 export { container };
