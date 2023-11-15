@@ -1,0 +1,9 @@
+{
+    "keys": [
+        {
+            "x": "your public key x value",
+            "y": "your public key y value",
+            "kid": "your public key kid value"
+        }
+    ]
+}
