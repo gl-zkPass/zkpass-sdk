@@ -1,7 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { minutesToSeconds } from 'date-fns';
 import { v4 } from "uuid";
-import { DVRDTO, DataVerificationRequest, GenerateQrCodeDTO, KeysetEndpointWrapped, QRTypes, SIWEDTO, Verifier, VerifyingKeyJWKS, ZkpassQuery } from '@didpass/verifier-sdk';
+import { DVRDTO, DataVerificationRequest, GenerateQrCodeDTO, KeysetEndpointWrapped, QRTypes, SIWEDTO, VerifyingKeyJWKS, ZkpassQuery } from '@didpass/verifier-sdk';
 import { nowInUnix } from '../helper';
 import VerifierRepository from './VerifierRepository';
 import { CreateSignedDvrParams, GenerateZkpassQueryParams, RequestVerifyParams } from '../types/VerifierParamTypes';
@@ -87,11 +87,6 @@ export class VerifierService {
       try {
         const { dvrId, dvrTitle, queryId } = params;
         
-        let { timeout } = params;
-        if (!timeout) {
-          timeout = minutesToSeconds(5);
-        }
-
         // Prepare QR code data
         const hostUrl = process.env.NEXT_PUBLIC_URL;
         const sessionId = v4();
@@ -160,11 +155,6 @@ export class VerifierService {
           sessionId,
           siweDto,
         } = params;
-
-        let { timeout } = params;
-        if (!timeout) {
-          timeout = minutesToSeconds(5);
-        }
 
         if (!privateKey || !jkuIssuer || !jkuVerifier || !verifierDid) {
           throw "Missing value of private key or jku!";

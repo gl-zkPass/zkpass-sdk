@@ -5,7 +5,6 @@ export interface RequestVerifyParams {
   dvrId: string;
   dvrTitle: string;
   queryId: string;
-  timeout?: number;
 };
 
 export interface CreateSignedDvrParams {

@@ -53,7 +53,6 @@ const ShowQr = () => {
         const status = (await req.json()).data;
 
         if (req.ok) {
-          console.log(status.statusType);
           if (status.statusType === VerificationStatus.PENDING) return;
           else if (status.statusType === VerificationStatus.VERIFIED) router.push({
             pathname: '/result',

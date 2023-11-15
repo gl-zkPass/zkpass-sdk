@@ -1,17 +1,13 @@
 import { injectable, inject } from 'inversify';
-import prisma from "../../lib/prisma";
-import { verification } from '@prisma/client';
 import { AuthVerificationResult, CreateDvrResult } from "@backend/types/VerifierResultTypes";
 import { VerifyZkpassProofOutput } from "@didpass/verifier-sdk";
 import { storageLookup } from '@backend/storage/StorageLookup';
 
 @injectable()
 export default class VerifierRepository {
-  private prisma;
   private storageLookup;
 
   constructor() {
-    this.prisma = prisma;
     this.storageLookup = storageLookup;
   }
 
@@ -98,7 +94,7 @@ export default class VerifierRepository {
 
   public getZkpassProofFromDB(
     sessionId: string
-  ): verification | null {
+  ): any {
     const zkPassProof = this.getCacheValue(`${sessionId}__proof`);
 
     return zkPassProof;

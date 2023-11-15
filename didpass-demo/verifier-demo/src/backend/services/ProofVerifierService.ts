@@ -61,7 +61,7 @@ export class ProofVerifierService {
           result
         );
 
-        // Delete previous cache from redis
+        // Delete previous cache
         await this.verifierRepository.uncacheSignedDvr(sessionId);
 
         resolve(verifyZkpassProofOutput);

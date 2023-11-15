@@ -3,9 +3,9 @@
 ## Prerequisite
 
 1. [Node.js 14.6.0 or higher (LTS is preffered)](https://nodejs.org/en/download)
-1. [Docker](https://docs.docker.com/get-docker/)
-1. [Redis](https://redis.io/)
-1. [Ngrok](https://ngrok.com/download)
+2. [Ngrok](https://ngrok.com/download)
+3. [didPass-Wallet](https://docs.ssi.id/didpass/didpass-wallet/download-and-install-wallet)
+4. [Issuer Demo](https://docs.ssi.id/didpass/v/didpass-developers-guide/~/changes/jCEn8UG86QOnzyhNQsWk/getting-started/quickstart/issuer-typescript-node.js)
 
 ## How to run Verifier Demo
 1. Install all dependencies using `npm i`
