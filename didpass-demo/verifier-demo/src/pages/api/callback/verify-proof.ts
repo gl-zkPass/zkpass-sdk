@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { container } from '@backend/inversify.config';
 import { allowCors } from '@utils/cors';
 import { StatusCodes } from 'http-status-codes';
-import { SIWEDTO, VerifyZkpassProofOutput } from '@didpass/verifier-sdk';
+import { SIWEDTO } from '@didpass/verifier-sdk';
 import { RequestService } from '@backend/services/RequestService';
 import { WalletCallbackParams } from '@backend/types/ProofVerifierTypes';
 
@@ -46,14 +46,14 @@ export default async function handler(
         sessionId,
         siweDto,
       };
-      const result = (await requestService.verifyProof(
-        params
-      )) as VerifyZkpassProofOutput;
+      const result = await requestService.verifyProof(params);
 
       return res.status(StatusCodes.OK).send({
         status: StatusCodes.OK,
-        statusText: `Query is ${result.result ? "Verified" : "Unverified"}`,
-        data: result,
+        statusText: `Query is ${result ? "Verified" : "Unverified"}`,
+        data: {
+          result: result,
+        },
       });
     } else {
       throw "Signature is incorrect or missing";

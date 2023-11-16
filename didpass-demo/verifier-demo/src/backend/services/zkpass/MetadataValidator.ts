@@ -27,14 +27,14 @@ export class MetadataValidator implements ZkPassProofMetadataValidator {
     dvrVerifyingKey: PublicKey,
     zkpassProofTtl: number
   ): Promise<void> {
-    const cache = await this.verifierRepository.getSignedDvrFromCache(dvrId);
+    const cache = this.verifierRepository.getSignedDvrFromCache(dvrId);
     if (!cache) {
       throw new Error("DVR not found");
     }
 
-    const decodedDvr: DataVerificationRequest = (
+    const decodedDvr = (
       decode(cache?.body.signedDvr) as any
-    ).data as DataVerificationRequest;
+    ).data;
     const dvr = new DataVerificationRequest(
       decodedDvr.dvr_title,
       decodedDvr.dvr_id,
@@ -45,17 +45,18 @@ export class MetadataValidator implements ZkPassProofMetadataValidator {
       decodedDvr.user_data_verifying_key
     );
 
-    if (dvr.dvr_title !== dvrTitle) {
+    if (dvr.dvrTitle !== dvrTitle) {
       throw new Error("DVR title mismatch");
     }
 
-    this.validateKey(dvr.user_data_verifying_key, userDataVerifyingKey);
+    this.validateKey(dvr.userDataVerifyingKey, userDataVerifyingKey);
 
     const verifyingKeyJKWS = {
       KeysetEndpoint: {
         jku: process.env.KEYSET_ENDPOINT_JKU_VERIFIER || "",
         kid: process.env.KEYSET_ENDPOINT_KID_VERIFIER || "",
       },
+      
     };
     this.validateKey(verifyingKeyJKWS, dvrVerifyingKey);
     // this.validateDigest(dvrDigest, dvr);
@@ -104,8 +105,6 @@ export class MetadataValidator implements ZkPassProofMetadataValidator {
         throw new Error(`Key is not found.`);
       }
     } catch (error) {
-      console.log(error);
-
       throw new Error("Error fetching data keyset.");
     }
   }

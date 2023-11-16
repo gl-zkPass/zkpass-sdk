@@ -1,5 +1,4 @@
 import { injectable, inject } from 'inversify';
-import { VerifyZkpassProofOutput } from '@didpass/verifier-sdk';
 import type { ZkPassProofMetadataValidator } from '@didpass/verifier-sdk';
 
 import VerifierRepository from './VerifierRepository';
@@ -31,38 +30,24 @@ export class ProofVerifierService {
    */
   async verifyProof(
     params: WalletCallbackParams
-  ): Promise<VerifyZkpassProofOutput | string> {
+  ): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
         const { sessionId, zkpassProofToken } = params;
 
         const verifyZkpassProofOutput =
           await this.verifier.verifyProof(zkpassProofToken, this.validator);
-
-        // If verification successful, add to cache
-        if (verifyZkpassProofOutput.result) {
-          await this.verifierRepository.cacheZkpassProofOutput(
+        
+          // If verification successful, add to cache
+        if (verifyZkpassProofOutput) {
+          this.verifierRepository.cacheZkpassProofVerificationOutput(
             sessionId,
             verifyZkpassProofOutput
           );
         }
 
-        const {
-          proof: { dvr_id, dvr_title, time_stamp },
-          result,
-        } = verifyZkpassProofOutput;
-
-        // Add to database
-        this.verifierRepository.addZkpassProofToDB(
-          sessionId,
-          dvr_id,
-          dvr_title,
-          time_stamp,
-          result
-        );
-
         // Delete previous cache
-        await this.verifierRepository.uncacheSignedDvr(sessionId);
+        this.verifierRepository.uncacheVerificationRequest(sessionId);
 
         resolve(verifyZkpassProofOutput);
       } catch (err) {

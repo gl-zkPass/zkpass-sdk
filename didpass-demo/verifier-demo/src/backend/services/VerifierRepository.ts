@@ -1,6 +1,5 @@
 import { injectable, inject } from 'inversify';
 import { AuthVerificationResult, CreateDvrResult } from "@backend/types/VerifierResultTypes";
-import { VerifyZkpassProofOutput } from "@didpass/verifier-sdk";
 import { storageLookup } from '@backend/storage/StorageLookup';
 
 @injectable()
@@ -9,6 +8,20 @@ export default class VerifierRepository {
 
   constructor() {
     this.storageLookup = storageLookup;
+  }
+
+  getCacheValue(id: string): any {
+    return this.storageLookup.value.get(id);
+  }
+
+  cacheValue(id: string, value: any): void {
+    this.storageLookup.value.set(id, value);
+  }
+
+  public getVerificationRequestFromCache(
+    sessionId: string
+    ): AuthVerificationResult | null {
+    return  this.getCacheValue(sessionId);
   }
 
   public cacheVerificationRequest(
@@ -21,31 +34,6 @@ export default class VerifierRepository {
   public uncacheVerificationRequest(sessionId: string) {
     this.storageLookup.value.delete(sessionId);
   }
-  
-  public getVerificationRequestFromCache(
-    sessionId: string
-    ): AuthVerificationResult | null {
-    return  this.getCacheValue(sessionId);
-  }
-
-  cacheValue(id: string, value: any): void {
-    this.storageLookup.value.set(id, value);
-  }
-  
-  getCacheValue(id: string): any {
-    return this.storageLookup.value.get(id);
-  }
-
-  public cacheSignedDvr(
-    authRequestWithTimeout: CreateDvrResult
-  ): void {
-    const { id } = authRequestWithTimeout;
-    this.cacheValue(id, authRequestWithTimeout);
-  }
-
-  public uncacheSignedDvr(sessionId: string) {
-    this.storageLookup.value.delete(sessionId);
-  }
 
   public getSignedDvrFromCache(
     dvrId: string
@@ -53,50 +41,33 @@ export default class VerifierRepository {
     return  this.getCacheValue(dvrId);
   }
 
-  public cacheZkpassProofOutput(
-    sessionId: string,
-    authRequestWithTimeout: VerifyZkpassProofOutput
+  public cacheSignedDvr(
+    verifyRequest: CreateDvrResult
   ): void {
-    const {
-      proof: { dvr_title, dvr_id },
-    } = authRequestWithTimeout;
-    const cacheId = `${sessionId}-VP`;
-    this.cacheValue(cacheId, { dvr_title, dvr_id });
+    const { id } = verifyRequest;
+    this.cacheValue(id, verifyRequest);
   }
 
-  public uncacheZkpassProofOutput(dvrId: string) {
+  public uncacheSignedDvr(dvrId: string) {
     this.storageLookup.value.delete(dvrId);
   }
 
-  public getZkpassProofOutputFromCache(
-    dvrId: string
-  ): VerifyZkpassProofOutput | null {
-    return  this.getCacheValue(dvrId);
-  }
 
-  public addZkpassProofToDB(
-    sessionId: string,
-    dvr_id: string,
-    dvr_title: string,
-    time_stamp: number,
-    result: boolean,
-    wallet: string = "abc"
-  ) {
-    this.cacheValue(sessionId, {
-      id: `${sessionId}__proof`,
-      dvr_id,
-      dvr_title,
-      time_stamp,
-      wallet,
-      status: result,
-    });
-  }
-
-  public getZkpassProofFromDB(
+  public getZkpassProofVerificationOutput(
     sessionId: string
-  ): any {
-    const zkPassProof = this.getCacheValue(`${sessionId}__proof`);
+  ): boolean {
+    return this.getCacheValue(`${sessionId}__proof`);
+  };
 
-    return zkPassProof;
+  public cacheZkpassProofVerificationOutput(
+    sessionId: string,
+    result: boolean
+  ): void {
+    const cacheId = `${sessionId}__proof`;
+    this.cacheValue(cacheId, result);
+  }
+
+  public uncacheZkpassProofVerificationOutput(sessionId: string) {
+    this.storageLookup.value.delete(sessionId);
   }
 }

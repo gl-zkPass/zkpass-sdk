@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - 3002:3002
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+volumes:
+  swiss-mysql-data:

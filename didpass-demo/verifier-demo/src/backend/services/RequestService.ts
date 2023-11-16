@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify';
-import { SIWEDTO, VerifyZkpassProofOutput } from '@didpass/verifier-sdk';
+import { SIWEDTO } from '@didpass/verifier-sdk';
 
 import { VerifierService } from './VerifierService';
 import { ProofVerifierService } from './ProofVerifierService';
@@ -65,7 +65,7 @@ export class RequestService {
 
     const { queryId, dvrId, dvrTitle } = cachedDvrData;
     const fullQuery = await this.verifier.constructFullQuery(queryId);
-
+    
     const params: CreateSignedDvrParams = {
       dvrId,
       dvrTitle,
@@ -102,7 +102,7 @@ export class RequestService {
    */
   public async verifyProof(
     params: WalletCallbackParams
-  ): Promise<VerifyZkpassProofOutput | string>{
+  ): Promise<boolean>{
     // Verfiy SIWE signature
     const { siweDto } = params;
     this.verifier.verifySiwe(siweDto);

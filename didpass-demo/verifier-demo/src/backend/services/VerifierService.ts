@@ -1,7 +1,7 @@
 import { injectable, inject } from 'inversify';
-import { minutesToSeconds } from 'date-fns';
 import { v4 } from "uuid";
-import { DVRDTO, DataVerificationRequest, GenerateQrCodeDTO, KeysetEndpointWrapped, QRTypes, SIWEDTO, VerifyingKeyJWKS, ZkpassQuery } from '@didpass/verifier-sdk';
+import { DVRDTO, DataVerificationRequest, GenerateQrCodeDTO, KeysetEndpointWrapped, QRTypes, SIWEDTO, KeysetEndpoint, ZkpassQuery } from '@didpass/verifier-sdk';
+import { ZkPassClient } from '@didpass/zkpass-client-ts'; 
 import { nowInUnix } from '../helper';
 import VerifierRepository from './VerifierRepository';
 import { CreateSignedDvrParams, GenerateZkpassQueryParams, RequestVerifyParams } from '../types/VerifierParamTypes';
@@ -18,6 +18,7 @@ export class VerifierService {
   private verifier;
   private verifierRepository;
   private queryBuilder;
+  private zkPassClient;
 
   public constructor(
     @inject("VerifierRepository") verifierRepository: VerifierRepository,
@@ -27,6 +28,7 @@ export class VerifierService {
     this.verifier = verifierInstance.getInstance();
     this.verifierRepository = verifierRepository;
     this.queryBuilder = queryBuilder;
+    this.zkPassClient = new ZkPassClient();
   }
 
   /**
@@ -53,11 +55,11 @@ export class VerifierService {
     }
 
     // fetch authrequest from db
-    const persistentAuthRequest =
-      this.verifierRepository.getZkpassProofFromDB(sessionId);
+    const proofVerificationOutput =
+      this.verifierRepository.getZkpassProofVerificationOutput(sessionId);
 
     // if found return status verified
-    if (persistentAuthRequest && persistentAuthRequest.status) {
+    if (proofVerificationOutput) {
       return {
         status: StatusCodes.OK,
         statusType: VerificationStatus.VERIFIED,
@@ -95,8 +97,8 @@ export class VerifierService {
         const options: GenerateQrCodeDTO = {
           callbackUrl,
           dvr: {
-            dvr_id: dvrId,
-            dvr_title: dvrTitle,
+            dvrId: dvrId,
+            dvrTitle: dvrTitle,
           },
         };
 
@@ -166,22 +168,24 @@ export class VerifierService {
             kid: kidIssuer,
           },
         };
-        const verifyingKeyJKWS: VerifyingKeyJWKS = {
+        const verifyingKeyJKWS: KeysetEndpoint = {
           jku: jkuVerifier,
           kid: kidVerifier,
         };
+
+        const { queryEngineVersion, queryMethodVersion } = await this.zkPassClient.getQueryEngineVersionInfo();
 
         const user_data_url = "https://example.com/user_data";
         const dvr = new DataVerificationRequest(
           dvrTitle,
           dvrId,
-          'query_engine_ver',
-          'query_method_ver',
+          queryEngineVersion,
+          queryMethodVersion,
           query,
           user_data_url,
           user_data_verifying_key
         );
-
+          
         // Sign DVR token using Verifier SDK
         const dvrDto: DVRDTO = {
           keyInPem: privateKey,
@@ -212,7 +216,7 @@ export class VerifierService {
           requestedAt: nowInUnix(),
         };
 
-        this.verifierRepository.cacheSignedDvr(verifyRequest); // Cache the dvr_id (id) corresponding with the query
+        this.verifierRepository.cacheSignedDvr(verifyRequest); // Cache the dvrId (id) corresponding with the query
         
         return resolve(verifyRequest);
       } catch (err) {
@@ -258,7 +262,6 @@ export class VerifierService {
 
         resolve(fullQuery);
       }catch(err){
-        console.log(err);
         reject(err);
       };
     })

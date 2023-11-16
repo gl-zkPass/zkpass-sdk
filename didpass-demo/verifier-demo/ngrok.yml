@@ -1,0 +1,9 @@
+version: 2
+authtoken: 2XYiNHPUaM79mvyZOXx6enSGSdB_4FjgJ8JaxtBQKJJ71NYcd
+tunnels:
+  issuer:
+    proto: http
+    addr: http://localhost:3000
+  verifier:
+    proto: http
+    addr: http://localhost:3002
