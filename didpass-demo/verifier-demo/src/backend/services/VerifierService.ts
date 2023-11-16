@@ -1,17 +1,19 @@
 import { injectable, inject } from 'inversify';
 import { v4 } from "uuid";
-import { DVRDTO, DataVerificationRequest, GenerateQrCodeDTO, KeysetEndpointWrapped, QRTypes, SIWEDTO, KeysetEndpoint, ZkpassQuery } from '@didpass/verifier-sdk';
-import { ZkPassClient } from '@didpass/zkpass-client-ts'; 
-import { nowInUnix } from '../helper';
-import VerifierRepository from './VerifierRepository';
-import { CreateSignedDvrParams, GenerateZkpassQueryParams, RequestVerifyParams } from '../types/VerifierParamTypes';
-import { AuthVerificationResult, CreateDvrResult } from '../types/VerifierResultTypes';
-import { VerifyCase, retrieveCaseType, retrieveDvrTitle, verifyCaseMap } from '../cases/useCase';
-import { DvrQueryCacheResponse, VerificationStatus, ZkPassQueryCriteria } from '@backend/types/VerifierTypes';
-import { QueryBuilderService } from './QueryBuilderService';
 import { StatusCodes } from 'http-status-codes';
-import { CheckStatusResponse } from '@backend/types/ResponseTypes';
+import { DVRDTO, DataVerificationRequest, GenerateQrCodeDTO, KeysetEndpointWrapped, QRTypes, SIWEDTO, KeysetEndpoint, ZkpassQuery } from '@didpass/verifier-sdk';
+import { SignedDvrResponse } from '@didpass/verifier-sdk/lib/types/signedDvrResponse';
+import { ZkPassClient } from '@didpass/zkpass-client-ts'; 
+
+import { nowInUnix } from '../helper';
 import { VerifierInstance } from './sdk/VerifierInstance';
+import VerifierRepository from './VerifierRepository';
+import { AuthVerificationResult } from '../types/VerifierResultTypes';
+import { VerifyCase, retrieveCaseType, retrieveDvrTitle, verifyCaseMap } from '../cases/useCase';
+import { QueryBuilderService } from './QueryBuilderService';
+import { CheckStatusResponse } from '@backend/types/ResponseTypes';
+import { DvrQueryCacheResponse, VerificationStatus, ZkPassQueryCriteria } from '@backend/types/VerifierTypes';
+import { CreateSignedDvrParams, GenerateZkpassQueryParams, RequestVerifyParams } from '../types/VerifierParamTypes';
 
 @injectable()
 export class VerifierService {
@@ -137,11 +139,11 @@ export class VerifierService {
    * 
    * @param params 
    * 
-   * @returns {{Promise<CreateDvrResult>}} 
+   * @returns {{Promise<SignedDvrResponse>}} 
    */
   public async createSignedDvr(
     params: CreateSignedDvrParams
-  ): Promise<CreateDvrResult> {
+  ): Promise<SignedDvrResponse> {
     return new Promise(async (resolve, reject) => {
       try {
         const privateKey = process.env.VERIFIER_PRIVATE_KEY_PEM;
@@ -192,33 +194,21 @@ export class VerifierService {
           dvr,
           verifyingKeyJKWS,
         };
-        const signedDVRToken = await this.verifier.signDvrToken(
-          dvrDto,
-          siweDto
-        );
 
         const hostUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
         const callbackPath = "/api/callback/verify-proof";
         const callbackUrl = `${hostUrl}${callbackPath}?sessionId=${sessionId}`;
-
-        const verifyRequest: CreateDvrResult = {
-          id: dvrId,
-          thid: dvrId,
-          from: verifierDid,
-          typ: "application/json",
-          type: QRTypes.TYPE_VERIFY,
-          body: {
-            reason: "Returns a JSON that can be used to verify proof.",
-            message: "",
-            callbackUrl: callbackUrl,
-            signedDvr: signedDVRToken,
-          },
-          requestedAt: nowInUnix(),
-        };
-
-        this.verifierRepository.cacheSignedDvr(verifyRequest); // Cache the dvrId (id) corresponding with the query
         
-        return resolve(verifyRequest);
+        const signedDVRToken = await this.verifier.signDvrToken(
+          dvrDto,
+          siweDto,
+          callbackUrl,
+          verifierDid
+        );
+
+        this.verifierRepository.cacheSignedDvr(signedDVRToken); // Cache the dvrId (id) corresponding with the query
+        
+        return resolve(signedDVRToken);
       } catch (err) {
         reject("Query is not correct");
       }

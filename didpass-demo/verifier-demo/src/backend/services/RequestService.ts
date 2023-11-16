@@ -1,12 +1,13 @@
 import { injectable, inject } from 'inversify';
 import { SIWEDTO } from '@didpass/verifier-sdk';
+import { SignedDvrResponse } from '@didpass/verifier-sdk/lib/types/signedDvrResponse';
 
 import { VerifierService } from './VerifierService';
 import { ProofVerifierService } from './ProofVerifierService';
 import { CreateSignedDvrParams, RequestVerifyParams } from '@backend/types/VerifierParamTypes';
 import { CheckStatusResponse } from '@backend/types/ResponseTypes';
 import { WalletCallbackParams } from '@backend/types/ProofVerifierTypes';
-import { AuthVerificationResult, CreateDvrResult } from '@backend/types/VerifierResultTypes';
+import { AuthVerificationResult } from '@backend/types/VerifierResultTypes';
 
 @injectable()
 export class RequestService {
@@ -48,12 +49,12 @@ export class RequestService {
    * @param sessionId 
    * @param siweDto 
    * 
-   * @returns {Promise<CreateDvrResult>}
+   * @returns {Promise<SignedDvrResponse>}
    */
   public async retrieveSignedDvr(
     sessionId: string,
     siweDto: SIWEDTO
-  ): Promise<CreateDvrResult> {
+  ): Promise<SignedDvrResponse> {
     // Verify SIWE signature
     this.verifier.verifySiwe(siweDto);
 

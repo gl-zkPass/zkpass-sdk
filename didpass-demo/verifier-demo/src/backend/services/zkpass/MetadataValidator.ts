@@ -33,7 +33,7 @@ export class MetadataValidator implements ZkPassProofMetadataValidator {
     }
 
     const decodedDvr = (
-      decode(cache?.body.signedDvr) as any
+      decode(cache?.signedDvr) as any
     ).data;
     const dvr = new DataVerificationRequest(
       decodedDvr.dvr_title,

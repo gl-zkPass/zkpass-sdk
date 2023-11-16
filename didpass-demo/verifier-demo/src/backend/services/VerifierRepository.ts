@@ -1,6 +1,7 @@
-import { injectable, inject } from 'inversify';
-import { AuthVerificationResult, CreateDvrResult } from "@backend/types/VerifierResultTypes";
+import { injectable } from 'inversify';
+import { AuthVerificationResult } from "@backend/types/VerifierResultTypes";
 import { storageLookup } from '@backend/storage/StorageLookup';
+import { SignedDvrResponse } from '@didpass/verifier-sdk/lib/types/signedDvrResponse';
 
 @injectable()
 export default class VerifierRepository {
@@ -37,12 +38,12 @@ export default class VerifierRepository {
 
   public getSignedDvrFromCache(
     dvrId: string
-  ): CreateDvrResult | null {
+  ): SignedDvrResponse | null {
     return  this.getCacheValue(dvrId);
   }
 
   public cacheSignedDvr(
-    verifyRequest: CreateDvrResult
+    verifyRequest: SignedDvrResponse
   ): void {
     const { id } = verifyRequest;
     this.cacheValue(id, verifyRequest);
