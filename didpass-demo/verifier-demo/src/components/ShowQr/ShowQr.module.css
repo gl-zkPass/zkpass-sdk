@@ -30,7 +30,7 @@
 }
 
 .note {
-  margin-bottom: 2rem;
+  margin-top: 3vh;
   font-size: var(--font-size-xsm);
 }
 
@@ -39,6 +39,7 @@
 }
 
 .button {
+  margin-top: 2rem;
   padding: 0.75rem 1rem;
   font-weight: bold;
   outline: none;
@@ -52,9 +53,4 @@
 
 .button:hover {
   transform: scale(1.05);
-}
-
-.button:hover:disabled {
-  transform: scale(1);
-  cursor: not-allowed;
 }

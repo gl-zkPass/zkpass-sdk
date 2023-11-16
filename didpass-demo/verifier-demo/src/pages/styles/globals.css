@@ -60,6 +60,10 @@ body {
   font-family: var(--font-roboto);
 }
 
+a {
+  text-decoration: none;
+}
+
 .hidden {
   display: none;
 }

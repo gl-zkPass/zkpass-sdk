@@ -83,7 +83,13 @@ const ShowQr = () => {
   return (
     <section className={styles.container}>
       <h2 className={styles.title}>Start Verification</h2>
-      <p className={styles.description}>Press the button to generate the QR and then scan it using your wallet!</p>
+      <p className={styles.description}>
+        {!qrData ?
+          'Press the button to generate the QR and then scan it using your wallet!'
+          :
+          'Scan the QR code using your wallet and continue process until proof verification!'
+        }
+      </p>
       <div className={styles.qrcode}>
         <QRCode
           id="connect-qr"
@@ -100,9 +106,12 @@ const ShowQr = () => {
         }
       </div>
 
-      <p className={styles.note}><span className={styles.note_highlight}>Note: </span> After scanning the QR, wait a few seconds for the status to update.</p>
+      <p className={styles.note}><span className={styles.note_highlight}>Note: </span> Every 5 seconds, a request will be sent out to check the current verification status.</p>
 
-      <button onClick={handleRetrieveQr} className={styles.button} disabled={qrData !== undefined}>Retrieve QR Code</button>
+      {
+        !qrData &&
+        <button onClick={handleRetrieveQr} className={styles.button} disabled={qrData !== undefined}>Retrieve QR Code</button>
+      }
     </section>
   )
 
