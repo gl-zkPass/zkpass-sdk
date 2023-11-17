@@ -1,4 +1,4 @@
-import { verifyZkpassProof } from "@didpass/zkpass-client-ts";
+import { ZkPassClient } from "@didpass/zkpass-client-ts";
 import { MyValidator } from "./proofValidator";
 
 export async function POST(req: Request) {
@@ -16,7 +16,11 @@ export async function POST(req: Request) {
      * Step 2
      * Validate the proof
      */
-    const proofResult = await verifyZkpassProof(proof, myValidator);
+    const zkPassClient = new ZkPassClient();
+    const proofResult = await zkPassClient.verifyZkpassProof(
+      proof,
+      myValidator
+    );
     console.log({ proofResult });
 
     console.log("=== proof OK result sent ===");

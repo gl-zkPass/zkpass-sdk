@@ -1,4 +1,4 @@
-import { DataVerificationRequest } from "@didpass/zkpass-client-ts/types/dvr";
+import { DataVerificationRequest } from "@didpass/zkpass-client-ts";
 
 /**
  * You can use database or any other storage to store DVRs.
@@ -27,7 +27,7 @@ class DVRLookupTable {
   private table: DVRTable = {};
 
   public addDVR(dvr: DataVerificationRequest): void {
-    this.table[dvr.dvr_id] = dvr;
+    this.table[dvr.dvrId] = dvr;
   }
 
   public getDVR(key: string): DataVerificationRequest | undefined {
