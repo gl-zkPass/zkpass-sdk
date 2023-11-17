@@ -26,7 +26,7 @@ export class ProofVerifierService {
    * 
    * @param params 
    * 
-   * @returns {Promise<VerifyZkpassProofOutput | string>} 
+   * @returns {Promise<boolean>} 
    */
   async verifyProof(
     params: WalletCallbackParams

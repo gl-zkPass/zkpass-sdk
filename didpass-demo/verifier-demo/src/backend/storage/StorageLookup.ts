@@ -1,5 +1,3 @@
-import { DataVerificationRequest } from "@didpass/zkpass-client-ts/types/dvr";
-
 /**
  * You can use database or any other storage to store DVRs.
  */

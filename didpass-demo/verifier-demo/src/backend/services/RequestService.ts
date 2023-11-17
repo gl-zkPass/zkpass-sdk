@@ -31,7 +31,7 @@ export class RequestService {
    */
   public async requestVerification(
     queryId: string
-  ): Promise<AuthVerificationResult | string> {
+  ): Promise<AuthVerificationResult> {
     if (!queryId && parseInt(queryId) != 0) {
       throw "Bad Request, empty query_id";
     }
@@ -99,7 +99,7 @@ export class RequestService {
    * 
    * @param params
    * 
-   * @returns {Promise<VerifyZkpassProofOutput | string>} 
+   * @returns {Promise<boolean>} 
    */
   public async verifyProof(
     params: WalletCallbackParams

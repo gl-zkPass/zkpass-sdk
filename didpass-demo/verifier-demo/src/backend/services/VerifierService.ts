@@ -82,11 +82,11 @@ export class VerifierService {
    * 
    * @param params 
    * 
-   * @returns {Promise<AuthVerificationResult | string>}
+   * @returns {Promise<AuthVerificationResult>}
    */
   async requestVerification(
     params: RequestVerifyParams
-  ): Promise<AuthVerificationResult | string> {
+  ): Promise<AuthVerificationResult> {
     return new Promise(async (resolve, reject) => {
       try {
         const { dvrId, dvrTitle, queryId } = params;
