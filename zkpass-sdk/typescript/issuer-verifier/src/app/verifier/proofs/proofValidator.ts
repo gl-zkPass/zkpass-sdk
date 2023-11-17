@@ -1,10 +1,10 @@
-import {
-  ZkPassProofMetadataValidator,
-  PublicKey,
-  KeysetEndpointWrapped,
-} from "@didpass/zkpass-client-ts/types/common";
+import { ZkPassProofMetadataValidator } from "@didpass/zkpass-client-ts/lib/interfaces";
 import { dvrLookup } from "../dvrs/dvrHelper";
-import { DataVerificationRequest } from "@didpass/zkpass-client-ts/types/dvr";
+import {
+  DataVerificationRequest,
+  KeysetEndpointWrapped,
+  PublicKey,
+} from "@didpass/zkpass-client-ts";
 
 export class MyValidator implements ZkPassProofMetadataValidator {
   /**
@@ -17,38 +17,34 @@ export class MyValidator implements ZkPassProofMetadataValidator {
    * @param   {string}      dvrVerifyingKey       Public key used for signing dvr in the proof (verifier public key)
    * @param   {string}      zkpassProofTtl        TTL of the proof in seconds
    */
-  validate(
+  async validate(
     dvrTitle: string,
     dvrId: string,
     dvrDigest: string,
     userDataVerifyingKey: PublicKey,
     dvrVerifyingKey: PublicKey,
     zkpassProofTtl: number
-  ): void {
+  ): Promise<void> {
     /**
      * This validate method will be called first inside verifyZkpassProof
      * you can modify the logic here to suit your needs
      */
-
     const dvr = dvrLookup.value.getDVR(dvrId);
     console.log("=== MyValidator.validate ===");
     console.log({ dvr });
     if (!dvr) {
       throw new Error("DVR not found");
     }
-
     console.log("=== validating dvrTitle ===");
-    console.log({ proof_title: dvrTitle, dvr_title: dvr.dvr_title });
-    if (dvr.dvr_title !== dvrTitle) {
+    console.log({ proof_title: dvrTitle, dvr_title: dvr.dvrTitle });
+    if (dvr.dvrTitle !== dvrTitle) {
       throw new Error("DVR title mismatch");
     }
-
     console.log("=== validating verifier key ===");
     this.validateKey(
-      dvr?.user_data_verifying_key as KeysetEndpointWrapped,
+      dvr?.userDataVerifyingKey as KeysetEndpointWrapped,
       dvrVerifyingKey
     );
-
     // Verifier knows which issuer's public key to use to verify the proof
     const verifyingKeyJKWS = {
       KeysetEndpoint: {
@@ -59,7 +55,6 @@ export class MyValidator implements ZkPassProofMetadataValidator {
     console.log("=== validating issuer key ===");
     this.validateKey(verifyingKeyJKWS, userDataVerifyingKey);
     this.validateDigest(dvrDigest, dvr);
-
     if (zkpassProofTtl > 0) {
       const currentTimestampInSeconds = Math.floor(new Date().getTime() / 1000);
       const diff = currentTimestampInSeconds - zkpassProofTtl;
