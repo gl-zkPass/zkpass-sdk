@@ -1,6 +1,5 @@
-import { injectable } from "inversify";
 import { ICredentialDatabase } from "./dto/ICredentialDatabase";
-import detailCredentialMock from "../mocks/detailCredentialMock.json";
+import detailCredentialMock from "./mocks/detailCredentialMock.json";
 import { IIssuerScanResponse, IssuerScanStatus } from "./dto/IssuerScanStatus";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -20,12 +19,10 @@ import {
   JwksEndpoint,
   TokenizePayload,
 } from "@didpass/issuer-sdk/lib/types/JWSDetailsDTO";
-import { IIssue } from "./IIssue";
 import { StatusCodes } from "http-status-codes";
-import { lookupTable } from "../storage/LookupTable";
+import { lookupTable } from "./storage/LookupTable";
 
-@injectable()
-export class IssuerService implements IIssue {
+export class IssuerService {
   private credential: Credential;
   private qrGenerator: QRGenerator;
   private didAccount: DIDAccount;
@@ -34,7 +31,6 @@ export class IssuerService implements IIssue {
   MAX_PREVIEW_ELEMENT = 4;
 
   private issuerPrivateKey = process.env.ISSUER_PRIVATE_KEY ?? "";
-  private baseUrl = process.env.NEXT_PUBLIC_URL || "";
 
   public constructor() {
     this.didAccount = new DIDAccount(this.issuerPrivateKey);

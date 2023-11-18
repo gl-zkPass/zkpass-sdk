@@ -1,6 +1,4 @@
-import { container } from "@/backend/inversify.config";
-import { IssuerService } from "@/backend/issuer/IssuerService";
-import { QRTypes } from "@didpass/issuer-sdk/lib/types/QRTypes";
+import { IssuerService } from "@/backend/IssuerService";
 import {
   ICredentialQRPayload,
   IWalletResponse,
@@ -19,7 +17,7 @@ export default async function handler(
 
   try {
     const credentialPayload: ICredentialQRPayload = req.body;
-    const issuerService = container.get<IssuerService>("IssuerService");
+    const issuerService = new IssuerService();
     const result = await issuerService.getClaimCredential(credentialPayload);
 
     response = {

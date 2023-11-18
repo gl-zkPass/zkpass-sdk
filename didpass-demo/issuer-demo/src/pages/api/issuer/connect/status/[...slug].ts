@@ -1,5 +1,4 @@
-import { container } from "@/backend/inversify.config";
-import { ConnectService } from "@/backend/issuer/ConnectService";
+import { ConnectService } from "@/backend/ConnectService";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
@@ -21,7 +20,7 @@ export default async function handler(
   if (uuid === undefined) {
     return res.status(StatusCodes.BAD_REQUEST).send({ message: "Slug error" });
   }
-  const connectService = container.get<ConnectService>("ConnectService");
+  const connectService = new ConnectService();
   const result = await connectService.checkStatus(uuid.toString());
   if (result.did) {
     return res

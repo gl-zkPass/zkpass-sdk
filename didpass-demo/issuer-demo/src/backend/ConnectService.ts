@@ -1,5 +1,4 @@
-import { ErrorResponse } from "../types/Response";
-import { injectable } from "inversify";
+import { ErrorResponse } from "./types/Response";
 import jwt from "jsonwebtoken";
 import "reflect-metadata";
 import { v4 as uuidv4 } from "uuid";
@@ -7,9 +6,8 @@ import { Auth, DIDAccount, QRGenerator } from "@didpass/issuer-sdk";
 import { IConnectQR } from "@didpass/issuer-sdk/lib/types/AuthDTO";
 import { IIssuerDetail } from "@didpass/issuer-sdk/lib/types/QRTypes";
 import { IConnectQRPayload } from "@didpass/issuer-sdk/lib/types/WalletDTO";
-import { lookupTable } from "../storage/LookupTable";
+import { lookupTable } from "./storage/LookupTable";
 
-@injectable()
 export class ConnectService {
   private auth: Auth;
   private qrGenerator: QRGenerator;

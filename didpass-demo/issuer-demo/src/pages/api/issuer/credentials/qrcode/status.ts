@@ -1,6 +1,5 @@
 import { getDidFromRequestHeaders } from "@/backend/helper";
-import { container } from "@/backend/inversify.config";
-import { IssuerService } from "@/backend/issuer/IssuerService";
+import { IssuerService } from "@/backend/IssuerService";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -33,7 +32,7 @@ export default async function handler(
       return;
     }
 
-    const issuerService = container.get<IssuerService>("IssuerService");
+    const issuerService = new IssuerService();
 
     const result = await issuerService.checkScanStatus(header.did);
     res.status(StatusCodes.OK).json({
