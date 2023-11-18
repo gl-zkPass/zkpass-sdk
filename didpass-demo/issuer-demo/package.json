@@ -15,7 +15,6 @@
     "@mui/icons-material": "^5.14.16",
     "@mui/material": "^5.14.17",
     "http-status-codes": "^2.3.0",
-    "ioredis": "^5.3.2",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "next": "14.0.1",
