@@ -1,21 +1,21 @@
-import { injectable } from "inversify";
 import { GenerateZkpassQueryParams } from '@backend/types/VerifierParamTypes';
 
 const operatorMapping = {
-  $eq: "==",
-  $lt: "<",
-  $gt: ">",
-  $in: "~==",
-  $nin: "~!=",
-  $gte: ">=",
-  $lte: "<=",
-  $ne: "!=",
+  $eq: '==',
+  $lt: '<',
+  $gt: '>',
+  $in: '~==',
+  $nin: '~!=',
+  $gte: '>=',
+  $lte: '<=',
+  $ne: '!=',
 };
 
-@injectable()
 export class QueryBuilderService {
-  public async buildFullQuery(request: GenerateZkpassQueryParams): Promise<any> {
-    if (!request) return Promise.reject("Query is empty");
+  public async buildFullQuery(
+    request: GenerateZkpassQueryParams
+  ): Promise<any> {
+    if (!request) return Promise.reject('Query is empty');
 
     try {
       const { schemaType: type, criterias } = request;
@@ -35,7 +35,7 @@ export class QueryBuilderService {
         }),
       };
       query.and.unshift({
-        "==": ["type", type],
+        '==': ['type', type],
       });
 
       return Promise.resolve(query);

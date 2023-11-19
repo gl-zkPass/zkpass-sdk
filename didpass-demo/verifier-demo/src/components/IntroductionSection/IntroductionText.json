@@ -1,4 +1,4 @@
 [
   "For the sake of simplicity, we will only use one particular case to demo.",
-  "The following page will display a \"Retrieve QR Code\"  button that will request a QR code to the backend through the \"/request-verification\" endpoint. To continue, you scan the QR code using your wallet and you will receive a signed DVR that will be displayed in your wallet. Finally, continue generating the proof, where after generating it, it will send another request to the <span styles={styles.description_highlight}>\"/verify-proof\"</span> endpoint for proof verification."
+  "The following page will display a \"Retrieve QR Code\"  button that will request a QR code to the backend through the \"/request-verification\" endpoint. To continue, you scan the QR code using your wallet and you will receive a signed DVR that will be displayed in your wallet. Finally, continue generating the proof, where after generating it, it will send another request to the \"/verify-proof\" endpoint for proof verification."
 ]

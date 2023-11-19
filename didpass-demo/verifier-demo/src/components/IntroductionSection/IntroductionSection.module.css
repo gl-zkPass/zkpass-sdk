@@ -8,12 +8,12 @@
   align-items: flex-end;
 }
 
-.title{
+.title {
   font-size: var(--font-size-13xl);
 }
 
 .steps {
-  color: rgba(255,255,255,0.25);
+  color: rgba(255, 255, 255, 0.25);
 }
 
 .description {
@@ -22,7 +22,7 @@
 }
 
 .buttons {
-  position: absolute; 
+  position: absolute;
   bottom: 10vh;
   right: 30vw;
   display: flex;
@@ -30,9 +30,10 @@
   gap: 1rem;
 }
 
-.buttons_prev, .buttons_next {
+.buttons_prev,
+.buttons_next {
   padding: 0.75rem 2rem;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   color: var(--color-gray-30);
   font-weight: bold;
   border-radius: 10px;
@@ -42,13 +43,14 @@
   transition: all 150ms ease-in-out;
 }
 
-.buttons_prev:hover, .buttons_next:hover{
-  background: rgba(255,255,255,0.25); 
-  color: rgba(255,255,255);
+.buttons_prev:hover,
+.buttons_next:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255);
 }
 
 .buttons_prev:disabled:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   color: var(--color-gray-30);
   cursor: auto;
 }

@@ -1,9 +1,7 @@
-import { injectable } from 'inversify';
 import { AuthVerificationResult } from "@backend/types/VerifierResultTypes";
 import { storageLookup } from '@backend/storage/StorageLookup';
 import { SignedDvrResponse } from '@didpass/verifier-sdk/lib/types/signedDvrResponse';
 
-@injectable()
 export default class VerifierRepository {
   private storageLookup;
 
