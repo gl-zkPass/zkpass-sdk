@@ -1,5 +1,4 @@
-import { container } from "@/backend/inversify.config";
-import { ConnectService } from "@/backend/issuer/ConnectService";
+import { ConnectService } from "@/backend/ConnectService";
 import {
   IConnectQRPayload,
   IWalletResponse,
@@ -27,7 +26,7 @@ export default async function handler(
 
   try {
     const connectPayload: IConnectQRPayload = req.body;
-    const connectService = container.get<ConnectService>("ConnectService");
+    const connectService = new ConnectService();
     await connectService.authorize(connectPayload);
 
     response = {

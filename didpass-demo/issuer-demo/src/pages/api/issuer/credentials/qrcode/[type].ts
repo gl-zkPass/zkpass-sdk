@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import { getDidFromRequestHeaders } from "@/backend/helper";
-import { container } from "@/backend/inversify.config";
-import { IssuerService } from "@/backend/issuer/IssuerService";
+import { IssuerService } from "@/backend/IssuerService";
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,7 +23,7 @@ export default async function handler(
         .status(StatusCodes.BAD_REQUEST)
         .send({ message: ReasonPhrases.BAD_REQUEST + ", empty credential Id" });
     }
-    const issuerService = container.get<IssuerService>("IssuerService");
+    const issuerService = new IssuerService();
     try {
       const { result } = await issuerService.getCredentialQRCode(
         did,

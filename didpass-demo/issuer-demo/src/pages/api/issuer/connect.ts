@@ -1,5 +1,4 @@
-import { container } from "@/backend/inversify.config";
-import { ConnectService } from "@/backend/issuer/ConnectService";
+import { ConnectService } from "@/backend/ConnectService";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -12,7 +11,7 @@ export default async function handler(
     return;
   }
 
-  const connectService = container.get<ConnectService>("ConnectService");
+  const connectService = new ConnectService();
   const [id, qrCode] = await connectService.getConnectQR();
 
   res.status(StatusCodes.OK).json({

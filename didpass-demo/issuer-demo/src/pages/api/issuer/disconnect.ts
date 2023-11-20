@@ -1,6 +1,4 @@
-import { getDidFromRequestHeaders } from "@/backend/helper";
-import { container } from "@/backend/inversify.config";
-import { ConnectService } from "@/backend/issuer/ConnectService";
+import { ConnectService } from "@/backend/ConnectService";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -14,7 +12,7 @@ export default async function handler(
   }
 
   try {
-    const connectService = container.get<ConnectService>("ConnectService");
+    const connectService = new ConnectService();
     connectService.disconnect();
 
     res.status(StatusCodes.OK).json({ result: "disconnected" });

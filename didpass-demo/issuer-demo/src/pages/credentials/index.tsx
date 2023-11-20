@@ -2,7 +2,7 @@ import styles from "./credentials.module.css";
 import {
   IssuerScanStatus,
   IIssuerScanResponse,
-} from "@/backend/issuer/dto/IssuerScanStatus";
+} from "@/backend/dto/IssuerScanStatus";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
