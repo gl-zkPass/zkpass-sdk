@@ -11,5 +11,3 @@ services:
     environment:
       - NODE_ENV=development
     command: npm run dev
-volumes:
-  swiss-mysql-data:

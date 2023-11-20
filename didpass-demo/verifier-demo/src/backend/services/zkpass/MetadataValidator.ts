@@ -52,7 +52,6 @@ export class MetadataValidator implements ZkPassProofMetadataValidator {
       },
     };
     this.validateKey(verifyingKeyJKWS, dvrVerifyingKey);
-    // this.validateDigest(dvrDigest, dvr);
 
     if (zkpassProofTtl > 0) {
       const currentTimestampInSeconds = Math.floor(new Date().getTime() / 1000);
@@ -99,12 +98,6 @@ export class MetadataValidator implements ZkPassProofMetadataValidator {
       }
     } catch (error) {
       throw new Error('Error fetching data keyset.');
-    }
-  }
-
-  private validateDigest(dvrDigest: string, dvr: DataVerificationRequest) {
-    if (dvrDigest != dvr.digest()) {
-      throw new Error('Digest mismatch');
     }
   }
 }
