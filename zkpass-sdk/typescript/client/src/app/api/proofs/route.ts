@@ -10,7 +10,7 @@ export async function POST(req: Request) {
      * Step 1
      * Provide url to the zkpass service.
      */
-    const zkPassServiceURL = "https://stag-zkpass-ws.ssi.id/proof";
+    const zkPassServiceURL = "https://playground-zkpass.ssi.id/proof";
 
     /**
      * Step 2
