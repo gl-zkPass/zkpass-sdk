@@ -7,6 +7,7 @@ import { IConnectQR } from "@didpass/issuer-sdk/lib/types/AuthDTO";
 import { IIssuerDetail } from "@didpass/issuer-sdk/lib/types/QRTypes";
 import { IConnectQRPayload } from "@didpass/issuer-sdk/lib/types/WalletDTO";
 import { lookupTable } from "./storage/LookupTable";
+import checkEnvironmentVariables from "./utils/environment-check";
 
 export class ConnectService {
   private auth: Auth;
@@ -17,6 +18,8 @@ export class ConnectService {
   private baseUrl = process.env.NEXT_PUBLIC_URL || "";
 
   constructor() {
+    checkEnvironmentVariables();
+
     this.auth = new Auth();
 
     const didAccount = new DIDAccount(this.privateKey);
