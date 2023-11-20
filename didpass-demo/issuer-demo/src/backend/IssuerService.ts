@@ -21,6 +21,7 @@ import {
 } from "@didpass/issuer-sdk/lib/types/JWSDetailsDTO";
 import { StatusCodes } from "http-status-codes";
 import { lookupTable } from "./storage/LookupTable";
+import checkEnvironmentVariables from "./utils/environment-check";
 
 export class IssuerService {
   private credential: Credential;
@@ -33,6 +34,8 @@ export class IssuerService {
   private issuerPrivateKey = process.env.ISSUER_PRIVATE_KEY ?? "";
 
   public constructor() {
+    checkEnvironmentVariables();
+    
     this.didAccount = new DIDAccount(this.issuerPrivateKey);
     this.qrGenerator = new QRGenerator(this.didAccount);
     this.credential = new Credential();
