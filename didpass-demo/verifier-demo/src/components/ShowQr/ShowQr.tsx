@@ -35,7 +35,10 @@ const ShowQr = () => {
     }).then((data) => {
       setLoading(false);
       setQrData(data.data);
-    })
+    }).catch(() => {
+      alert('Something went wrong when trying to retrieve the QR!');
+      router.back();
+    });
   };
 
   useEffect(() => {

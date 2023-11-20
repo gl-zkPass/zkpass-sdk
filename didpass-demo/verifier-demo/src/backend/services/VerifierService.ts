@@ -36,6 +36,7 @@ import {
   RequestVerifyParams,
 } from '@backend/types/VerifierParamTypes';
 import { nowInUnix } from '@backend/helper';
+import { checkEnvironmentVariables } from '@utils/environment-check';
 
 class VerifierService {
   private verifier;
@@ -50,6 +51,8 @@ class VerifierService {
     this.queryBuilder = new QueryBuilderService();
     this.zkPassClient = new ZkPassClient();
     this.validator = new MetadataValidator(this.verifierRepository);
+
+    checkEnvironmentVariables();
   }
 
   /**
@@ -97,7 +100,7 @@ class VerifierService {
   /**
    * Request verification
    *
-   * @param params
+   * @param queryId
    *
    * @returns {Promise<AuthVerificationResult>}
    */
@@ -147,7 +150,8 @@ class VerifierService {
   /**
    * Create a signed DVR token using verifier SDK
    *
-   * @param params
+   * @param sessionId
+   * @param siweDto
    *
    * @returns {{Promise<SignedDvrResponse>}}
    */

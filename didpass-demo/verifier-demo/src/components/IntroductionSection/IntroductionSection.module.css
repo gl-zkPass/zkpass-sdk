@@ -33,8 +33,8 @@
 .buttons_prev,
 .buttons_next {
   padding: 0.75rem 2rem;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--color-gray-30);
+  background: var(--color-aqua);
+  color: var(--black);
   font-weight: bold;
   border-radius: 10px;
   outline: none;
@@ -45,12 +45,11 @@
 
 .buttons_prev:hover,
 .buttons_next:hover {
-  background: rgba(255, 255, 255, 0.25);
-  color: rgba(255, 255, 255);
+  transform: scale(1.1);
 }
 
-.buttons_prev:disabled:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--color-gray-30);
+.buttons_prev:disabled {
+  transform: scale(1);
+  opacity: 0.75;
   cursor: auto;
 }
