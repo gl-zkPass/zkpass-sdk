@@ -1,0 +1,22 @@
+.logo {
+  width: 2rem;
+  height: 2rem;
+}
+
+.title_container {
+  width: 100%;
+  margin: 2.5vh 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.title_text {
+  font-size: var(--font-size-13xl);
+}
+
+.title_demo{
+  font-weight: normal;
+  font-style: italic;
+}

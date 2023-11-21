@@ -1,0 +1,32 @@
+.container {
+  padding-top: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.title{
+  margin: 0;
+}
+
+.result {
+  margin: 4vh 0 8vh;
+  font-size: var(--font-size-13xl);
+}
+
+.button {
+  padding: 0.75rem 1rem;
+  font-weight: bold;
+  outline: none;
+  border: none;
+  border-radius: 10px;
+  background: var(--color-aqua);
+  color: var(--black);
+  cursor: pointer;
+  transition: all 150ms ease-in-out;
+}
+
+.button:hover {
+  transform: scale(1.05);
+}

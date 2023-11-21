@@ -1,0 +1,33 @@
+.container {
+  margin-top: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.title{
+  margin-bottom: 0.5rem;
+  font-size: var(--font-size-13xl);
+}
+
+.description{
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.start_button {
+  padding: 1rem 1.75rem;
+  border-radius: 1rem;
+  outline: none;
+  border: none;
+  font-weight: bold;
+  background: var(--color-aqua);
+  color: var(--black);
+  transition: all 150ms ease-in-out;
+  cursor: pointer;
+}
+
+.start_button:hover{
+  transform: scale(1.1);
+};
