@@ -1,4 +1,4 @@
-import { DIDAccount } from "../implementation/DIDAccount";
+import { DIDAccount } from "../implementation";
 
 /**
  * Represents the details of a credential issuance.

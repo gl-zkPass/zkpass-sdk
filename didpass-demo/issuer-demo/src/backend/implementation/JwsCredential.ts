@@ -5,7 +5,7 @@ import {
   JwksEndpoint,
   JwsPayload,
   TokenizePayload,
-} from "../dto/JWSDetailsDTO";
+} from "../dto";
 
 /**
  * Represents a JWS credential used for tokenizing data.

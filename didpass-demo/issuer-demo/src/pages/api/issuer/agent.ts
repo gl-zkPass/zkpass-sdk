@@ -1,5 +1,5 @@
 import { IssuerService } from "@/backend/IssuerService";
-import { ICredentialQRPayload, IWalletResponse } from "@/backend/dto/WalletDTO";
+import { ICredentialQRPayload, IWalletResponse } from "@/backend/dto";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { NextApiRequest, NextApiResponse } from "next";
 

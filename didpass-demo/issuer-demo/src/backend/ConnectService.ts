@@ -1,15 +1,11 @@
-import { ErrorResponse } from "./types/Response";
 import jwt from "jsonwebtoken";
 import "reflect-metadata";
 import { v4 as uuidv4 } from "uuid";
 import { lookupTable } from "./storage/LookupTable";
 import checkEnvironmentVariables from "./utils/environment-check";
-import { IConnectQRPayload } from "./dto/WalletDTO";
-import { IIssuerDetail } from "./types/QRTypes";
-import { IConnectQR } from "./types/QR";
-import { Auth } from "./implementation/Auth";
-import { QRGenerator } from "./implementation/QRGenerator";
-import { DIDAccount } from "./implementation/DIDAccount";
+import { IConnectQRPayload } from "./dto";
+import { ErrorResponse, IConnectQR, IIssuerDetail } from "./types";
+import { Auth, DIDAccount, QRGenerator } from "./implementation";
 
 export class ConnectService {
   private auth: Auth;

@@ -1,4 +1,4 @@
-import { IAuth } from "../interfaces/IAuth";
+import { IAuth } from "../interfaces";
 import { SiweMessage } from "siwe";
 
 /**

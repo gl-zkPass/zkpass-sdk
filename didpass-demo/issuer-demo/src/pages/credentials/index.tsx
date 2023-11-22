@@ -1,18 +1,14 @@
 import styles from "./credentials.module.css";
-import {
-  IssuerScanStatus,
-  IIssuerScanResponse,
-} from "@/backend/dto/IssuerScanStatus";
+import { IIssuerScanResponse, IssuerScanStatus } from "@/backend/dto";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { QR } from "@/backend/types/QR";
 import MainContainer from "@/components/Container/MainContainer";
 import Toast, { ToastConfig } from "@/components/Toast";
-import { Claim } from "@/backend/types/Claims";
+import { Claim, QrModalConfig } from "@/backend/types";
 import { getToken, removeUserCookie } from "@/utils/cookie";
 import CredentialWidget from "@/components/CredentialWidget";
-import { QrModalConfig } from "@/backend/types/QRModalConfig";
 import QrModal from "@/components/QrModal";
 
 const Credentials = () => {

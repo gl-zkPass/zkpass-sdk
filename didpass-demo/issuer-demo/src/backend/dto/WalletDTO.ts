@@ -1,4 +1,4 @@
-import { QRTypes } from "../types/QRTypes";
+import { QRTypes } from "../types";
 
 /**
  * Interface for wallet response.

@@ -1,5 +1,5 @@
 import { ConnectService } from "@/backend/ConnectService";
-import { IConnectQRPayload, IWalletResponse } from "@/backend/dto/WalletDTO";
+import { IConnectQRPayload, IWalletResponse } from "@/backend/dto";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { NextApiRequest, NextApiResponse } from "next";
 

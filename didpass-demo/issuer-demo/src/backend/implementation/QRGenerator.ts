@@ -1,10 +1,8 @@
-import { QRTypes } from "../types/QRTypes";
-import type { IIssuerDetail } from "../types/QRTypes";
 import { DIDAccount } from "./DIDAccount";
 import { v4 } from "uuid";
 import { generateNonce } from "siwe";
-import { IConnectQR } from "../types/QR";
-import { ICredentialBody, ICredentialQR } from "../dto/CredentialDTO";
+import { IConnectQR, IIssuerDetail, QRTypes } from "../types";
+import { ICredentialBody, ICredentialQR } from "../dto";
 
 /**
  * QRGenerator class for generating QR codes for connecting, issuing, and verifying credentials.

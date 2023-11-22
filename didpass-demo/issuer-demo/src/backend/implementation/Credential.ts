@@ -1,7 +1,7 @@
-import { ICredential } from "../interfaces/ICredential";
+import { ICredential } from "../interfaces";
 import didkit from "@spruceid/didkit-wasm-node";
 import { Auth } from "./Auth";
-import { IssuanceDetails } from "../dto/IssuanceDetailsDTO";
+import { IssuanceDetails } from "../dto";
 
 /**
  * Credential class that implements ICredential interface.

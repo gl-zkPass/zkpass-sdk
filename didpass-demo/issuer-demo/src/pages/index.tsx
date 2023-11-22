@@ -3,7 +3,7 @@ import { useState } from "react";
 import ShowQr from "@/components/ShowQr";
 import ConnectWidget from "@/components/ConnectWidget";
 import styles from "./index.module.css";
-import { QR } from "@/backend/types/QR";
+import { QR } from "@/backend/types";
 import ConnectHeader from "@/components/ConnectHeader";
 import CardContainer from "@/components/Container/CardContainer";
 
