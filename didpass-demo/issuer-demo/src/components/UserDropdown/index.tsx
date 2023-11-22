@@ -6,7 +6,6 @@ import Paper from "@mui/material/Paper";
 import Popper from "@mui/material/Popper";
 import Stack from "@mui/material/Stack";
 import Cookies from "js-cookie";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { getToken, removeUserCookie } from "@/utils/cookie";
