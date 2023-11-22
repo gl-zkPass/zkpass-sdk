@@ -1,8 +1,5 @@
 import { ConnectService } from "@/backend/ConnectService";
-import {
-  IConnectQRPayload,
-  IWalletResponse,
-} from "@didpass/issuer-sdk/lib/types/WalletDTO";
+import { IConnectQRPayload, IWalletResponse } from "@/backend/dto/WalletDTO";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { NextApiRequest, NextApiResponse } from "next";
 

@@ -1,8 +1,5 @@
 import { IssuerService } from "@/backend/IssuerService";
-import {
-  ICredentialQRPayload,
-  IWalletResponse,
-} from "@didpass/issuer-sdk/lib/types/WalletDTO";
+import { ICredentialQRPayload, IWalletResponse } from "@/backend/dto/WalletDTO";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { NextApiRequest, NextApiResponse } from "next";
 

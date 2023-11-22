@@ -2,26 +2,18 @@ import { ICredentialDatabase } from "./dto/ICredentialDatabase";
 import detailCredentialMock from "./mocks/detailCredentialMock.json";
 import { IIssuerScanResponse, IssuerScanStatus } from "./dto/IssuerScanStatus";
 import { v4 as uuidv4 } from "uuid";
-import {
-  Credential,
-  DIDAccount,
-  QRGenerator,
-  JwsCredential,
-} from "@didpass/issuer-sdk";
-import {
-  ICredentialBody,
-  ICredentialQR,
-} from "@didpass/issuer-sdk/lib/types/CredentialDTO";
-import { IssuanceDetails } from "@didpass/issuer-sdk/lib/types/IssuanceDetailsDTO";
-import { ICredentialQRPayload } from "@didpass/issuer-sdk/lib/types/WalletDTO";
-import { QRTypes } from "@didpass/issuer-sdk/lib/types/QRTypes";
-import {
-  JwksEndpoint,
-  TokenizePayload,
-} from "@didpass/issuer-sdk/lib/types/JWSDetailsDTO";
 import { StatusCodes } from "http-status-codes";
 import { lookupTable } from "./storage/LookupTable";
 import checkEnvironmentVariables from "./utils/environment-check";
+import { ICredentialBody, ICredentialQR } from "./dto/CredentialDTO";
+import { QRTypes } from "./types/QRTypes";
+import { ICredentialQRPayload } from "./dto/WalletDTO";
+import { IssuanceDetails } from "./dto/IssuanceDetailsDTO";
+import { JwksEndpoint, TokenizePayload } from "./dto/JWSDetailsDTO";
+import { QRGenerator } from "./implementation/QRGenerator";
+import { DIDAccount } from "./implementation/DIDAccount";
+import { JwsCredential } from "./implementation/JwsCredential";
+import { Credential } from "./implementation/Credential";
 
 export class IssuerService {
   private credential: Credential;

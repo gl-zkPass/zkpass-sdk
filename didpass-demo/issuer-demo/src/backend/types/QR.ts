@@ -1,3 +1,9 @@
+import { IIssuerDetail } from "./QRTypes";
+
+/**
+ * Interface for Connect QR object
+ * @interface IConnectQR
+ */
 export interface IConnectQR {
   id: string;
   thid: string;
@@ -8,6 +14,7 @@ export interface IConnectQR {
     callbackUrl: string;
     reason: string;
     nonce: string;
+    issuer?: IIssuerDetail;
   };
 }
 
