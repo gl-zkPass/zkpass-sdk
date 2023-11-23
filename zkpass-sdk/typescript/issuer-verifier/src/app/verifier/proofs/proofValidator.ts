@@ -48,8 +48,8 @@ export class MyValidator implements ZkPassProofMetadataValidator {
     // Verifier knows which issuer's public key to use to verify the proof
     const verifyingKeyJKWS = {
       KeysetEndpoint: {
-        jku: process.env.NEXT_PUBLIC_URL + "/issuer/jwks.json",
-        kid: "yibXxdascCcvpCxxbVvRm1B0N2loYIB8wMyGJjr5P0A=",
+        jku: "https://gdp-admin.github.io/didPass-demo/zkpass/sample-jwks/issuer-key.json",
+        kid: "k-1",
       },
     };
     console.log("=== validating issuer key ===");
