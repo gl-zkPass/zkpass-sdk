@@ -5,7 +5,7 @@
 
 ## Running Wallet-Demo
 
-- `ngrok install` - Install dependencies.
+- `npm install` - Install dependencies.
 - Create `.env` and copy content from `.env.example`.
 - Change `.env` values by your needs.
 - `npm run start` - Start Metro to initiate mobile project (ios/android)
