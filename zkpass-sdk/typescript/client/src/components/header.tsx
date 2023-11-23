@@ -11,7 +11,7 @@ export default function HeaderBar({ user }: { user: string | undefined }) {
 
   const _handleLogout = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    fetch("http://localhost:3001/api/logout", {
+    fetch("http://localhost:3000/api/logout", {
       method: "POST",
       body: JSON.stringify({}),
     })

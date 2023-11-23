@@ -18,7 +18,7 @@ export default function Home() {
       setOpen(true);
       return;
     }
-    fetch("http://localhost:3001/api/login", {
+    fetch("http://localhost:3000/api/login", {
       method: "POST",
       body: JSON.stringify({ username, password }),
     })

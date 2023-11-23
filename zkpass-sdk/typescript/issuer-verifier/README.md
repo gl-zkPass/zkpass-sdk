@@ -9,7 +9,7 @@
 
 ## Generating Keypair [Optional]
 
-- `POST localhost:3009/keys`, check your console to see generated keypair.
+- `POST localhost:3001/keys`, check your console to see generated keypair.
 
 ## Modifying DVR [Optional]
 
