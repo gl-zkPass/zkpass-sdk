@@ -67,9 +67,9 @@ async function _signBloodTest(data: { [key: string]: any }) {
    */
   const PRIVATE_KEY_PEM =
     "-----BEGIN PRIVATE KEY-----\n" +
-    "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgln38K+VhuqmDCahN\n" +
-    "VFfftgyM7MeY7t6LZqIx+PcPCjOhRANCAASvtotehwDpyUwONiDzQDxWdwaa+uaj\n" +
-    "tzi4SPgPtJm5YGsLINywg+uh9MaHTRmVLlgCgIGenyT0Yx6iNmPRo3zb\n" +
+    "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg3J/wAlzSD8ZyAU8f\n" +
+    "bPkuCY/BSlq2Y2S5hym8sRccpZehRANCAATt/RChVSxxwH3IzAcBHuhWT8v5mRfx\n" +
+    "moLVnRdNqPcExwyeqH5XN0dlffIYprf66E0CEpZbJ8H+v7cTys9Ie1dd\n" +
     "-----END PRIVATE KEY-----\n";
 
   /**
@@ -78,8 +78,8 @@ async function _signBloodTest(data: { [key: string]: any }) {
    * This is the pair of the private key from step 1
    */
   const verifyingKeyJKWS = {
-    jku: process.env.NEXT_PUBLIC_URL + "/issuer/jwks.json",
-    kid: "yibXxdascCcvpCxxbVvRm1B0N2loYIB8wMyGJjr5P0A=",
+    jku: "https://gdp-admin.github.io/didPass-demo/zkpass/sample-jwks/issuer-key.json",
+    kid: "k-1",
   };
 
   /**

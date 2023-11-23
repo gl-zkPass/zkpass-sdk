@@ -69,9 +69,9 @@ async function _generateSignedDVR(user: User) {
    */
   const PRIVATE_KEY_PEM =
     "-----BEGIN PRIVATE KEY-----\n" +
-    "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgoscaQEAjaaBo1WZ3\n" +
-    "QYh0QF1bgjq/LF7nelvj8blaxeChRANCAARD9HUmJXTWInD5PYLY1sR4HOiNm+e8\n" +
-    "ORtu6YJAO6qFhyuzxyxid3QFJNyanOswNxxbaEwhKxfE+q+jOfKR4pND\n" +
+    "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgLxxbcd7aVcNEdE/C\n" +
+    "EGPwLzM6lkLuDYzhd3FqALuuHCahRANCAASnpYmXAC2V39TiEOaa64x1kJW0x5Qh\n" +
+    "PfGQN1TAs6+xVUD6KJLB9pfgeoqVE8MYb4XpYaOfHKz1Pka017ee97A4\n" +
     "-----END PRIVATE KEY-----\n";
 
   /**
@@ -80,8 +80,8 @@ async function _generateSignedDVR(user: User) {
    * This is the pair of the private key from step 1
    */
   const verifyingKeyJKWS = {
-    jku: process.env.NEXT_PUBLIC_URL + "/verifier/jwks.json",
-    kid: "H3l/puWLF1UF4QHGMlIBvg8DrHax5ECYYjEDMUTeELk=",
+    jku: "https://gdp-admin.github.io/didPass-demo/zkpass/sample-jwks/verifier-key.json",
+    kid: "k-1",
   };
 
   /**
