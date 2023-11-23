@@ -56,8 +56,8 @@ export default function EmployeeOnboarding({
   useEffect(() => {
     if (!requestedDVR || !requestedBloodTest) {
       setIsLoading(true);
-      const dvrUrl = "http://localhost:3009/verifier/dvrs";
-      const bloodTestUrl = "http://localhost:3009/issuer/blood_tests";
+      const dvrUrl = "http://localhost:3001/verifier/dvrs";
+      const bloodTestUrl = "http://localhost:3001/issuer/blood_tests";
       const fetchingDvr = fetch(dvrUrl, {
         method: "POST",
         body: JSON.stringify({ name: user }),
@@ -145,7 +145,7 @@ export default function EmployeeOnboarding({
     setConfirmBloodTest(true);
     setIsLoading(true);
     setLoadingMessage("Generating Proof...");
-    const url = "http://localhost:3001/api/proofs";
+    const url = "http://localhost:3000/api/proofs";
     interface ProofResponse {
       status: number;
       message?: string;
@@ -160,7 +160,7 @@ export default function EmployeeOnboarding({
     if (proofBody.status == 200) {
       console.log("== proof body 200");
       const validateProof = await fetch(
-        "http://localhost:3009/verifier/proofs",
+        "http://localhost:3001/verifier/proofs",
         {
           method: "POST",
           body: JSON.stringify({ proof: proofBody.data }),
