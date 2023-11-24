@@ -232,7 +232,7 @@ export default function EmployeeOnboarding({
                 sx={{ color: "rgb(74 222 128)" }}
                 fontSize="large"
               />
-              Blood test fulfiled onboarding requirements
+              The blood test succeeded onboarding requirements.
             </Paper>
           ) : loadedProof && !proofResult ? (
             <Paper
@@ -240,7 +240,7 @@ export default function EmployeeOnboarding({
               className="flex flex-row items-center gap-2 p-4 bg-red-200"
             >
               <CancelIcon sx={{ color: "rgb(248 113 113)" }} fontSize="large" />
-              Blood test failed onboarding requirements
+              The blood test failed onboarding requirements.
             </Paper>
           ) : (
             <></>
