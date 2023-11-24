@@ -61,8 +61,6 @@ function _setHeader(response: NextResponse) {
 }
 
 async function _generateSignedDVR(user: User) {
-  const dvrQuery = _generateBloodTestQuery(user);
-
   /**
    * Step 1
    * Provide private key to sign data
@@ -88,6 +86,7 @@ async function _generateSignedDVR(user: User) {
    * Step 3
    * Prepare DVR to sign
    */
+  const dvrQuery = _generateBloodTestQuery(user);
   const zkPassClient = new ZkPassClient();
   const { queryEngineVersion, queryMethodVersion } =
     await zkPassClient.getQueryEngineVersionInfo();
