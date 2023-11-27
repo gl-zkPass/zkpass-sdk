@@ -14,4 +14,4 @@
 
 ### Generating ZkPass Proof
 
-https://github.com/GDP-ADMIN/didPass-demo/blob/b01b43fd54ec086d9693951c0b471b048fcd0569/zkpass-demo/wallet/src/home/HomePage.tsx#L101-L117
+https://github.com/GDP-ADMIN/zkpass-sdk/blob/b01b43fd54ec086d9693951c0b471b048fcd0569/zkpass-demo/wallet/src/home/HomePage.tsx#L101-L117
