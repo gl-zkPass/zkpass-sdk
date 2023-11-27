@@ -1,0 +1,20 @@
+{
+  "name": "typescript-cli",
+  "version": "0.1.0",
+  "description": "zkpass demo typescript cli",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "rm -rf ./build && tsc",
+    "demo": "npm run build && node build/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@didpass/zkpass-client-ts": "^0.1.1-beta.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5"
+  }
+}

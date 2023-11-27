@@ -1,0 +1,45 @@
+{
+  "bcaDocID": "DOC897923CP",
+  "bcaDocName": "BCA Customer Profile",
+  "customerID": "BCA123756108",
+  "personalInfo": {
+    "firstName": "Dewi",
+    "lastName": "Putri",
+    "dateOfBirth": "1980-01-01",
+    "driverLicenseNumber": "DL123456789"
+  },
+  "financialInfo": {
+    "averageMonthlyBalance": 200000000,
+    "creditRatings": {
+      "pefindo": 720,
+      "creditKarma": 725,
+      "equiInfo": 730
+    },
+    "accounts": {
+      "checking": {
+        "accountNumber": "CHK1234567",
+        "balance": 50000000
+      },
+      "savings": {
+        "accountNumber": "SAV1234567",
+        "balance": 15000
+      }
+    }
+  },
+  "loanHistory": [
+    {
+      "loanType": "auto",
+      "loanAmount": 200000000,
+      "loanStatus": "closed"
+    }
+  ],
+  "contactInfo": {
+    "email": "dewi.putri@yahoo.com",
+    "phone": "+62-855-123-4567"
+  },
+  "flags": {
+    "isOverdraftProtected": true,
+    "isVIP": false,
+    "fraudAlerts": false
+  }
+}
