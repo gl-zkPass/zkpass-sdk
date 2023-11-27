@@ -78,7 +78,7 @@ async function _signBloodTest(data: { [key: string]: any }) {
    * This is the pair of the private key from step 1
    */
   const verifyingKeyJKWS = {
-    jku: "https://gdp-admin.github.io/didPass-demo/zkpass/sample-jwks/issuer-key.json",
+    jku: "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/issuer-key.json",
     kid: "k-1",
   };
 

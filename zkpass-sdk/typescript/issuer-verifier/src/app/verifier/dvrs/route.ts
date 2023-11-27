@@ -78,7 +78,7 @@ async function _generateSignedDVR(user: User) {
    * This is the pair of the private key from step 1
    */
   const verifyingKeyJKWS = {
-    jku: "https://gdp-admin.github.io/didPass-demo/zkpass/sample-jwks/verifier-key.json",
+    jku: "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/verifier-key.json",
     kid: "k-1",
   };
 

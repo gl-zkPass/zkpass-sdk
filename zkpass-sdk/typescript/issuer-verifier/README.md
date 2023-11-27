@@ -23,12 +23,12 @@
 
 ### Issuer Signing Data
 
-https://github.com/GDP-ADMIN/didPass-demo/blob/b62cdaec4150d2022eb49930d9aa9c2afcd06d81/zkpass-demo/typescript/issuer-verifier/src/app/issuer/blood_tests/route.ts#L64-L95
+https://github.com/GDP-ADMIN/zkpass-sdk/blob/b62cdaec4150d2022eb49930d9aa9c2afcd06d81/zkpass-demo/typescript/issuer-verifier/src/app/issuer/blood_tests/route.ts#L64-L95
 
 ### Verifier Signing DVR
 
-https://github.com/GDP-ADMIN/didPass-demo/blob/b971737b4e52ba56213ae378fff0ac8e13553935/zkpass-demo/typescript/issuer-verifier/src/app/verifier/dvrs/route.ts#L67-L113
+https://github.com/GDP-ADMIN/zkpass-sdk/blob/b971737b4e52ba56213ae378fff0ac8e13553935/zkpass-demo/typescript/issuer-verifier/src/app/verifier/dvrs/route.ts#L67-L113
 
 ### Verifier Validating Proof
 
-https://github.com/GDP-ADMIN/didPass-demo/blob/b62cdaec4150d2022eb49930d9aa9c2afcd06d81/zkpass-demo/typescript/issuer-verifier/src/app/verifier/proofs/route.ts#L10-L19
+https://github.com/GDP-ADMIN/zkpass-sdk/blob/b62cdaec4150d2022eb49930d9aa9c2afcd06d81/zkpass-demo/typescript/issuer-verifier/src/app/verifier/proofs/route.ts#L10-L19

@@ -12,4 +12,4 @@
 
 ## Generate zkPass Proof Snippet
 
-https://github.com/GDP-ADMIN/didPass-demo/blob/61b2768b7e549148c384ac0019ba3720ce6bed2f/zkpass-demo/typescript/client/src/app/api/proofs/route.ts#L9-L23
+https://github.com/GDP-ADMIN/zkpass-sdk/blob/61b2768b7e549148c384ac0019ba3720ce6bed2f/zkpass-demo/typescript/client/src/app/api/proofs/route.ts#L9-L23

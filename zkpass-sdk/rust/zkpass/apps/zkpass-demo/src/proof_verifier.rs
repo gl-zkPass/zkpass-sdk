@@ -97,7 +97,7 @@ impl ProofVerifier {
 
         let kid = String::from("k-1");
         let jku = String::from(
-            "https://gdp-admin.github.io/didPass-demo/zkpass/sample-jwks/verifier-key.json",
+            "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/verifier-key.json",
         );
         let ep = KeysetEndpoint { jku, kid };
         // issuer's pubkey params:
