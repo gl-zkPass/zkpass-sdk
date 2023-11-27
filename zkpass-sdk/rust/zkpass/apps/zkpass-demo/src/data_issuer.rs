@@ -33,7 +33,7 @@ impl DataIssuer {
 
         let kid = String::from("k-1");
         let jku = String::from(
-            "https://gdp-admin.github.io/didPass-demo/zkpass/sample-jwks/issuer-key.json",
+            "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/issuer-key.json",
         );
         let ep = KeysetEndpoint { jku, kid };
 
