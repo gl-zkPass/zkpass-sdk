@@ -9,7 +9,8 @@
  * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * -----
  * Reviewers:
- *   NONE
+ *   Zulchaidir (zulchaidir@gdplabs.id)
+ *   Nugraha Tejapermana (nugraha.tejapermana@gdplabs.id)
  * ---
  * References:
  *   NONE

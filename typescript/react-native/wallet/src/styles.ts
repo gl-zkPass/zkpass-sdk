@@ -1,7 +1,7 @@
 /*
  * styles.ts
  * Stylesheet of HomePage.tsx
- * 
+ *
  * Authors:
  *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * Created at: November 7th 2023
@@ -10,7 +10,7 @@
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
- *   
+ *   JaniceLaksana (janice.laksana@gdplabs.id)
  * ---
  * References:
  *   NONE
@@ -18,7 +18,7 @@
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
 
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   safeArea: {
@@ -29,17 +29,17 @@ export const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 10, 
+    paddingHorizontal: 10,
     width: '100%',
     backgroundColor: '#FFFFFF',
-    marginBottom: 125
+    marginBottom: 125,
   },
   header: {
     fontSize: 20,
     fontWeight: 'bold',
     color: 'black',
     marginVertical: 30,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   dvrInformation: {
     justifyContent: 'center',
@@ -56,24 +56,24 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     marginBottom: 15,
-    marginHorizontal: 5
+    marginHorizontal: 5,
   },
   dvrInformationHeaderText: {
     color: 'black',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   dvrInformationHeaderCopy: {
     flexDirection: 'row',
   },
   dvrInformationHeaderCopyText: {
     color: 'blue',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   dvrContainer: {
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
     borderColor: '#E3E3E3',
-    borderWidth: 1
+    borderWidth: 1,
   },
   buttonContainer: {
     position: 'absolute',
