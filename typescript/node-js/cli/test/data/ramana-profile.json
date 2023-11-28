@@ -1,0 +1,45 @@
+{
+  "bcaDocID": "DOC897923CP",
+  "bcaDocName": "BCA Customer Profile",
+  "customerID": "BCA123756108",
+  "personalInfo": {
+    "firstName": "Ramana",
+    "lastName": "Maharshi",
+    "dateOfBirth": "1970-10-08",
+    "driverLicenseNumber": "DL77108108"
+  },
+  "financialInfo": {
+    "averageMonthlyBalance": 200000000,
+    "creditRatings": {
+      "pefindo": 710,
+      "CreditKarma": 755,
+      "EquiInfo": 695
+    },
+    "accounts": {
+      "checking": {
+        "accountNumber": "CHK1238569",
+        "balance": 89000000
+      },
+      "savings": {
+        "accountNumber": "SAV1231770",
+        "balance": 380000000
+      }
+    }
+  },
+  "loanHistory": [
+    {
+      "loanType": "auto",
+      "loanAmount": 500000000,
+      "loanStatus": "closed"
+    }
+  ],
+  "contactInfo": {
+    "email": "Ramana.Maharshi@karma.org",
+    "phone": "+62-856-685-0108"
+  },
+  "flags": {
+    "isOverdraftProtected": true,
+    "isVIP": false,
+    "fraudAlerts": false
+  }
+}
