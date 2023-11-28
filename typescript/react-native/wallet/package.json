@@ -5,7 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "lint": "eslint .",
+    "lint": "eslint . --fix",
     "start": "react-native start",
     "postinstall": "rn-nodeify --install crypto,stream,util,events --hack && patch-package",
     "test": "jest"
@@ -13,9 +13,6 @@
   "dependencies": {
     "@didpass/zkpass-client-react-native": "^0.1.0-beta.2",
     "@tradle/react-native-http": "^2.0.1",
-    "@types/crypto-js": "^4.1.1",
-    "axios": "^1.5.1",
-    "crypto-js": "^4.1.1",
     "events": "^1.1.1",
     "jsonwebtoken": "^9.0.2",
     "patch-package": "^7.0.0",
@@ -52,9 +49,6 @@
     "react-test-renderer": "18.2.0",
     "rn-nodeify": "^10.3.0",
     "typescript": "4.8.4"
-  },
-  "engines": {
-    "node": ">=16"
   },
   "react-native": {
     "crypto": "react-native-crypto",

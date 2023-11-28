@@ -1,11 +1,22 @@
 /*
- * Filename: typescript/node-js/client/src/app/onboarding/page.tsx
- * Path: typescript/node-js/client
- * Created Date: Monday, November 27th 2023, 4:42:11 pm
- * Author: Naufal Fakhri Muhammad
+ * page.tsx
  *
+ * Authors:
+ *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Created at: October 31st 2023
+ * -----
+ * Last Modified: November 28th 2023
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * -----
+ * Reviewers:
+ *   Zulchaidir (zulchaidir@gdplabs.id)
+ * ---
+ * References:
+ *   NONE
+ * ---
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
+
 import { cookies } from "next/headers";
 import EmployeeOnboarding from "./employeeOnboarding.component";
 

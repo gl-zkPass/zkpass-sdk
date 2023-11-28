@@ -1,11 +1,23 @@
 /*
- * Filename: typescript/node-js/issuer-verifier/src/app/verifier/dvrs/route.ts
- * Path: typescript/node-js/issuer-verifier
- * Created Date: Tuesday, November 28th 2023, 11:45:27 am
- * Author: Naufal Fakhri Muhammad
+ * route.ts
  *
+ * Authors:
+ *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ *   Zulchaidir (zulchaidir@gdplabs.id)
+ * Created at: October 31st 2023
+ * -----
+ * Last Modified: November 28th 2023
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * -----
+ * Reviewers:
+ *   Zulchaidir (zulchaidir@gdplabs.id)
+ * ---
+ * References:
+ *   NONE
+ * ---
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
+
 import fs from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
@@ -69,6 +81,10 @@ function _setHeader(response: NextResponse) {
 }
 
 async function _generateSignedDVR(user: User) {
+  /**
+   * Step 1
+   * Provide private key to sign data
+   */
   const PRIVATE_KEY_PEM =
     "-----BEGIN PRIVATE KEY-----\n" +
     "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgLxxbcd7aVcNEdE/C\n" +
@@ -76,27 +92,24 @@ async function _generateSignedDVR(user: User) {
     "PfGQN1TAs6+xVUD6KJLB9pfgeoqVE8MYb4XpYaOfHKz1Pka017ee97A4\n" +
     "-----END PRIVATE KEY-----\n";
 
+  /**
+   * Step 2
+   * Provide url containing jwks, and kid of the jwks
+   * This is the pair of the private key from step 1
+   */
   const verifyingKeyJKWS = {
     jku: "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/verifier-key.json",
     kid: "k-1",
   };
+
+  /**
+   * Step 3
+   * Prepare DVR to sign
+   */
   const dvrQuery = _generateBloodTestQuery(user);
-
-  /**
-   * Step 1: Instantiate the ZkPassClient object.
-   */
   const zkPassClient = new ZkPassClient();
-
-  /**
-   * Step 2: Call zkPassClient.getQueryEngineVersionInfo.
-   *         The version info is needed for DVR object creation.
-   */
   const { queryEngineVersion, queryMethodVersion } =
     await zkPassClient.getQueryEngineVersionInfo();
-
-  /**
-   * Step 3: Create the DVR object.
-   */
   const data = DataVerificationRequest.fromJSON({
     dvr_title: "Onboarding Blood Test",
     dvr_id: uuidv4(),
@@ -110,17 +123,19 @@ async function _generateSignedDVR(user: User) {
   });
 
   /**
-   * Step 4: Call zkPassClient.signToJwsToken.
-   *         to digitally-sign the dvr data.
+   * Step 4
+   * sign data to jws token
    */
-  const dvrToken = await data.signToJwsToken(PRIVATE_KEY_PEM, verifyingKeyJKWS);
+  const signedDVR = await data.signToJwsToken(
+    PRIVATE_KEY_PEM,
+    verifyingKeyJKWS
+  );
 
   console.log({ DataVerificationRequest: data });
-  // Save the dvr to a global hash table
-  // This will be needed by the validator to check the proof metadata
+  // This dvrLookup will be used in the proof validation process in proofValidator.ts
   dvrLookup.value.addDVR(data);
 
-  return dvrToken;
+  return signedDVR;
 }
 
 function _generateBloodTestQuery(user: User): string {

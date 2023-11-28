@@ -1,11 +1,22 @@
 /*
- * Filename: typescript/node-js/client/src/app/onboarding/employeeOnboarding.component.tsx
- * Path: typescript/node-js/client
- * Created Date: Monday, November 27th 2023, 4:42:11 pm
- * Author: Naufal Fakhri Muhammad
+ * employeeOnboarding.component.tsx
  *
+ * Authors:
+ *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Created at: October 31st 2023
+ * -----
+ * Last Modified: November 28th 2023
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * -----
+ * Reviewers:
+ *   Zulchaidir (zulchaidir@gdplabs.id)
+ * ---
+ * References:
+ *   NONE
+ * ---
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
+
 "use client";
 
 import HeaderBar from "@/components/header";
@@ -210,12 +221,11 @@ export default function EmployeeOnboarding({
         onClose={() => setOpen(false)}
         message={message}
       />
-      <div className="flex flex-col justify-start items-center h-screen pt-8">
+      <div className='flex flex-col justify-start items-center h-screen pt-8'>
         <Paper
           elevation={3}
-          className="w-3/5 p-7 flex flex-col items-center gap-5"
-        >
-          <div className="flex items-center text-lg">
+          className='w-3/5 p-7 flex flex-col items-center gap-5'>
+          <div className='flex items-center text-lg'>
             {_formatUsername(user!)}'s Employee Onboarding.
           </div>
           <Stepper activeStep={activeStep}>
@@ -234,20 +244,18 @@ export default function EmployeeOnboarding({
           {loadedProof && proofResult ? (
             <Paper
               elevation={2}
-              className="flex flex-row items-center gap-2 p-4 bg-green-200"
-            >
+              className='flex flex-row items-center gap-2 p-4 bg-green-200'>
               <CheckCircleOutlineIcon
                 sx={{ color: "rgb(74 222 128)" }}
-                fontSize="large"
+                fontSize='large'
               />
               The blood test succeeded onboarding requirements.
             </Paper>
           ) : loadedProof && !proofResult ? (
             <Paper
               elevation={2}
-              className="flex flex-row items-center gap-2 p-4 bg-red-200"
-            >
-              <CancelIcon sx={{ color: "rgb(248 113 113)" }} fontSize="large" />
+              className='flex flex-row items-center gap-2 p-4 bg-red-200'>
+              <CancelIcon sx={{ color: "rgb(248 113 113)" }} fontSize='large' />
               The blood test failed onboarding requirements.
             </Paper>
           ) : (
@@ -255,7 +263,7 @@ export default function EmployeeOnboarding({
           )}
 
           {isLoading ? (
-            <div className="flex flex-col justify-center items-center gap-4">
+            <div className='flex flex-col justify-center items-center gap-4'>
               <Box sx={{ display: "flex" }}>
                 <CircularProgress />
               </Box>
@@ -268,23 +276,20 @@ export default function EmployeeOnboarding({
           {!confirmBloodTest && requestedDVR && requestedBloodTest ? (
             <Paper
               elevation={2}
-              className="p-6 flex items-center flex-col gap-4 bg-gray-200"
-            >
+              className='p-6 flex items-center flex-col gap-4 bg-gray-200'>
               {!confirmBloodTest && !confirmDVR ? (
                 <>
-                  <div className="text-base">
+                  <div className='text-base'>
                     Please review the Employee Onboarding questionnaires
                   </div>
                   <Paper
                     elevation={1}
-                    className="max-h-96 max-w-lg overflow-scroll p-5"
-                  >
+                    className='max-h-96 max-w-lg overflow-scroll p-5'>
                     <pre dangerouslySetInnerHTML={{ __html: formatedDVR }} />
                   </Paper>
                   <Button
-                    variant="outlined"
-                    onClick={() => setConfirmDVR(true)}
-                  >
+                    variant='outlined'
+                    onClick={() => setConfirmDVR(true)}>
                     Confirm and Continue
                   </Button>
                 </>
@@ -294,15 +299,15 @@ export default function EmployeeOnboarding({
 
               {confirmDVR && !confirmBloodTest ? (
                 <>
-                  <div className="text-base">
+                  <div className='text-base'>
                     Please review the Blood Test Result
                   </div>
-                  <Paper elevation={1} className="max-h-96 overflow-scroll p-5">
+                  <Paper elevation={1} className='max-h-96 overflow-scroll p-5'>
                     <pre
                       dangerouslySetInnerHTML={{ __html: formatedBloodTest }}
                     />
                   </Paper>
-                  <Button variant="outlined" onClick={_handleGenerateProof}>
+                  <Button variant='outlined' onClick={_handleGenerateProof}>
                     Confirm and Generate Proof
                   </Button>
                 </>

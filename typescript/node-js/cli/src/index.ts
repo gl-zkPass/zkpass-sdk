@@ -1,9 +1,19 @@
 /*
- * Filename: /typescript/node-js/cli/src/index.ts
- * Path: /typescript/node-js/cli
- * Created Date: Monday, November 27th 2023, 8:48:04 am
- * Author: Naufal Fakhri Muhammad
+ * index.ts
  *
+ * Authors:
+ *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Created Date: November 27th 2023
+ * -----
+ * Last Modified: November 28th 2023
+ * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * -----
+ * Reviewers:
+ *   NONE
+ * ---
+ * References:
+ *   NONE
+ * ---
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
 import { DataHolder } from "./dataHolder";
