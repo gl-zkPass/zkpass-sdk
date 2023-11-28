@@ -1,3 +1,11 @@
+/*
+ * Filename: typescript/node-js/issuer-verifier/src/app/verifier/proofs/route.ts
+ * Path: typescript/node-js/issuer-verifier
+ * Created Date: Tuesday, November 28th 2023, 11:45:27 am
+ * Author: Naufal Fakhri Muhammad
+ *
+ * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
+ */
 import { ZkPassClient } from "@didpass/zkpass-client-ts";
 import { MyValidator } from "./proofValidator";
 
@@ -7,16 +15,16 @@ export async function POST(req: Request) {
   try {
     const { proof } = await req.json();
     console.log({ proof });
-    /**
-     * Step 1
-     * Create a validator class that implements ZkPassProofMetadataValidator
-     */
     const myValidator = new MyValidator();
+
     /**
-     * Step 2
-     * Validate the proof
+     * Step 1: Instantiate the zkpassClient object.
      */
     const zkPassClient = new ZkPassClient();
+
+    /**
+     * Step 2: Call zkpassClient.verifyZkpassProof to verify the proof.
+     */
     const proofResult = await zkPassClient.verifyZkpassProof(
       proof,
       myValidator

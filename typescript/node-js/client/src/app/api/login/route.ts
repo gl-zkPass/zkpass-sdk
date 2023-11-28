@@ -1,3 +1,11 @@
+/*
+ * Filename: typescript/node-js/client/src/app/api/login/route.ts
+ * Path: typescript/node-js/client
+ * Created Date: Monday, November 27th 2023, 4:42:11 pm
+ * Author: Naufal Fakhri Muhammad
+ *
+ * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
+ */
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 

@@ -1,3 +1,11 @@
+/*
+ * Filename: typescript/node-js/issuer-verifier/src/app/issuer/blood_tests/route.ts
+ * Path: typescript/node-js/issuer-verifier
+ * Created Date: Tuesday, November 28th 2023, 11:45:27 am
+ * Author: Naufal Fakhri Muhammad
+ *
+ * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
+ */
 import fs from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
@@ -61,10 +69,6 @@ export async function OPTIONS() {
 }
 
 async function _signBloodTest(data: { [key: string]: any }) {
-  /**
-   * Step 1
-   * Provide private key to sign data
-   */
   const PRIVATE_KEY_PEM =
     "-----BEGIN PRIVATE KEY-----\n" +
     "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg3J/wAlzSD8ZyAU8f\n" +
@@ -72,28 +76,26 @@ async function _signBloodTest(data: { [key: string]: any }) {
     "moLVnRdNqPcExwyeqH5XN0dlffIYprf66E0CEpZbJ8H+v7cTys9Ie1dd\n" +
     "-----END PRIVATE KEY-----\n";
 
-  /**
-   * Step 2
-   * Provide url containing jwks, and kid of the jwks
-   * This is the pair of the private key from step 1
-   */
   const verifyingKeyJKWS = {
     jku: "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/issuer-key.json",
     kid: "k-1",
   };
 
   /**
-   * Step 3
-   * Sign data to jws token
+   * Step 1: Instantiate the zkPassClient object
    */
   const zkPassClient = new ZkPassClient();
-  const signedBloodTest = await zkPassClient.signDataToJwsToken(
+  /**
+   * Step 2: Call the zkPassClient.signDataToJwsToken.
+   *         This is to digitally-sign the user data.
+   */
+  const dataToken = await zkPassClient.signDataToJwsToken(
     PRIVATE_KEY_PEM,
     data,
     verifyingKeyJKWS
   );
 
-  return signedBloodTest;
+  return dataToken;
 }
 
 function _setHeader(response: NextResponse) {

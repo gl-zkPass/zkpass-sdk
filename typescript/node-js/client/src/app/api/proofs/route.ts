@@ -1,3 +1,11 @@
+/*
+ * Filename: typescript/node-js/client/src/app/api/proofs/route.ts
+ * Path: typescript/node-js/client
+ * Created Date: Tuesday, November 28th 2023, 11:45:27 am
+ * Author: Naufal Fakhri Muhammad
+ *
+ * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
+ */
 import { NextResponse } from "next/server";
 import { ZkPassClient } from "@didpass/zkpass-client-ts";
 
@@ -6,17 +14,16 @@ export async function POST(req: Request) {
     const { dvr, blood_test } = await req.json();
     console.log({ dvr, blood_test });
 
-    /**
-     * Step 1
-     * Provide url to the zkpass service.
-     */
     const zkPassServiceURL = "https://playground-zkpass.ssi.id/proof";
 
     /**
-     * Step 2
-     * Generate the proof from blood_test and dvr
+     * Step 1: Instantiate the ZkPassClient object.
      */
     const zkPassClient = new ZkPassClient();
+    /**
+     * Step 2: Call the zkpassClient.generateZkpassProof
+     *         to get the zkpassProofToken.
+     */
     const proof = await zkPassClient.generateZkpassProof(
       zkPassServiceURL,
       blood_test,
