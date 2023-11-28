@@ -1,3 +1,12 @@
+/*
+ * Filename: /typescript/node-js/cli/src/dataIssuer.ts
+ * Path: /typescript/node-js/cli
+ * Created Date: Monday, November 27th 2023, 9:07:20 am
+ * Author: Naufal Fakhri Muhammad
+ *
+ * Copyright (c) 2023 DGP Labs. All rights reserved.
+ */
+
 import fs from "fs";
 import { KeysetEndpoint } from "@didpass/zkpass-client-ts/lib/types";
 import { ZkPassClient } from "@didpass/zkpass-client-ts";

@@ -1,3 +1,11 @@
+/*
+ * Filename: /typescript/node-js/cli/src/index.ts
+ * Path: /typescript/node-js/cli
+ * Created Date: Monday, November 27th 2023, 8:48:04 am
+ * Author: Naufal Fakhri Muhammad
+ *
+ * Copyright (c) 2023 DGP Labs. All rights reserved.
+ */
 import { DataHolder } from "./dataHolder";
 
 function runDataHolder(dataFile: string, dvrFile: string): void {

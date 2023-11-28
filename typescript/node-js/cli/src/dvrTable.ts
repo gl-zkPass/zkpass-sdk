@@ -1,3 +1,11 @@
+/*
+ * Filename: /typescript/node-js/cli/src/dvrTable.ts
+ * Path: /typescript/node-js/cli
+ * Created Date: Monday, November 27th 2023, 10:45:51 am
+ * Author: Naufal Fakhri Muhammad
+ *
+ * Copyright (c) 2023 DGP Labs. All rights reserved.
+ */
 import { DataVerificationRequest } from "@didpass/zkpass-client-ts";
 
 /**

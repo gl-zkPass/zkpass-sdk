@@ -1,3 +1,11 @@
+/*
+ * Filename: /typescript/node-js/cli/src/proofVerifier.ts
+ * Path: /typescript/node-js/cli
+ * Created Date: Monday, November 27th 2023, 9:18:10 am
+ * Author: Naufal Fakhri Muhammad
+ *
+ * Copyright (c) 2023 DGP Labs. All rights reserved.
+ */
 import {
   DataVerificationRequest,
   ZkPassClient,
@@ -40,8 +48,8 @@ export class ProofVerifier {
     PfGQN1TAs6+xVUD6KJLB9pfgeoqVE8MYb4XpYaOfHKz1Pka017ee97A4
     -----END PRIVATE KEY-----`;
 
-  async getDvrToken(dvr_file: string): Promise<string> {
-    const query = readFileSync(dvr_file, "utf-8");
+  async getDvrToken(dvrFile: string): Promise<string> {
+    const query = readFileSync(dvrFile, "utf-8");
     console.log(`query=${query}`);
 
     const kid = "k-1";
@@ -51,10 +59,10 @@ export class ProofVerifier {
 
     const queryObj = JSON.parse(query);
 
-    // Step 1: Instantiate the zkpass_client object.
+    // Step 1: Instantiate the ZkPassClient object.
     const zkPassClient = new ZkPassClient();
 
-    // Step 2: Call zkpass_client.get_query_engine_version_info.
+    // Step 2: Call zkPassClient.getQueryEngineVersionInfo.
     // The version info is needed for DVR object creation.
     const { queryEngineVersion, queryMethodVersion } =
       await zkPassClient.getQueryEngineVersionInfo();
@@ -72,7 +80,7 @@ export class ProofVerifier {
       },
     });
 
-    // Step 4: Call zkPassClient.sign_data_to_jws_token.
+    // Step 4: Call zkPassClient.signToJwsToken.
     // to digitally-sign the dvr data.
     const dvrToken = dvr.signToJwsToken(this.VERIFIER_PRIVKEY, verifierPubkey);
 
