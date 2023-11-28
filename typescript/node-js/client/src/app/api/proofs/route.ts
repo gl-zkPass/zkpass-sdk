@@ -26,17 +26,16 @@ export async function POST(req: Request) {
     const { dvr, blood_test } = await req.json();
     console.log({ dvr, blood_test });
 
-    /**
-     * Step 1
-     * Provide url to the zkpass service.
-     */
     const zkPassServiceURL = "https://playground-zkpass.ssi.id/proof";
 
     /**
-     * Step 2
-     * Generate the proof from blood_test and dvr
+     * Step 1: Instantiate the ZkPassClient object.
      */
     const zkPassClient = new ZkPassClient();
+    /**
+     * Step 2: Call the zkpassClient.generateZkpassProof
+     *         to get the zkpassProofToken.
+     */
     const proof = await zkPassClient.generateZkpassProof(
       zkPassServiceURL,
       blood_test,

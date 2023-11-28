@@ -27,16 +27,16 @@ export async function POST(req: Request) {
   try {
     const { proof } = await req.json();
     console.log({ proof });
-    /**
-     * Step 1
-     * Create a validator class that implements ZkPassProofMetadataValidator
-     */
     const myValidator = new MyValidator();
+
     /**
-     * Step 2
-     * Validate the proof
+     * Step 1: Instantiate the zkpassClient object.
      */
     const zkPassClient = new ZkPassClient();
+
+    /**
+     * Step 2: Call zkpassClient.verifyZkpassProof to verify the proof.
+     */
     const proofResult = await zkPassClient.verifyZkpassProof(
       proof,
       myValidator
