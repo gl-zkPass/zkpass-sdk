@@ -1,3 +1,22 @@
+/*
+ * header.tsx
+ * 
+ * Authors:
+ *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Created at: October 31st 2023
+ * -----
+ * Last Modified: November 28th 2023
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * -----
+ * Reviewers:
+ *   
+ * ---
+ * References:
+ *   NONE
+ * ---
+ * Copyright (c) 2023 GDP LABS. All rights reserved.
+ */
+
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";

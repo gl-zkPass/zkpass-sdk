@@ -1,3 +1,22 @@
+/*
+ * employeeOnboarding.component.tsx
+ * 
+ * Authors:
+ *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Created at: October 31st 2023
+ * -----
+ * Last Modified: November 28th 2023
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * -----
+ * Reviewers:
+ *   
+ * ---
+ * References:
+ *   NONE
+ * ---
+ * Copyright (c) 2023 GDP LABS. All rights reserved.
+ */
+
 "use client";
 
 import HeaderBar from "@/components/header";
