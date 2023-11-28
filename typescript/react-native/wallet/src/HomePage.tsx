@@ -15,7 +15,7 @@
  * References:
  *   NONE
  * ---
- * Copyright (c) 2023 GDP LABS. All rights reserved.
+ * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
