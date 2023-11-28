@@ -4,7 +4,7 @@
  * Created Date: Monday, November 27th 2023, 9:18:39 am
  * Author: Naufal Fakhri Muhammad
  *
- * Copyright (c) 2023 DGP Labs. All rights reserved.
+ * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
 import { ZkPassClient } from "@didpass/zkpass-client-ts";
 import { DataIssuer } from "./dataIssuer";

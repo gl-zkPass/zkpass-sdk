@@ -4,7 +4,7 @@
  * Created Date: Monday, November 27th 2023, 8:48:04 am
  * Author: Naufal Fakhri Muhammad
  *
- * Copyright (c) 2023 DGP Labs. All rights reserved.
+ * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
 import { DataHolder } from "./dataHolder";
 
