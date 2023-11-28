@@ -1,7 +1,7 @@
 /*
  * style.ts
  * Stylesheet of JsonDisplayer.tsx
- * 
+ *
  * Authors:
  *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * Created at: November 7th 2023
@@ -10,7 +10,7 @@
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
- *   
+ *   JaniceLaksana (janice.laksana@gdplabs.id)
  * ---
  * References:
  *   NONE
@@ -18,7 +18,7 @@
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
 
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   code: {

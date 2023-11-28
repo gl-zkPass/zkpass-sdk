@@ -1,7 +1,7 @@
 /*
  * JsonDisplayer.tsx
  * COMPONENT TO DISPLAY JSON FORMATTED OBJECT
- * 
+ *
  * Authors:
  *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * Created at: November 7th 2023
@@ -10,7 +10,7 @@
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
- *   
+ *   JaniceLaksana (janice.laksana@gdplabs.id)
  * ---
  * References:
  *   NONE
@@ -18,24 +18,16 @@
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
 
-import {
-  ScrollView, 
-  Text, 
-  View,
-  ViewStyle,
-  StyleProp
-} from 'react-native';
+import { ScrollView, Text, View, ViewStyle, StyleProp } from 'react-native';
 import React from 'react';
-import {styles} from './style';
+import { styles } from './style';
 
-interface props { 
+interface props {
   jsonText: string;
-  containerStyle: StyleProp<ViewStyle>
+  containerStyle: StyleProp<ViewStyle>;
 }
 
-const JsonDisplayer = ({jsonText, containerStyle}: props) => {
-
-    
+const JsonDisplayer = ({ jsonText, containerStyle }: props) => {
   return (
     <ScrollView showsHorizontalScrollIndicator={false} style={containerStyle}>
       <View>
