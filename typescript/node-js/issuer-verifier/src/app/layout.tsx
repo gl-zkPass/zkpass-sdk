@@ -1,6 +1,6 @@
 /*
  * layout.tsx
- * 
+ *
  * Authors:
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created at: October 31st 2023
@@ -9,7 +9,7 @@
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
- *   
+ *   Zulchaidir (zulchaidir@gdplabs.id)
  * ---
  * References:
  *   NONE
@@ -34,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang='en'>
       <body className={inter.className}>{children}</body>
     </html>
   );
