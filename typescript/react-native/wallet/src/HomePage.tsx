@@ -30,15 +30,17 @@ import Config from 'react-native-config';
 import { JwtPayload, decode } from 'jsonwebtoken';
 import { DownloadDirectoryPath, exists, readFile, unlink, writeFile } from 'react-native-fs';
 import JsonDisplayer from './json-displayer/JsonDisplayer';
+import { StatusCodes } from 'http-status-codes';
 
+enum PAGE_STATE {
+  DVR,
+  UserData,
+  GenerateProof,
+  ShowTokenProof
+}
 
 const HomePage = () => {
-  const [proofState, setProofState] = useState<
-    'DVR' | 
-    'UserData' | 
-    'GenerateProof' | 
-    'ShowTokenProof'
-  >('DVR');
+  const [pageState, setPageState] = useState<PAGE_STATE>(PAGE_STATE.DVR);
   const [userData, setUserData] = useState<string>('');
   const [dvr, setDvr] = useState<string>('');
   const [isError, setIsError] = useState<boolean>(false);
@@ -60,35 +62,35 @@ const HomePage = () => {
   }, []);
 
   const handleCopyPress = () => {
-    if(proofState == 'DVR') {
+    if(pageState == PAGE_STATE.DVR) {
       Clipboard.setString(JSON.stringify(dvr, null, 2));
-    } else if(proofState == 'UserData') {
+    } else if(pageState == PAGE_STATE.UserData) {
       Clipboard.setString(JSON.stringify(userData, null, 2));
     }
   };
   
   const goNext = () => {
-    if(proofState == 'DVR') {
-      setProofState('UserData');
-    } else if(proofState == 'UserData') {
-      setProofState('GenerateProof');
-    } else if(proofState == 'GenerateProof') {
-      setProofState('ShowTokenProof');
+    if(pageState == PAGE_STATE.DVR) {
+      setPageState(PAGE_STATE.UserData);
+    } else if(pageState == PAGE_STATE.UserData) {
+      setPageState(PAGE_STATE.GenerateProof);
+    } else if(pageState == PAGE_STATE.GenerateProof) {
+      setPageState(PAGE_STATE.ShowTokenProof);
     }
   };
 
   const goBack = () => {
-    if(proofState == 'UserData') {
-      setProofState('DVR');
-    } else if(proofState == 'GenerateProof') {
-      setProofState('UserData');
-    } else if(proofState == 'ShowTokenProof') {
-      setProofState('GenerateProof');
+    if(pageState == PAGE_STATE.UserData) {
+      setPageState(PAGE_STATE.DVR);
+    } else if(pageState == PAGE_STATE.GenerateProof) {
+      setPageState(PAGE_STATE.UserData);
+    } else if(pageState == PAGE_STATE.ShowTokenProof) {
+      setPageState(PAGE_STATE.GenerateProof);
     }
   };
 
   const goToStart = () => {
-    setProofState('DVR');
+    setPageState(PAGE_STATE.DVR);
     setProofToken('');
     setIsError(false);
   };
@@ -141,14 +143,13 @@ const HomePage = () => {
         dvrToken!
       );
 
-      if (result.status == 200 && result.proof) {
-        setProofState('ShowTokenProof');
+      if (result.status == StatusCodes.OK && result.proof) {
+        setPageState(PAGE_STATE.ShowTokenProof);
         setProofToken(result.proof);
         setIsError(false);     
       }
       else throw 'error';
     } catch (error) {
-      console.error('Error generate proof:', error);
       setProofToken('');
       setIsError(true);
     }
@@ -160,11 +161,11 @@ const HomePage = () => {
 
   useEffect(() => {
     (async () => {
-      if(proofState == 'GenerateProof') {
+      if(pageState == PAGE_STATE.GenerateProof) {
         await generateProof();
       }
     })();
-  }, [proofState]);
+  }, [pageState]);
 
   if (isError) {
     return (
@@ -195,25 +196,25 @@ const HomePage = () => {
     >
       <View style={styles.container}>
         <Text style={styles.header}>
-          {proofState == 'DVR' && 'Please review your Data Verification Request'}
-          {proofState == 'UserData' && 'Please review your User Data'}
-          {proofState == 'GenerateProof' && 'Generating Proof'}
-          {proofState == 'ShowTokenProof' && 'Generated Token Proof'}
+          {pageState == PAGE_STATE.DVR && 'Please review your Data Verification Request'}
+          {pageState == PAGE_STATE.UserData && 'Please review your User Data'}
+          {pageState == PAGE_STATE.GenerateProof && 'Generating Proof'}
+          {pageState == PAGE_STATE.ShowTokenProof && 'Generated Token Proof'}
         </Text>
 
         {/* Display JSON Data & Token */}
-        {(proofState == 'DVR' || 
-          proofState == 'UserData' || 
-          proofState == 'ShowTokenProof') &&
+        {(pageState == PAGE_STATE.DVR || 
+          pageState == PAGE_STATE.UserData || 
+          pageState == PAGE_STATE.ShowTokenProof) &&
           <View style={styles.dvrInformation}>
             <View style={styles.dvrInformationHeader}>
               <Text style={styles.dvrInformationHeaderText}>
-                {proofState == 'DVR' && 'Data Verification Request'}
-                {proofState == 'UserData' && 'User Data'}
-                {proofState == 'ShowTokenProof' && 'Token Proof'}
+                {pageState == PAGE_STATE.DVR && 'Data Verification Request'}
+                {pageState == PAGE_STATE.UserData && 'User Data'}
+                {pageState == PAGE_STATE.ShowTokenProof && 'Token Proof'}
               </Text>
 
-              {proofState == 'ShowTokenProof' &&  
+              {pageState == PAGE_STATE.ShowTokenProof &&  
                 <TouchableOpacity
                   style={styles.dvrInformationHeaderCopy}
                   onPress={downloadProofAsFile}
@@ -238,9 +239,9 @@ const HomePage = () => {
             
             <JsonDisplayer
               jsonText={
-                proofState == 'DVR' 
+                pageState == PAGE_STATE.DVR 
                   ? JSON.stringify(dvr, null, 2)
-                  : proofState == 'UserData' 
+                  : pageState == PAGE_STATE.UserData 
                     ? JSON.stringify(userData, null, 2)
                     : proofToken.substring(0,1000) + '...'
               }
@@ -252,7 +253,7 @@ const HomePage = () => {
 
       {/* Display Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        {proofState == 'UserData' && 
+        {pageState == PAGE_STATE.UserData && 
           <TouchableOpacity
             style={styles.button}
             onPress={goBack}
@@ -263,7 +264,7 @@ const HomePage = () => {
           </TouchableOpacity>
         }
 
-        {(proofState == 'DVR' || proofState == 'UserData') && 
+        {(pageState == PAGE_STATE.DVR || pageState == PAGE_STATE.UserData) && 
           <TouchableOpacity
             style={styles.button}
             onPress={goNext}
@@ -274,7 +275,7 @@ const HomePage = () => {
           </TouchableOpacity>
         }
 
-        {proofState == 'ShowTokenProof' && 
+        {pageState == PAGE_STATE.ShowTokenProof && 
           <TouchableOpacity
             style={styles.button}
             onPress={goToStart}

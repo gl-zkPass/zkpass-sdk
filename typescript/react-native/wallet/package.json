@@ -14,6 +14,7 @@
     "@didpass/zkpass-client-react-native": "^0.1.0-beta.2",
     "@tradle/react-native-http": "^2.0.1",
     "events": "^1.1.1",
+    "http-status-codes": "^2.3.0",
     "jsonwebtoken": "^9.0.2",
     "patch-package": "^7.0.0",
     "path-browserify": "^0.0.0",
