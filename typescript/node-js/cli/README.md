@@ -9,6 +9,6 @@
 
 ## Running demo
 
-- `npm run demo ./test/data/dewi-profile-wrong.json ./test/data/bca-insurance-dewi-dvr.json` - Dewi, expected result `false`.
-- `npm run demo ./test/data/ramana-profile.json ./test/data/bca-finance-ramana-dvr.json` - Ramana, expected result `true`.
-- `npm run demo ./test/data/jane-blood-test-result.json ./test/data/employee-onboarding-dvr.json` - Jane, expected result `true`.
+- `npm run demo-dewi` - Expected result `false`.
+- `npm run demo-ramana` - Expected result `true`.
+- `npm run demo-jane` - Expected result `true`.
