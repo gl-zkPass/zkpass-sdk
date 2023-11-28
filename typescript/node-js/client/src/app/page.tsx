@@ -1,6 +1,6 @@
 /*
  * page.tsx
- * 
+ *
  * Authors:
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created at: October 31st 2023
@@ -9,7 +9,7 @@
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
- *   
+ *   Zulchaidir (zulchaidir@gdplabs.id)
  * ---
  * References:
  *   NONE
@@ -69,25 +69,24 @@ export default function Home() {
         onClose={() => setOpen(false)}
         message={message}
       />
-      <div className="flex justify-center items-center h-screen">
+      <div className='flex justify-center items-center h-screen'>
         <Paper
           elevation={3}
-          className="w-2/5 p-7 flex flex-col items-center gap-5"
-        >
-          <div className="text-lg">ZKPass Demo : My Namaste</div>
+          className='w-2/5 p-7 flex flex-col items-center gap-5'>
+          <div className='text-lg'>ZKPass Demo : My Namaste</div>
           <TextField
-            id="username"
-            label="Username"
-            variant="outlined"
-            className="w-4/6"
+            id='username'
+            label='Username'
+            variant='outlined'
+            className='w-4/6'
             onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
-            id="password"
-            label="Password"
-            type="password"
-            variant="outlined"
-            className="w-4/6"
+            id='password'
+            label='Password'
+            type='password'
+            variant='outlined'
+            className='w-4/6'
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -95,7 +94,7 @@ export default function Home() {
               }
             }}
           />
-          <Button variant="outlined" onClick={_handleLogin}>
+          <Button variant='outlined' onClick={_handleLogin}>
             Login
           </Button>
         </Paper>

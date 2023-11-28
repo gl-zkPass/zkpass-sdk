@@ -9,7 +9,7 @@
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
- *   
+ *   Zulchaidir (zulchaidir@gdplabs.id)
  * ---
  * References:
  *   NONE
@@ -33,13 +33,12 @@ export default function UsersWelcome({ user }: { user: string | undefined }) {
   return (
     <>
       <HeaderBar user={user} />
-      <div className="flex flex-col justify-start items-center h-screen pt-40">
+      <div className='flex flex-col justify-start items-center h-screen pt-40'>
         <Paper
           elevation={3}
-          className="w-2/5 p-7 flex flex-col items-center gap-5"
-        >
+          className='w-2/5 p-7 flex flex-col items-center gap-5'>
           <div>Welcome {user}!</div>
-          <Button href="/onboarding" variant="outlined">
+          <Button href='/onboarding' variant='outlined'>
             Start Employee Onboarding
           </Button>
         </Paper>

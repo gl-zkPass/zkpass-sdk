@@ -1,7 +1,7 @@
 /*
  * dvrHelper.ts
  * DEFAULT DESCRIPTION. EDIT OR DELETE THIS.
- * 
+ *
  * Authors:
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -11,7 +11,7 @@
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
- *   
+ *   Zulchaidir (zulchaidir@gdplabs.id)
  * ---
  * References:
  *   NONE
