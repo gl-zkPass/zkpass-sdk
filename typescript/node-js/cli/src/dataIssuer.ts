@@ -1,9 +1,19 @@
 /*
- * Filename: /typescript/node-js/cli/src/dataIssuer.ts
- * Path: /typescript/node-js/cli
- * Created Date: Monday, November 27th 2023, 9:07:20 am
- * Author: Naufal Fakhri Muhammad
+ * dataIssuer.ts
  *
+ * Authors:
+ *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Created Date: November 27th 2023, 9:07:20 am
+ * -----
+ * Last Modified: November 27th 2023, 9:07:20 am
+ * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * -----
+ * Reviewers:
+ *   NONE
+ * ---
+ * References:
+ *   NONE
+ * ---
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
 

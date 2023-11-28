@@ -1,9 +1,19 @@
 /*
- * Filename: /typescript/node-js/cli/src/dataHolder.ts
- * Path: /typescript/node-js/cli
- * Created Date: Monday, November 27th 2023, 9:18:39 am
- * Author: Naufal Fakhri Muhammad
+ * dataHolder.ts
  *
+ * Authors:
+ *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Created Date: November 27th 2023
+ * -----
+ * Last Modified: November 28th 2023
+ * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * -----
+ * Reviewers:
+ *   NONE
+ * ---
+ * References:
+ *   NONE
+ * ---
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
 import { ZkPassClient } from "@didpass/zkpass-client-ts";
