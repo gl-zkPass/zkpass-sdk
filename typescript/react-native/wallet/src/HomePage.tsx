@@ -1,3 +1,24 @@
+/*
+ * HomePage.tsx
+ * Main Page of The Wallet Demo Mobile App
+ * 
+ * Authors:
+ *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Created at: November 7th 2023
+ * -----
+ * Last Modified: November 28th 2023
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * -----
+ * Reviewers:
+ *   
+ * ---
+ * References:
+ *   NONE
+ * ---
+ * Copyright (c) 2023 GDP LABS. All rights reserved.
+ */
+
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Clipboard, Alert } from 'react-native';
 import { styles } from './styles';
@@ -8,7 +29,7 @@ import {
 import Config from 'react-native-config';
 import { JwtPayload, decode } from 'jsonwebtoken';
 import { DownloadDirectoryPath, exists, readFile, unlink, writeFile } from 'react-native-fs';
-import JsonDisplayer from './components/json-displayer/JsonDisplayer';
+import JsonDisplayer from './json-displayer/JsonDisplayer';
 
 
 const HomePage = () => {
@@ -26,6 +47,7 @@ const HomePage = () => {
   useEffect(() => {
     if (!Config.USER_DATA_TOKEN || !Config.DVR_TOKEN) {
       setIsError(true);
+      return;
     }
     const userData = decode(Config.USER_DATA_TOKEN!) as JwtPayload;
     const decodedUserData = userData?.data;
@@ -96,8 +118,9 @@ const HomePage = () => {
 
   const generateProof = async () => {
     try {
-      if (!Config.USER_DATA_TOKEN || !Config.DVR_TOKEN) {
+      if (!Config.USER_DATA_TOKEN || !Config.DVR_TOKEN || !Config.ZKPASS_URL) {
         setIsError(true);
+        return;
       }
 
       /**
@@ -119,7 +142,6 @@ const HomePage = () => {
       );
 
       if (result.status == 200 && result.proof) {
-        console.log('Proof Token: ', result.proof);
         setProofState('ShowTokenProof');
         setProofToken(result.proof);
         setIsError(false);     
