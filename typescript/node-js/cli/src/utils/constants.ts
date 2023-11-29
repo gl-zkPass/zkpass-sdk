@@ -17,6 +17,10 @@
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
 
+// Holder constants
+export const ZKPASS_SERVICE_URL: string =
+  "https://playground-zkpass.ssi.id/proof";
+
 // Issuer constants
 export const ISSUER_PRIVKEY: string =
   "-----BEGIN PRIVATE KEY-----\n" +

@@ -53,11 +53,14 @@ class MyMetadataValidator implements ZkPassProofMetadataValidator {
 }
 
 export class Verifier {
+  private zkPassClient: ZkPassClient;
   constructor(
     private VERIFIER_PRIVKEY: string,
     private KID: string,
     private JKU: string
-  ) {}
+  ) {
+    this.zkPassClient = new ZkPassClient();
+  }
 
   async getDvrToken(dvrFile: string): Promise<string> {
     const DVR_TITLE: string = "My DVR";
@@ -72,12 +75,12 @@ export class Verifier {
     const queryObj = JSON.parse(query);
 
     // Step 1: Instantiate the ZkPassClient object.
-    const zkPassClient = new ZkPassClient();
+    // In this example, we have instantiated the zkPassClient object in the constructor.
 
     // Step 2: Call zkPassClient.getQueryEngineVersionInfo.
     // The version info is needed for DVR object creation.
     const { queryEngineVersion, queryMethodVersion } =
-      await zkPassClient.getQueryEngineVersionInfo();
+      await this.zkPassClient.getQueryEngineVersionInfo();
 
     // Step 3: Create the DVR object.
     const dvr = DataVerificationRequest.fromJSON({
@@ -109,11 +112,11 @@ export class Verifier {
 
     const proofMetadataValidator = new MyMetadataValidator();
 
-    // Step 1: Instantiate the zkpassClient object.
-    const zkpassClient = new ZkPassClient();
+    // Step 1: Instantiate the zkPassClient object.
+    // In this example, we have instantiated the zkPassClient object in the constructor.
 
-    // Step 2: Call zkpassClient.verifyZkpassProof to verify the proof.
-    const proofResult = await zkpassClient.verifyZkpassProof(
+    // Step 2: Call zkPassClient.verifyZkpassProof to verify the proof.
+    const proofResult = await this.zkPassClient.verifyZkpassProof(
       zkpassProofToken,
       proofMetadataValidator
     );

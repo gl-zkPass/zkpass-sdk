@@ -22,10 +22,9 @@ import { ZkPassClient } from "@didpass/zkpass-client-ts";
 export class Holder {
   public async getProofToken(
     userDataToken: string,
-    dvrToken: string
+    dvrToken: string,
+    zkPassServiceUrl: string
   ): Promise<string> {
-    const ZKPASS_SERVICE_URL: string = "https://playground-zkpass.ssi.id/proof";
-
     try {
       console.log("\n#### starting zkpass proof generation...");
       const start = Date.now();
@@ -44,7 +43,7 @@ export class Holder {
       //         to get the zkpassProofToken.
       //
       const zkpassProofToken = await zkpassClient.generateZkpassProof(
-        ZKPASS_SERVICE_URL,
+        zkPassServiceUrl,
         userDataToken,
         dvrToken
       );

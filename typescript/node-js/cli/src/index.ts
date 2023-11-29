@@ -26,6 +26,7 @@ import {
   VERIFIER_JKU,
   VERIFIER_KID,
   VERIFIER_PRIVKEY,
+  ZKPASS_SERVICE_URL,
 } from "./utils/constants";
 import { Verifier } from "./Verifier";
 
@@ -55,7 +56,8 @@ async function main() {
     const holder = new Holder();
     const zkpassProofToken = await holder.getProofToken(
       userDataToken,
-      dvrToken
+      dvrToken,
+      ZKPASS_SERVICE_URL
     );
 
     //
