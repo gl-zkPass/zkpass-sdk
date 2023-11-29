@@ -52,16 +52,14 @@ class MyMetadataValidator implements ZkPassProofMetadataValidator {
   }
 }
 
-export class ProofVerifier {
+export class Verifier {
+  constructor(
+    private VERIFIER_PRIVKEY: string,
+    private KID: string,
+    private JKU: string
+  ) {}
+
   async getDvrToken(dvrFile: string): Promise<string> {
-    const VERIFIER_PRIVKEY: string = `-----BEGIN PRIVATE KEY-----
-    MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgLxxbcd7aVcNEdE/C
-    EGPwLzM6lkLuDYzhd3FqALuuHCahRANCAASnpYmXAC2V39TiEOaa64x1kJW0x5Qh
-    PfGQN1TAs6+xVUD6KJLB9pfgeoqVE8MYb4XpYaOfHKz1Pka017ee97A4
-    -----END PRIVATE KEY-----`;
-    const KID: string = "k-1";
-    const JKU: string =
-      "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/verifier-key.json";
     const DVR_TITLE: string = "My DVR";
     const USER_DATA_URL: string = "https://hostname/api/user_data/";
     const ENCODING = "utf-8";
@@ -69,7 +67,7 @@ export class ProofVerifier {
     const query = readFileSync(dvrFile, ENCODING);
     console.log(`query=${query}`);
 
-    const verifierPubkey = { jku: JKU, kid: KID };
+    const verifierPubkey = { jku: this.JKU, kid: this.KID };
 
     const queryObj = JSON.parse(query);
 
@@ -96,7 +94,7 @@ export class ProofVerifier {
 
     // Step 4: Call zkPassClient.signToJwsToken.
     // to digitally-sign the dvr data.
-    const dvrToken = dvr.signToJwsToken(VERIFIER_PRIVKEY, verifierPubkey);
+    const dvrToken = dvr.signToJwsToken(this.VERIFIER_PRIVKEY, verifierPubkey);
 
     // Save the dvr to a global hash table
     // This will be needed by the validator to check the proof metadata

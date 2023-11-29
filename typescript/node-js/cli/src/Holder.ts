@@ -19,7 +19,7 @@
  */
 import { ZkPassClient } from "@didpass/zkpass-client-ts";
 
-export class DataHolder {
+export class Holder {
   public async getProofToken(
     userDataToken: string,
     dvrToken: string
