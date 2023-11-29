@@ -6,7 +6,7 @@
  *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * Created at: November 7th 2023
  * -----
- * Last Modified: November 28th 2023
+ * Last Modified: November 29th 2023
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -95,6 +95,11 @@ const HomePage = () => {
     setIsError(false);
   };
 
+  const truncateToken = (token:string) => {
+    const TOKEN_LIMIT = 100;
+    return token.substring(0, TOKEN_LIMIT) + '...';
+  };
+
   const downloadProofAsFile = async () => {
     const path = DownloadDirectoryPath + '/proof_token.json';
     const fileExists = await exists(path);
@@ -106,7 +111,7 @@ const HomePage = () => {
       .then(() => {
         readFile(path)
           .then((token) => {
-            Alert.alert('Success Download', token.substring(0, 100) + '...');
+            Alert.alert('Success Download', truncateToken(token));
           })
           .catch((err) => {
             Alert.alert('Error Reading Saved JSON', err.message);
@@ -148,7 +153,9 @@ const HomePage = () => {
         setProofToken(result.proof);
         setIsError(false);     
       }
-      else throw 'error';
+      else {
+        throw new Error('Error Generating Proof');
+      }
     } catch (error) {
       setProofToken('');
       setIsError(true);
@@ -243,7 +250,7 @@ const HomePage = () => {
                   ? JSON.stringify(dvr, null, 2)
                   : pageState == PAGE_STATE.UserData 
                     ? JSON.stringify(userData, null, 2)
-                    : proofToken.substring(0,1000) + '...'
+                    : truncateToken(proofToken)
               }
               containerStyle={styles.dvrContainer}
             />
