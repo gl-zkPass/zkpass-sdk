@@ -6,7 +6,7 @@
  *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * Created at: November 7th 2023
  * -----
- * Last Modified: November 28th 2023
+ * Last Modified: November 29th 2023
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -20,12 +20,13 @@
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Clipboard, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { styles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { generateZkPassProof } from '@didpass/zkpass-client-react-native';
 import Config from 'react-native-config';
 import { JwtPayload, decode } from 'jsonwebtoken';
+import Clipboard from '@react-native-clipboard/clipboard';
 import {
   DownloadDirectoryPath,
   exists,
@@ -98,6 +99,11 @@ const HomePage = () => {
     setIsError(false);
   };
 
+  const truncateToken = (token:string) => {
+    const TOKEN_LIMIT = 1000;
+    return token.substring(0, TOKEN_LIMIT) + '...';
+  };
+
   const downloadProofAsFile = async () => {
     const path = DownloadDirectoryPath + '/proof_token.json';
     const fileExists = await exists(path);
@@ -108,8 +114,8 @@ const HomePage = () => {
     writeFile(path, proofToken)
       .then(() => {
         readFile(path)
-          .then((token) => {
-            Alert.alert('Success Download', token.substring(0, 100) + '...');
+          .then(() => {
+            Alert.alert('File Downloaded', 'The proof_token.json is stored in Downloads folder');
           })
           .catch((err) => {
             Alert.alert('Error Reading Saved JSON', err.message);
@@ -149,7 +155,10 @@ const HomePage = () => {
         setPageState(PageState.ShowTokenProof);
         setProofToken(result.proof);
         setIsError(false);
-      } else throw 'error';
+      } 
+      else {
+        throw new Error('Error Generating Proof');
+      }
     } catch (error) {
       setProofToken('');
       setIsError(true);
@@ -237,7 +246,7 @@ const HomePage = () => {
                   ? JSON.stringify(dvr, null, 2)
                   : pageState == PageState.UserData
                     ? JSON.stringify(userData, null, 2)
-                    : proofToken.substring(0, 1000) + '...'
+                    : truncateToken(proofToken)
               }
               containerStyle={styles.dvrContainer}
             />
