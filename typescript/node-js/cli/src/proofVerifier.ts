@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023
  * -----
- * Last Modified: November 28th 2023
+ * Last Modified: November 29th 2023
  * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * -----
  * Reviewers:
@@ -23,7 +23,7 @@ import {
   PublicKey,
 } from "@didpass/zkpass-client-ts";
 import { ZkPassProofMetadataValidator } from "@didpass/zkpass-client-ts/lib/interfaces";
-import { dvrTable } from "./dvrTable";
+import { dvrTable } from "./utils/dvrTable";
 import { readFileSync } from "fs";
 import { v4 as uuidv4 } from "uuid";
 
@@ -53,20 +53,23 @@ class MyMetadataValidator implements ZkPassProofMetadataValidator {
 }
 
 export class ProofVerifier {
-  private readonly VERIFIER_PRIVKEY: string = `-----BEGIN PRIVATE KEY-----
+  async getDvrToken(dvrFile: string): Promise<string> {
+    const VERIFIER_PRIVKEY: string = `-----BEGIN PRIVATE KEY-----
     MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgLxxbcd7aVcNEdE/C
     EGPwLzM6lkLuDYzhd3FqALuuHCahRANCAASnpYmXAC2V39TiEOaa64x1kJW0x5Qh
     PfGQN1TAs6+xVUD6KJLB9pfgeoqVE8MYb4XpYaOfHKz1Pka017ee97A4
     -----END PRIVATE KEY-----`;
+    const KID: string = "k-1";
+    const JKU: string =
+      "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/verifier-key.json";
+    const DVR_TITLE: string = "My DVR";
+    const USER_DATA_URL: string = "https://hostname/api/user_data/";
+    const ENCODING = "utf-8";
 
-  async getDvrToken(dvrFile: string): Promise<string> {
-    const query = readFileSync(dvrFile, "utf-8");
+    const query = readFileSync(dvrFile, ENCODING);
     console.log(`query=${query}`);
 
-    const kid = "k-1";
-    const jku =
-      "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/verifier-key.json";
-    const verifierPubkey = { jku, kid };
+    const verifierPubkey = { jku: JKU, kid: KID };
 
     const queryObj = JSON.parse(query);
 
@@ -80,12 +83,12 @@ export class ProofVerifier {
 
     // Step 3: Create the DVR object.
     const dvr = DataVerificationRequest.fromJSON({
-      dvr_title: "My DVR",
+      dvr_title: DVR_TITLE,
       dvr_id: uuidv4(),
       query_engine_ver: queryEngineVersion,
       query_method_ver: queryMethodVersion,
       query: JSON.stringify(queryObj),
-      user_data_url: "https://hostname/api/user_data/",
+      user_data_url: USER_DATA_URL,
       user_data_verifying_key: {
         KeysetEndpoint: verifierPubkey,
       },
@@ -93,7 +96,7 @@ export class ProofVerifier {
 
     // Step 4: Call zkPassClient.signToJwsToken.
     // to digitally-sign the dvr data.
-    const dvrToken = dvr.signToJwsToken(this.VERIFIER_PRIVKEY, verifierPubkey);
+    const dvrToken = dvr.signToJwsToken(VERIFIER_PRIVKEY, verifierPubkey);
 
     // Save the dvr to a global hash table
     // This will be needed by the validator to check the proof metadata

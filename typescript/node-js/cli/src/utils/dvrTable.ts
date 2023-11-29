@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023
  * -----
- * Last Modified: November 28th 2023
+ * Last Modified: November 29th 2023
  * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * -----
  * Reviewers:
@@ -61,8 +61,8 @@ class DVRLookupTable {
     }
   }
 }
-
-const dvrTable = new GlobalRef<DVRLookupTable>("zkpass.dvr_table");
+const DVR_TABLE_NAME = "zkpass.dvr_table";
+const dvrTable = new GlobalRef<DVRLookupTable>(DVR_TABLE_NAME);
 if (!dvrTable.value) {
   dvrTable.value = new DVRLookupTable();
 }

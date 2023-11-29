@@ -36,16 +36,17 @@ export class DataIssuer {
       "bPkuCY/BSlq2Y2S5hym8sRccpZehRANCAATt/RChVSxxwH3IzAcBHuhWT8v5mRfx\n" +
       "moLVnRdNqPcExwyeqH5XN0dlffIYprf66E0CEpZbJ8H+v7cTys9Ie1dd\n" +
       "-----END PRIVATE KEY-----\n";
+    const ENCODING = "utf-8";
+    const KID: string = "k-1";
+    const JKU: string =
+      "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/issuer-key.json";
 
-    let data: string = fs.readFileSync(dataFile, "utf-8");
+    const data: string = fs.readFileSync(dataFile, ENCODING);
     console.log(`data=${data}`);
 
-    let dataObj: any = JSON.parse(data);
+    const dataObj: any = JSON.parse(data);
 
-    let kid: string = "k-1";
-    let jku: string =
-      "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/issuer-key.json";
-    let issuerPubkey: KeysetEndpoint = { jku, kid };
+    const issuerPubkey: KeysetEndpoint = { jku: JKU, kid: KID };
 
     //
     //  Data Issuer's integration points with the zkpass-client SDK library
@@ -54,13 +55,13 @@ export class DataIssuer {
     //
     // Step 1: Instantiate the zkPassClient object
     //
-    let zkPassClient: ZkPassClient = new ZkPassClient();
+    const zkPassClient: ZkPassClient = new ZkPassClient();
 
     //
     // Step 2: Call the zkPassClient.signDataToJwsToken.
     //         This is to digitally-sign the user data.
     //
-    let dataToken: string = await zkPassClient.signDataToJwsToken(
+    const dataToken: string = await zkPassClient.signDataToJwsToken(
       ISSUER_PRIVKEY,
       dataObj,
       issuerPubkey
