@@ -20,7 +20,7 @@
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Clipboard, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { styles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { 
@@ -28,6 +28,7 @@ import {
 } from '@didpass/zkpass-client-react-native';
 import Config from 'react-native-config';
 import { JwtPayload, decode } from 'jsonwebtoken';
+import Clipboard from '@react-native-clipboard/clipboard';
 import { DownloadDirectoryPath, exists, readFile, unlink, writeFile } from 'react-native-fs';
 import JsonDisplayer from './json-displayer/JsonDisplayer';
 import { StatusCodes } from 'http-status-codes';
@@ -96,7 +97,7 @@ const HomePage = () => {
   };
 
   const truncateToken = (token:string) => {
-    const TOKEN_LIMIT = 100;
+    const TOKEN_LIMIT = 1000;
     return token.substring(0, TOKEN_LIMIT) + '...';
   };
 
@@ -110,8 +111,8 @@ const HomePage = () => {
     writeFile(path, proofToken)
       .then(() => {
         readFile(path)
-          .then((token) => {
-            Alert.alert('Success Download', truncateToken(token));
+          .then(() => {
+            Alert.alert('File Downloaded', 'The proof_token.json is stored in Downloads folder');
           })
           .catch((err) => {
             Alert.alert('Error Reading Saved JSON', err.message);
