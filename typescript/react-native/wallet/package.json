@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@didpass/zkpass-client-react-native": "^0.1.0-beta.2",
+    "@react-native-clipboard/clipboard": "^1.12.1",
     "@tradle/react-native-http": "^2.0.1",
     "events": "^1.1.1",
     "http-status-codes": "^2.3.0",
