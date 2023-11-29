@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023
  * -----
- * Last Modified: November 28th 2023
+ * Last Modified: November 29th 2023
  * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * -----
  * Reviewers:
@@ -17,24 +17,55 @@
  * ---
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
-import { DataHolder } from "./dataHolder";
+import { Holder } from "./Holder";
+import { Issuer } from "./Issuer";
+import {
+  ISSUER_JKU,
+  ISSUER_KID,
+  ISSUER_PRIVKEY,
+  VERIFIER_JKU,
+  VERIFIER_KID,
+  VERIFIER_PRIVKEY,
+  ZKPASS_SERVICE_URL,
+} from "./utils/constants";
+import { Verifier } from "./Verifier";
 
-function runDataHolder(dataFile: string, dvrFile: string): void {
-  try {
-    const dataHolder = new DataHolder();
-    dataHolder.start(dataFile, dvrFile);
-  } catch (error) {
-    console.log("=== runDataHolder: error ===");
-    console.log({ error });
-  }
-}
-
-function main(): void {
+async function main() {
   const args: string[] = process.argv.slice(2);
   console.log("=== main ===");
   console.log({ args });
   if (args.length === 2) {
-    runDataHolder(args[0], args[1]);
+    const dataFile = args[0];
+    const dvrFile = args[1];
+
+    //
+    //  Get the dvr from the verifier
+    //
+    const verifier = new Verifier(VERIFIER_PRIVKEY, VERIFIER_KID, VERIFIER_JKU);
+    const dvrToken = await verifier.getDvrToken(dvrFile);
+
+    //
+    //  Get the user data from the data issuer
+    //
+    const issuer = new Issuer(ISSUER_PRIVKEY, ISSUER_KID, ISSUER_JKU);
+    const userDataToken = await issuer.getUserDataToken(dataFile);
+
+    //
+    //  Generate the zkpassProofToken using user data token & dvr token
+    //
+    const holder = new Holder();
+    const zkpassProofToken = await holder.getProofToken(
+      userDataToken,
+      dvrToken,
+      ZKPASS_SERVICE_URL
+    );
+
+    //
+    //  Verifier verifies the proof
+    //
+    const queryResult = await verifier.verifyZkpassProof(zkpassProofToken);
+
+    console.log(`the query result is ${queryResult}`);
   } else {
     console.log("required arguments: <data-file> <rules-file>");
   }

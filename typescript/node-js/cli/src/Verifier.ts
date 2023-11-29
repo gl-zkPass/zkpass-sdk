@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023
  * -----
- * Last Modified: November 28th 2023
+ * Last Modified: November 29th 2023
  * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * -----
  * Reviewers:
@@ -23,7 +23,7 @@ import {
   PublicKey,
 } from "@didpass/zkpass-client-ts";
 import { ZkPassProofMetadataValidator } from "@didpass/zkpass-client-ts/lib/interfaces";
-import { dvrTable } from "./dvrTable";
+import { dvrTable } from "./utils/dvrTable";
 import { readFileSync } from "fs";
 import { v4 as uuidv4 } from "uuid";
 
@@ -52,40 +52,44 @@ class MyMetadataValidator implements ZkPassProofMetadataValidator {
   }
 }
 
-export class ProofVerifier {
-  private readonly VERIFIER_PRIVKEY: string = `-----BEGIN PRIVATE KEY-----
-    MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgLxxbcd7aVcNEdE/C
-    EGPwLzM6lkLuDYzhd3FqALuuHCahRANCAASnpYmXAC2V39TiEOaa64x1kJW0x5Qh
-    PfGQN1TAs6+xVUD6KJLB9pfgeoqVE8MYb4XpYaOfHKz1Pka017ee97A4
-    -----END PRIVATE KEY-----`;
+export class Verifier {
+  private zkPassClient: ZkPassClient;
+  constructor(
+    private VERIFIER_PRIVKEY: string,
+    private KID: string,
+    private JKU: string
+  ) {
+    this.zkPassClient = new ZkPassClient();
+  }
 
   async getDvrToken(dvrFile: string): Promise<string> {
-    const query = readFileSync(dvrFile, "utf-8");
+    const DVR_TITLE: string = "My DVR";
+    const USER_DATA_URL: string = "https://hostname/api/user_data/";
+    const ENCODING = "utf-8";
+
+    const query = readFileSync(dvrFile, ENCODING);
     console.log(`query=${query}`);
 
-    const kid = "k-1";
-    const jku =
-      "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/verifier-key.json";
-    const verifierPubkey = { jku, kid };
+    const verifierPubkey = { jku: this.JKU, kid: this.KID };
 
     const queryObj = JSON.parse(query);
 
     // Step 1: Instantiate the ZkPassClient object.
-    const zkPassClient = new ZkPassClient();
+    // In this example, we have instantiated the zkPassClient object in the constructor.
 
     // Step 2: Call zkPassClient.getQueryEngineVersionInfo.
     // The version info is needed for DVR object creation.
     const { queryEngineVersion, queryMethodVersion } =
-      await zkPassClient.getQueryEngineVersionInfo();
+      await this.zkPassClient.getQueryEngineVersionInfo();
 
     // Step 3: Create the DVR object.
     const dvr = DataVerificationRequest.fromJSON({
-      dvr_title: "My DVR",
+      dvr_title: DVR_TITLE,
       dvr_id: uuidv4(),
       query_engine_ver: queryEngineVersion,
       query_method_ver: queryMethodVersion,
       query: JSON.stringify(queryObj),
-      user_data_url: "https://hostname/api/user_data/",
+      user_data_url: USER_DATA_URL,
       user_data_verifying_key: {
         KeysetEndpoint: verifierPubkey,
       },
@@ -108,11 +112,11 @@ export class ProofVerifier {
 
     const proofMetadataValidator = new MyMetadataValidator();
 
-    // Step 1: Instantiate the zkpassClient object.
-    const zkpassClient = new ZkPassClient();
+    // Step 1: Instantiate the zkPassClient object.
+    // In this example, we have instantiated the zkPassClient object in the constructor.
 
-    // Step 2: Call zkpassClient.verifyZkpassProof to verify the proof.
-    const proofResult = await zkpassClient.verifyZkpassProof(
+    // Step 2: Call zkPassClient.verifyZkpassProof to verify the proof.
+    const proofResult = await this.zkPassClient.verifyZkpassProof(
       zkpassProofToken,
       proofMetadataValidator
     );
