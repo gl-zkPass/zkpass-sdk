@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023
  * -----
- * Last Modified: November 29th 2023
- * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Last Modified: December 14th 2023, 9:07:20 am
+ * Modified By: GDPWinnerPranata (winner.pranata@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -23,7 +23,8 @@ export class Holder {
   public async getProofToken(
     userDataToken: string,
     dvrToken: string,
-    zkPassServiceUrl: string
+    zkPassServiceUrl: string,
+    apiKey: string
   ): Promise<string> {
     try {
       console.log("\n#### starting zkpass proof generation...");
@@ -45,7 +46,8 @@ export class Holder {
       const zkpassProofToken = await zkpassClient.generateZkpassProof(
         zkPassServiceUrl,
         userDataToken,
-        dvrToken
+        dvrToken,
+        apiKey
       );
 
       const duration = Date.now() - start;

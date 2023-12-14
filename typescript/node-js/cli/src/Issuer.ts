@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023, 9:07:20 am
  * -----
- * Last Modified: November 29th 2023, 9:07:20 am
- * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Last Modified: December 14th 2023, 9:07:20 am
+ * Modified By: GDPWinnerPranata (winner.pranata@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -19,8 +19,7 @@
  */
 
 import fs from "fs";
-import { KeysetEndpoint } from "@didpass/zkpass-client-ts/lib/types";
-import { ZkPassClient } from "@didpass/zkpass-client-ts";
+import { KeysetEndpoint, ZkPassClient } from "@didpass/zkpass-client-ts";
 
 //
 //  Simulating the REST call to the Data Issuer

@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023
  * -----
- * Last Modified: November 29th 2023
- * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Last Modified: December 14th 2023, 9:07:20 am
+ * Modified By: GDPWinnerPranata (winner.pranata@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -20,6 +20,8 @@
 import { Holder } from "./Holder";
 import { Issuer } from "./Issuer";
 import {
+  API_KEY,
+  EXPECTED_DVR_TTL,
   ISSUER_JKU,
   ISSUER_KID,
   ISSUER_PRIVKEY,
@@ -41,7 +43,14 @@ async function main() {
     //
     //  Get the dvr from the verifier
     //
-    const verifier = new Verifier(VERIFIER_PRIVKEY, VERIFIER_KID, VERIFIER_JKU);
+    const verifier = new Verifier(
+      VERIFIER_PRIVKEY,
+      ISSUER_KID,
+      ISSUER_JKU,
+      VERIFIER_KID,
+      VERIFIER_JKU,
+      EXPECTED_DVR_TTL
+    );
     const dvrToken = await verifier.getDvrToken(dvrFile);
 
     //
@@ -57,7 +66,8 @@ async function main() {
     const zkpassProofToken = await holder.getProofToken(
       userDataToken,
       dvrToken,
-      ZKPASS_SERVICE_URL
+      ZKPASS_SERVICE_URL,
+      API_KEY
     );
 
     //
@@ -65,7 +75,7 @@ async function main() {
     //
     const queryResult = await verifier.verifyZkpassProof(zkpassProofToken);
 
-    console.log(`the query result is ${queryResult}`);
+    console.log(`the query result is ${queryResult.result}`);
   } else {
     console.log("required arguments: <data-file> <rules-file>");
   }

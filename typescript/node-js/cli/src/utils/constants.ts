@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 29th 2023
  * -----
- * Last Modified: November 29th 2023
- * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Last Modified: December 14th 2023, 9:07:20 am
+ * Modified By: GDPWinnerPranata (winner.pranata@gdplabs.id)
  * -----
  * Reviewers:
  *   Nugraha Tejapermana (nugraha.tejapermana@gdplabs.id)
@@ -41,3 +41,7 @@ export const VERIFIER_PRIVKEY: string = `-----BEGIN PRIVATE KEY-----
 export const VERIFIER_KID: string = "k-1";
 export const VERIFIER_JKU: string =
   "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/verifier-key.json";
+export const EXPECTED_DVR_TTL: number = 600;
+
+// API Keys
+export const API_KEY: string = "";
