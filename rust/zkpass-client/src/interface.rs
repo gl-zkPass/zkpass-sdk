@@ -1,4 +1,5 @@
-use serde_json::Value;
+use std::time::{Instant, Duration};
+use serde_json::{json, Value};
 use async_trait::async_trait;
 use crate::core::*;
 use zkpass_core::interface::get_current_timestamp;
@@ -237,6 +238,110 @@ pub trait ZkPassProofVerifier {
 }
 
 //
-/// <span style="font-size: 1.1em; color: #996515;"> ***The main struct which implements all of the traits defined in this module.*** </span>
+/// <span style="font-size: 1.1em; color: #996515;"> ***The main struct which implements the ZkPassProofGenerator, ZkPassProofVerifier, and ZkPassUtility traits defined in this module.*** </span>
 /// 
 pub struct ZkPassClient;
+
+#[async_trait]
+///
+/// <span style="font-size: 1.1em; color: #996515;"> ***Trait built on the ZkPassClient to support higher-level abstrations for implementing a data holder.
+/// This trait is provided as a helper type alternative to using the ZkPassClient direclty.
+/// This is primarily for developers who prefer a more object-oriented approach in designing the data holder.*** </span>
+/// 
+pub trait DataHolder {
+    async fn create_zkpass_proof(&self, zkpass_service_url: &str, user_data_token: &str, dvr_token: &str) -> Result<(String, Duration), ZkPassError> {
+        //let zkpass_service_url = String::from("https://playground-zkpass.ssi.id/proof");
+        //let zkpass_service_url = String::from("http://localhost:10888/proof");
+
+        //println!("\n#### starting zkpass proof generation...");
+        let start = Instant::now();
+
+        //
+        // Step 1: Instantiate the zkpass_client object.
+        //
+        let zkpass_client = ZkPassClient;
+
+        //
+        // Step 2: Call the zkpass_client.generate_zk_pass_proof
+        //         to get the zkpass_proof_token.
+        //
+        let zkpass_proof_token = zkpass_client
+            .generate_zkpass_proof(
+                &zkpass_service_url,
+                &user_data_token,
+                &dvr_token)
+            .await?;
+
+        let duration = start.elapsed();
+        //println!("#### generation completed [time={:?}]", duration);
+
+        Ok((zkpass_proof_token, duration))
+    }
+}
+
+///
+/// <span style="font-size: 1.1em; color: #996515;"> ***Trait built on the ZkPassClient to support higher-level abstrations for implementing a data issuer.
+/// This trait is provided as a helper type alternative to using the ZkPassClient directly.
+/// This is primarily for developers who prefer a more object-oriented approach in designing the data issuer.*** </span>
+/// 
+pub trait DataIssuer {
+    fn sign_user_data(&self, signing_key: &str, data: Value, verifying_key_jwks: Option<KeysetEndpoint>,) -> Result<String, ZkPassError> {
+        //
+        // Step 1: Instantiate the zkpass_client object
+        //
+        let zkpass_client = ZkPassClient;
+
+        //
+        // Step 2: Call the zkpass_client.sign_data_to_jws_token.
+        //         This is to digitally-sign the user data.
+        //
+        let data_token = zkpass_client
+            .sign_data_to_jws_token(
+                signing_key,
+                json!(data),
+                verifying_key_jwks
+            )?;
+
+        Ok(data_token)
+    }
+}
+
+///
+/// <span style="font-size: 1.1em; color: #996515;"> ***Trait built on the ZkPassClient to support higher-level abstrations for implementing a proof verifier.
+/// This trait is provided as a helper type alternative to using the ZkPassClient directly.
+/// This is primarily for developers who prefer a more object-oriented approach in designing the proof verifier.*** </span>
+/// 
+pub trait ProofVerifier {
+    fn sign_dvr(&self, signing_key: &str, dvr: DataVerificationRequest, verifying_key_jwks: Option<KeysetEndpoint>,) -> Result<String, ZkPassError> {
+        //
+        // Step 1: Instantiate the zkpass_client object
+        //
+        let zkpass_client = ZkPassClient;
+
+        //
+        // Step 2: Call the zkpass_client.sign_data_to_jws_token.
+        //         This is to digitally-sign the user data.
+        //
+        let dvr_token = zkpass_client
+            .sign_data_to_jws_token(
+                signing_key,
+                json!(dvr),
+                verifying_key_jwks
+            )?;
+
+        Ok(dvr_token)
+    }
+
+    fn get_query_engine_version_info(&self) -> (String, String) {
+        //
+        //  Step 1: Instantiate the zkpass_client object.
+        //
+        let zkpass_client = ZkPassClient;
+
+        //
+        //  Step 2: Call zkpass_client.get_query_engine_version_info.
+        //          The version info is needed for DVR object creation.
+        //
+        zkpass_client.get_query_engine_version_info()
+    }
+}
