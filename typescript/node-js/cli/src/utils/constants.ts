@@ -18,8 +18,7 @@
  */
 
 // Holder constants
-export const ZKPASS_SERVICE_URL: string =
-  "https://playground-zkpass.ssi.id/proof";
+export const ZKPASS_SERVICE_URL: string = "https://staging-zkpass.ssi.id/proof";
 
 // Issuer constants
 export const ISSUER_PRIVKEY: string =

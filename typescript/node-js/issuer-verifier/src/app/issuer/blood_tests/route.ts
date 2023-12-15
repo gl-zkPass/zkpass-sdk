@@ -6,8 +6,8 @@
  *   Zulchaidir (zulchaidir@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: November 28th 2023
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Last Modified: December 15th 2023
+ * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -22,8 +22,14 @@ import fs from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
 import { ZkPassClient } from "@didpass/zkpass-client-ts";
+import {
+  ISSUER_JWKS_KID,
+  ISSUER_JWKS_URL,
+  ISSUER_PRIVATE_KEY_PEM,
+} from "@/utils/constants";
 
 const ASSET_PATH = "public/issuer/";
+const BLOOD_TEST_FILE = "blood-tests.json";
 
 interface BloodTest {
   testId: string;
@@ -47,11 +53,7 @@ export async function POST(req: Request) {
   const { name } = await req.json();
   const userName = name;
 
-  const usersFilePath = path.join(
-    process.cwd(),
-    ASSET_PATH,
-    "blood-tests.json"
-  );
+  const usersFilePath = path.join(process.cwd(), ASSET_PATH, BLOOD_TEST_FILE);
   const usersFileContents = fs.readFileSync(usersFilePath, "utf8");
   const bloodTests: { [key: string]: BloodTest } =
     JSON.parse(usersFileContents);
@@ -81,16 +83,9 @@ export async function OPTIONS() {
 }
 
 async function _signBloodTest(data: { [key: string]: any }) {
-  const PRIVATE_KEY_PEM =
-    "-----BEGIN PRIVATE KEY-----\n" +
-    "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg3J/wAlzSD8ZyAU8f\n" +
-    "bPkuCY/BSlq2Y2S5hym8sRccpZehRANCAATt/RChVSxxwH3IzAcBHuhWT8v5mRfx\n" +
-    "moLVnRdNqPcExwyeqH5XN0dlffIYprf66E0CEpZbJ8H+v7cTys9Ie1dd\n" +
-    "-----END PRIVATE KEY-----\n";
-
   const verifyingKeyJKWS = {
-    jku: "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/issuer-key.json",
-    kid: "k-1",
+    jku: ISSUER_JWKS_URL,
+    kid: ISSUER_JWKS_KID,
   };
 
   /**
@@ -103,7 +98,7 @@ async function _signBloodTest(data: { [key: string]: any }) {
    *         This is to digitally-sign the user data.
    */
   const dataToken = await zkPassClient.signDataToJwsToken(
-    PRIVATE_KEY_PEM,
+    ISSUER_PRIVATE_KEY_PEM,
     data,
     verifyingKeyJKWS
   );
