@@ -5,10 +5,10 @@ mod test;
 
 use std::env;
 use tokio::runtime::Runtime;
-use data_holder::DataHolder;
+use data_holder::holder::MyDataHolder;
 
 fn run_data_holder(data_file: &String, dvr_file: &String) {
-    let data_holder = DataHolder;
+    let data_holder = MyDataHolder;
     let rt = Runtime::new().unwrap();
 
     rt.block_on(
