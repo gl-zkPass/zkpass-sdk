@@ -17,8 +17,9 @@
  * ---
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
-import { Holder } from "./Holder";
-import { Issuer } from "./Issuer";
+import { MyHolder } from "./MyHolder";
+import { MyIssuer } from "./MyIssuer";
+import { MyVerifier } from "./MyVerifier";
 import {
   ISSUER_JKU,
   ISSUER_KID,
@@ -28,7 +29,6 @@ import {
   VERIFIER_PRIVKEY,
   ZKPASS_SERVICE_URL,
 } from "./utils/constants";
-import { Verifier } from "./Verifier";
 
 async function main() {
   const args: string[] = process.argv.slice(2);
@@ -41,20 +41,20 @@ async function main() {
     //
     //  Get the dvr from the verifier
     //
-    const verifier = new Verifier(VERIFIER_PRIVKEY, VERIFIER_KID, VERIFIER_JKU);
-    const dvrToken = await verifier.getDvrToken(dvrFile);
+    const myVerifier = new MyVerifier();
+    const dvrToken = await myVerifier.getDvrToken(dvrFile);
 
     //
     //  Get the user data from the data issuer
     //
-    const issuer = new Issuer(ISSUER_PRIVKEY, ISSUER_KID, ISSUER_JKU);
-    const userDataToken = await issuer.getUserDataToken(dataFile);
+    const myIssuer = new MyIssuer();
+    const userDataToken = await myIssuer.getUserDataToken(dataFile);
 
     //
     //  Generate the zkpassProofToken using user data token & dvr token
     //
-    const holder = new Holder();
-    const zkpassProofToken = await holder.getProofToken(
+    const myHolder = new MyHolder();
+    const zkpassProofToken = await myHolder.start(
       userDataToken,
       dvrToken,
       ZKPASS_SERVICE_URL
@@ -63,7 +63,7 @@ async function main() {
     //
     //  Verifier verifies the proof
     //
-    const queryResult = await verifier.verifyZkpassProof(zkpassProofToken);
+    const queryResult = await myVerifier.verifyZkpassProof(zkpassProofToken);
 
     console.log(`the query result is ${queryResult}`);
   } else {
