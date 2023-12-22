@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023
  * -----
- * Last Modified: December 14th 2023, 9:07:20 am
+ * Last Modified: December 22nd 2023, 9:07:20 am
  * Modified By: GDPWinnerPranata (winner.pranata@gdplabs.id)
  * -----
  * Reviewers:
@@ -24,7 +24,10 @@ export class Holder {
     userDataToken: string,
     dvrToken: string,
     zkPassServiceUrl: string,
-    apiKey: string
+    apiKey: {
+      key: string;
+      secret: string;
+    }
   ): Promise<string> {
     try {
       console.log("\n#### starting zkpass proof generation...");
