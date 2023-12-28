@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023
  * -----
- * Last Modified: December 14th 2023, 9:07:20 am
+ * Last Modified: December 28th 2023, 9:07:20 am
  * Modified By: GDPWinnerPranata (winner.pranata@gdplabs.id)
  * -----
  * Reviewers:
@@ -84,7 +84,7 @@ export class Verifier {
     private VERIFIER_JKU: string,
     private DVR_TTL: number
   ) {
-    this.zkPassClient = new ZkPassClient();
+    this.zkPassClient = new ZkPassClient("");
   }
 
   async getDvrToken(dvrFile: string): Promise<string> {

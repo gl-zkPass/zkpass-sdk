@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 29th 2023
  * -----
- * Last Modified: December 22nd 2023, 9:07:20 am
+ * Last Modified: December 28th 2023, 9:07:20 am
  * Modified By: GDPWinnerPranata (winner.pranata@gdplabs.id)
  * -----
  * Reviewers:
@@ -17,6 +17,7 @@
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
 
+import { ZkPassApiKey } from "@didpass/zkpass-client-ts";
 import { config } from "dotenv";
 
 config();
@@ -47,7 +48,7 @@ export const VERIFIER_JKU: string =
 export const EXPECTED_DVR_TTL: number = 600;
 
 // API Keys
-export const API_KEY = {
-  key: process.env.API_KEY ?? "",
-  secret: process.env.API_SECRET ?? "",
-};
+export const API_KEY: ZkPassApiKey = new ZkPassApiKey(
+  process.env.API_KEY ?? "",
+  process.env.API_SECRET ?? ""
+);

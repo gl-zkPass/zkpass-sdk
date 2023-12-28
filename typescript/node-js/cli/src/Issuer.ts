@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023, 9:07:20 am
  * -----
- * Last Modified: December 14th 2023, 9:07:20 am
+ * Last Modified: December 28th 2023, 9:07:20 am
  * Modified By: GDPWinnerPranata (winner.pranata@gdplabs.id)
  * -----
  * Reviewers:
@@ -49,7 +49,7 @@ export class Issuer {
     //
     // Step 1: Instantiate the zkPassClient object
     //
-    const zkPassClient: ZkPassClient = new ZkPassClient();
+    const zkPassClient: ZkPassClient = new ZkPassClient("");
 
     //
     // Step 2: Call the zkPassClient.signDataToJwsToken.
