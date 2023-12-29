@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023
  * -----
- * Last Modified: December 14th 2023, 9:07:20 am
+ * Last Modified: December 29th 2023, 9:07:20 am
  * Modified By: GDPWinnerPranata (winner.pranata@gdplabs.id)
  * -----
  * Reviewers:
@@ -63,12 +63,12 @@ async function main() {
     //  Generate the zkpassProofToken using user data token & dvr token
     //
     const holder = new Holder();
-    const zkpassProofToken = await holder.getProofToken(
-      userDataToken,
-      dvrToken,
-      ZKPASS_SERVICE_URL,
-      API_KEY
-    );
+    const zkpassProofToken = await holder
+      .getProofToken(userDataToken, dvrToken, ZKPASS_SERVICE_URL, API_KEY)
+      .catch((e) => {
+        console.error(`Proof generation failed: ${e}`);
+        process.exit();
+      });
 
     //
     //  Verifier verifies the proof

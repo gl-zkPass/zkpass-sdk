@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023
  * -----
- * Last Modified: December 28th 2023, 9:07:20 am
+ * Last Modified: December 29th 2023, 9:07:20 am
  * Modified By: GDPWinnerPranata (winner.pranata@gdplabs.id)
  * -----
  * Reviewers:
@@ -55,6 +55,7 @@ export class Holder {
     } catch (error) {
       console.log("#### DataHolder: error");
       console.log({ error });
+      throw error;
     }
   }
 }
