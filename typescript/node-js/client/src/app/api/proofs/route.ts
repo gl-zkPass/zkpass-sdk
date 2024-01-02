@@ -19,12 +19,15 @@
  */
 
 import { NextResponse } from "next/server";
-import { ZkPassClient } from "@didpass/zkpass-client-ts";
+import { ZkPassApiKey, ZkPassClient } from "@didpass/zkpass-client-ts";
 
 export async function POST(req: Request) {
   try {
-    const API_KEY = "";
-    const ZKPASS_SERVICE_URL = "https://staging-zkpass.ssi.id/proof";
+    const API_KEY = new ZkPassApiKey(
+      process.env.API_KEY ?? "",
+      process.env.API_SECRET ?? ""
+    );
+    const ZKPASS_SERVICE_URL = process.env.ZKPASS_SERVICE_URL ?? "";
 
     const { dvr, blood_test } = await req.json();
     console.log({ dvr, blood_test });
@@ -32,17 +35,13 @@ export async function POST(req: Request) {
     /**
      * Step 1: Instantiate the ZkPassClient object.
      */
-    const zkPassClient = new ZkPassClient();
+    const zkPassClient = new ZkPassClient(ZKPASS_SERVICE_URL, API_KEY);
+
     /**
      * Step 2: Call the zkpassClient.generateZkpassProof
      *         to get the zkpassProofToken.
      */
-    const proof = await zkPassClient.generateZkpassProof(
-      ZKPASS_SERVICE_URL,
-      blood_test,
-      dvr,
-      API_KEY
-    );
+    const proof = await zkPassClient.generateZkpassProof(blood_test, dvr);
     console.log({ proof });
     return Response.json({ status: 200, data: proof });
   } catch (error) {

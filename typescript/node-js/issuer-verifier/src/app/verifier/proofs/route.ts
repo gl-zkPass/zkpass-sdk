@@ -18,13 +18,19 @@
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
 
-import { ZkPassClient } from "@didpass/zkpass-client-ts";
+import { ZkPassApiKey, ZkPassClient } from "@didpass/zkpass-client-ts";
 import { MyValidator } from "./proofValidator";
 
 export async function POST(req: Request) {
   console.log("*** POST verifier/proofs ***");
 
   try {
+    const API_KEY = new ZkPassApiKey(
+      process.env.API_KEY ?? "",
+      process.env.API_SECRET ?? ""
+    );
+    const ZKPASS_SERVICE_URL = process.env.ZKPASS_SERVICE_URL ?? "";
+
     const { proof } = await req.json();
     console.log({ proof });
     const myValidator = new MyValidator();
@@ -32,7 +38,7 @@ export async function POST(req: Request) {
     /**
      * Step 1: Instantiate the zkpassClient object.
      */
-    const zkPassClient = new ZkPassClient();
+    const zkPassClient = new ZkPassClient(ZKPASS_SERVICE_URL, API_KEY);
 
     /**
      * Step 2: Call zkpassClient.verifyZkpassProof to verify the proof.

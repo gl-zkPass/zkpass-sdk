@@ -6,8 +6,7 @@
  *   Zulchaidir (zulchaidir@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: December 15th 2023
- * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ src/app/issuer/blood_tests/route.ts
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -21,7 +20,7 @@
 import fs from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
-import { ZkPassClient } from "@didpass/zkpass-client-ts";
+import { ZkPassApiKey, ZkPassClient } from "@didpass/zkpass-client-ts";
 import {
   ISSUER_JWKS_KID,
   ISSUER_JWKS_URL,
@@ -83,6 +82,12 @@ export async function OPTIONS() {
 }
 
 async function _signBloodTest(data: { [key: string]: any }) {
+  const API_KEY = new ZkPassApiKey(
+    process.env.API_KEY ?? "",
+    process.env.API_SECRET ?? ""
+  );
+  const ZKPASS_SERVICE_URL = process.env.ZKPASS_SERVICE_URL ?? "";
+
   const verifyingKeyJKWS = {
     jku: ISSUER_JWKS_URL,
     kid: ISSUER_JWKS_KID,
@@ -91,7 +96,7 @@ async function _signBloodTest(data: { [key: string]: any }) {
   /**
    * Step 1: Instantiate the zkPassClient object
    */
-  const zkPassClient = new ZkPassClient();
+  const zkPassClient = new ZkPassClient(ZKPASS_SERVICE_URL, API_KEY);
 
   /**
    * Step 2: Call the zkPassClient.signDataToJwsToken.

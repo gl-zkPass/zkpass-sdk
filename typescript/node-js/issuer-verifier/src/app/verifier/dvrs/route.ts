@@ -24,6 +24,7 @@ import { NextResponse } from "next/server";
 import {
   ZkPassClient,
   DataVerificationRequest,
+  ZkPassApiKey,
 } from "@didpass/zkpass-client-ts";
 import { v4 as uuidv4 } from "uuid";
 import { dvrLookup } from "./dvrHelper";
@@ -73,7 +74,7 @@ export async function GET() {
   return Response.json({ data: "get api dvrs" });
 }
 
-export async function OPTION() {
+export async function OPTIONS() {
   let response = _setHeader(NextResponse.json({ status: 200 }));
   return response;
 }
@@ -89,6 +90,12 @@ function _setHeader(response: NextResponse) {
 }
 
 async function _generateSignedDVR(user: User) {
+  const API_KEY = new ZkPassApiKey(
+    process.env.API_KEY ?? "",
+    process.env.API_SECRET ?? ""
+  );
+  const ZKPASS_SERVICE_URL = process.env.ZKPASS_SERVICE_URL ?? "";
+
   const issuerVerifyingKeyJKWS = {
     jku: ISSUER_JWKS_URL,
     kid: ISSUER_JWKS_KID,
@@ -105,7 +112,7 @@ async function _generateSignedDVR(user: User) {
   /**
    * Step 1: Instantiate the ZkPassClient object.
    */
-  const zkPassClient = new ZkPassClient();
+  const zkPassClient = new ZkPassClient(ZKPASS_SERVICE_URL, API_KEY);
 
   /**
    * Step 2: Call zkPassClient.getQueryEngineVersionInfo.
