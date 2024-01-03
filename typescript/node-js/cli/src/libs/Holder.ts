@@ -27,8 +27,6 @@ export abstract class Holder {
     userDataToken: string,
     dvrToken: string
   ): Promise<string> {
-    console.log("\n#### starting zkpass proof generation...");
-
     //
     // Step 1: Instantiate the ZkPassClient object.
     //
