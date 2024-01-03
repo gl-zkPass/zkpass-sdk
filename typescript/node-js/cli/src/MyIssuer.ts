@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 21st 2023
  * -----
- * Last Modified: January 2nd 2024
+ * Last Modified: January 3rd 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -20,9 +20,9 @@
  */
 
 import fs from "fs";
-import { KeysetEndpoint } from "@didpass/zkpass-client-ts/lib/types";
 import { Issuer } from "./libs/Issuer";
 import { ISSUER_JKU, ISSUER_KID, ISSUER_PRIVKEY } from "./utils/constants";
+import { KeysetEndpoint } from "@didpass/zkpass-client-ts";
 
 export class MyIssuer extends Issuer {
   public async getUserDataToken(dataFile: string): Promise<string> {

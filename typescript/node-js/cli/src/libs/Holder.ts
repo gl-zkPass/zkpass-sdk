@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 19th 2023
  * -----
- * Last Modified: January 2nd 2024
+ * Last Modified: January 3rd 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -18,11 +18,12 @@
  * ---
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
-import { ZkPassClient } from "@didpass/zkpass-client-ts";
+import { ZkPassApiKey, ZkPassClient } from "@didpass/zkpass-client-ts";
 
 export abstract class Holder {
   protected async createZkPassProof(
     zkPassServiceUrl: string,
+    apiKey: ZkPassApiKey,
     userDataToken: string,
     dvrToken: string
   ): Promise<string> {
@@ -31,14 +32,13 @@ export abstract class Holder {
     //
     // Step 1: Instantiate the ZkPassClient object.
     //
-    const zkpassClient = new ZkPassClient();
+    const zkpassClient = new ZkPassClient(zkPassServiceUrl, apiKey);
 
     //
     // Step 2: Call the zkpassClient.generateZkpassProof
     //         to get the zkpassProofToken.
     //
     const zkpassProofToken = await zkpassClient.generateZkpassProof(
-      zkPassServiceUrl,
       userDataToken,
       dvrToken
     );

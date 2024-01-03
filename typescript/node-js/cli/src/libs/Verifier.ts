@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 19th 2023
  * -----
- * Last Modified: January 2nd 2024
+ * Last Modified: January 3rd 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -31,13 +31,14 @@ export type DvrData = {
   query: string;
   user_data_url: string;
   user_data_verifying_key: PublicKeyOption;
+  dvr_verifying_key: PublicKeyOption;
 };
 
 export abstract class Verifier {
   zkPassClient: ZkPassClient;
   dvr: DataVerificationRequest | null;
   constructor() {
-    this.zkPassClient = new ZkPassClient();
+    this.zkPassClient = new ZkPassClient("");
     this.dvr = null;
   }
 

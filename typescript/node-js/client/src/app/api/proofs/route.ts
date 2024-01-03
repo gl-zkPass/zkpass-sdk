@@ -6,8 +6,8 @@
  *   Zulchaidir (zulchaidir@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: November 28th 2023
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Last Modified: December 15th 2023
+ * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -19,28 +19,29 @@
  */
 
 import { NextResponse } from "next/server";
-import { ZkPassClient } from "@didpass/zkpass-client-ts";
+import { ZkPassApiKey, ZkPassClient } from "@didpass/zkpass-client-ts";
 
 export async function POST(req: Request) {
   try {
+    const API_KEY = new ZkPassApiKey(
+      process.env.API_KEY ?? "",
+      process.env.API_SECRET ?? ""
+    );
+    const ZKPASS_SERVICE_URL = process.env.ZKPASS_SERVICE_URL ?? "";
+
     const { dvr, blood_test } = await req.json();
     console.log({ dvr, blood_test });
-
-    const zkPassServiceURL = "https://playground-zkpass.ssi.id/proof";
 
     /**
      * Step 1: Instantiate the ZkPassClient object.
      */
-    const zkPassClient = new ZkPassClient();
+    const zkPassClient = new ZkPassClient(ZKPASS_SERVICE_URL, API_KEY);
+
     /**
      * Step 2: Call the zkpassClient.generateZkpassProof
      *         to get the zkpassProofToken.
      */
-    const proof = await zkPassClient.generateZkpassProof(
-      zkPassServiceURL,
-      blood_test,
-      dvr
-    );
+    const proof = await zkPassClient.generateZkpassProof(blood_test, dvr);
     console.log({ proof });
     return Response.json({ status: 200, data: proof });
   } catch (error) {

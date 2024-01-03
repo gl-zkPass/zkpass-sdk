@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 21st 2023
  * -----
- * Last Modified: January 2nd 2024
+ * Last Modified: January 3rd 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -18,40 +18,67 @@
  * ---
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
-import { PublicKey } from "@didpass/zkpass-client-ts";
-import { ZkPassProofMetadataValidator } from "@didpass/zkpass-client-ts/lib/interfaces";
+import {
+  PublicKey,
+  MetadataValidatorResult,
+  PublicKeyWrapped,
+  KeysetEndpointWrapped,
+  VerifyZkpassProofResult,
+} from "@didpass/zkpass-client-ts";
+import { ZkPassProofMetadataValidator } from "@didpass/zkpass-client-ts";
 import { dvrTable } from "./utils/dvrTable";
 import { readFileSync } from "fs";
 import { v4 as uuidv4 } from "uuid";
 import { DvrData, Verifier } from "./libs/Verifier";
 import {
+  EXPECTED_DVR_TTL,
+  ISSUER_JKU,
+  ISSUER_KID,
   VERIFIER_JKU,
   VERIFIER_KID,
   VERIFIER_PRIVKEY,
 } from "./utils/constants";
 
 class MyMetadataValidator implements ZkPassProofMetadataValidator {
-  async validate(
-    dvrTitle: string,
-    dvrId: string,
-    dvrDigest: string,
-    userDataVerifyingKey: PublicKey,
-    dvrVerifyingKey: PublicKey,
-    zkpassProofTtl: number
-  ): Promise<void> {
+  constructor() {}
+
+  async validate(dvrId: string): Promise<MetadataValidatorResult> {
     // Modify this function to validate the metadata of the proof
     // In this example, we are validating that the DVR title matches the one we issued.
     const dvr = dvrTable.value.getDVR(dvrId);
     if (!dvr) {
       throw new Error("DVR not found");
     }
-    if (dvr.dvrTitle !== dvrTitle) {
-      throw new Error("DVR title mismatch");
+
+    // dvrVerifyingKey can either be PublicKey or KeysetEndpoint
+    let expectedVerifyingDvrKey: PublicKey = (
+      dvr.dvrVerifyingKey as PublicKeyWrapped
+    ).PublicKey;
+    if (!expectedVerifyingDvrKey) {
+      const { jku, kid } = (dvr.dvrVerifyingKey as KeysetEndpointWrapped)
+        .KeysetEndpoint;
+
+      const verifyingKey: PublicKey | undefined = await fetch(jku)
+        .then((res) => res.json())
+        .then((json: { keys: (PublicKey & { kid: string })[] }) =>
+          json.keys.find((k) => k.kid === kid)
+        )
+        .catch(() => undefined);
+
+      if (!verifyingKey) {
+        throw new Error("DVR verifying key not found");
+      }
+
+      expectedVerifyingDvrKey = verifyingKey;
     }
-    // In this example, we are validating that the DVR digest matches the one we issued.
-    if (dvrDigest != dvr.digest()) {
-      throw new Error("Digest mismatch");
-    }
+
+    const result: MetadataValidatorResult = {
+      expectedDvr: dvr,
+      expectedTtl: EXPECTED_DVR_TTL,
+      expectedVerifyingDvrKey,
+    };
+
+    return result;
   }
 }
 
@@ -68,6 +95,7 @@ export class MyVerifier extends Verifier {
     const query = readFileSync(dvrFile, ENCODING);
     console.log(`query=${query}`);
 
+    const issuerPubkey = { jku: ISSUER_JKU, kid: ISSUER_KID };
     const verifierPubkey = { jku: VERIFIER_JKU, kid: VERIFIER_KID };
 
     const queryObj = JSON.parse(query);
@@ -78,6 +106,9 @@ export class MyVerifier extends Verifier {
       query: JSON.stringify(queryObj),
       user_data_url: USER_DATA_URL,
       user_data_verifying_key: {
+        KeysetEndpoint: issuerPubkey,
+      },
+      dvr_verifying_key: {
         KeysetEndpoint: verifierPubkey,
       },
     };
@@ -100,7 +131,9 @@ export class MyVerifier extends Verifier {
     return dvrToken;
   }
 
-  async verifyZkpassProof(zkpassProofToken: string): Promise<boolean> {
+  async verifyZkpassProof(
+    zkpassProofToken: string
+  ): Promise<VerifyZkpassProofResult> {
     console.log("\n#### starting zkpass proof verification...");
     const start = Date.now();
 

@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@didpass/zkpass-client-ts": "^0.1.1-beta.2",
+    "@didpass/zkpass-client-ts": "^0.1.3-beta.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.15",

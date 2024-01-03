@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023
  * -----
- * Last Modified: January 2nd 2024
+ * Last Modified: January 3rd 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -21,14 +21,9 @@
 import { MyHolder } from "./MyHolder";
 import { MyIssuer } from "./MyIssuer";
 import { MyVerifier } from "./MyVerifier";
-import {
-  ISSUER_JKU,
-  ISSUER_KID,
-  ISSUER_PRIVKEY,
-  VERIFIER_JKU,
-  VERIFIER_KID,
-  VERIFIER_PRIVKEY,
-  ZKPASS_SERVICE_URL,
+import { 
+  API_KEY,
+  ZKPASS_SERVICE_URL 
 } from "./utils/constants";
 
 async function main() {
@@ -58,15 +53,19 @@ async function main() {
     const zkpassProofToken = await myHolder.start(
       userDataToken,
       dvrToken,
-      ZKPASS_SERVICE_URL
-    );
+      ZKPASS_SERVICE_URL,
+      API_KEY
+    ).catch((e) => {
+      console.error(`Proof generation failed: ${e}`);
+      process.exit();
+    });;
 
     //
     //  Verifier verifies the proof
     //
     const queryResult = await myVerifier.verifyZkpassProof(zkpassProofToken);
 
-    console.log(`the query result is ${queryResult}`);
+    console.log(`the query result is ${queryResult.result}`);
   } else {
     console.log("required arguments: <data-file> <rules-file>");
   }
