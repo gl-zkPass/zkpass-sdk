@@ -7,7 +7,7 @@
     "ios": "react-native run-ios",
     "lint": "eslint . --fix",
     "start": "react-native start",
-    "postinstall": "rn-nodeify --install crypto,stream,util,events --hack && patch-package",
+    "postinstall": "patch-package && rn-nodeify --install crypto,stream,util,events --hack",
     "test": "jest"
   },
   "dependencies": {
