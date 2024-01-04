@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 19th 2023
  * -----
- * Last Modified: January 3rd 2024
+ * Last Modified: January 4th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -71,4 +71,6 @@ export abstract class Verifier {
   protected getDvr(): DataVerificationRequest | null {
     return this.dvr;
   }
+
+  abstract getDvrToken(dvrFile: string): Promise<string>
 }
