@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 21st 2023
  * -----
- * Last Modified: January 3rd 2024
+ * Last Modified: January 9th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -24,8 +24,8 @@ import {
   PublicKeyWrapped,
   KeysetEndpointWrapped,
   VerifyZkpassProofResult,
+  ZkPassProofMetadataValidator
 } from "@didpass/zkpass-client-ts";
-import { ZkPassProofMetadataValidator } from "@didpass/zkpass-client-ts";
 import { dvrTable } from "./utils/dvrTable";
 import { readFileSync } from "fs";
 import { v4 as uuidv4 } from "uuid";
