@@ -1,11 +1,13 @@
 /*
  * constants.ts
+ * 
+ * Values within constants.ts are strictly used for testing purposes only
  *
  * Authors:
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 29th 2023
  * -----
- * Last Modified: December 28th 2023, 9:07:20 am
+ * Last Modified: January 9th 2024, 9:07:20 am
  * Modified By: GDPWinnerPranata (winner.pranata@gdplabs.id)
  * -----
  * Reviewers:
