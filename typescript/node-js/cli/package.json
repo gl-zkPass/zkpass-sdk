@@ -14,11 +14,9 @@
   },
   "dependencies": {
     "@didpass/zkpass-client-ts": "^0.1.2-alpha-1",
-    "dotenv": "^16.3.1",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@types/dotenv": "^8.2.0",
     "@types/node": "^20.10.0",
     "typescript": "^5"
   }

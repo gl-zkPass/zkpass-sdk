@@ -1,6 +1,6 @@
 /*
  * constants.ts
- * 
+ *
  * Values within constants.ts are strictly used for testing purposes only
  *
  * Authors:
@@ -20,9 +20,6 @@
  */
 
 import { ZkPassApiKey } from "@didpass/zkpass-client-ts";
-import { config } from "dotenv";
-
-config();
 
 // Holder constants
 export const ZKPASS_SERVICE_URL: string = "https://staging-zkpass.ssi.id/proof";
@@ -50,7 +47,6 @@ export const VERIFIER_JKU: string =
 export const EXPECTED_DVR_TTL: number = 600;
 
 // API Keys
-export const API_KEY: ZkPassApiKey = new ZkPassApiKey(
-  process.env.API_KEY ?? "",
-  process.env.API_SECRET ?? ""
-);
+export const KEY = "e7fd7ec9-33b2-4f33-a383-c2f1d151a7c2";
+export const SECRET = "6a79ffa2-5fe8-4764-8edf-0ebc5dbcccf9";
+export const API_KEY: ZkPassApiKey = new ZkPassApiKey(KEY, SECRET);

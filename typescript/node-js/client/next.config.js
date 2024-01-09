@@ -4,19 +4,6 @@ const nextConfig = {
     esmExternals: "loose",
     serverComponentsExternalPackages: ["@didpass/zkpass-client-ts"],
   },
-
-  // webpack: (
-  //   config,
-  //   { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }
-  // ) => {
-  //   return {
-  //     ...config,
-  //     node: {
-  //       ...config.node,
-  //       __dirname: true,
-  //     },
-  //   };
-  // },
 };
 
 module.exports = nextConfig;
