@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@didpass/zkpass-client-ts": "file:didpass-zkpass-client-ts-0.1.2-alpha-2.tgz",
+    "@didpass/zkpass-client-ts": "^0.1.2-alpha-2",
     "jose": "^4.15.4",
     "next": "13.5.6",
     "react": "^18",
