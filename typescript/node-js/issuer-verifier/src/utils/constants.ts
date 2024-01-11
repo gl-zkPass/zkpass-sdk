@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created at: December 15th 2023
  * -----
- * Last Modified: December 15th 2023
- * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Last Modified: January 11th 2024
+ * Modified By: handrianalandi (handrian.alandi@gdplabs.id)
  * -----
  * Reviewers:
  *   NONE
@@ -38,3 +38,7 @@ export const ISSUER_PRIVATE_KEY_PEM =
 export const ISSUER_JWKS_URL =
   "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/issuer-key.json";
 export const ISSUER_JWKS_KID = "k-1";
+
+export const API_KEY = "e7fd7ec9-33b2-4f33-a383-c2f1d151a7c2";
+export const API_SECRET = "6a79ffa2-5fe8-4764-8edf-0ebc5dbcccf9";
+export const ZKPASS_SERVICE_URL = "https://staging-zkpass.ssi.id/proof";

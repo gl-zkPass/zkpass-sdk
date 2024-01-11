@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created at: December 15th 2023
  * -----
- * Last Modified: December 15th 2023
- * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Last Modified: January 11th 2024
+ * Modified By: handrianalandi (handrian.alandi@gdplabs.id)
  * -----
  * Reviewers:
  *   NONE
@@ -19,3 +19,7 @@
 export const MYNAMASTE_URL = "http://localhost:3000";
 export const ISSUER_URL = "http://localhost:3001/issuer";
 export const VERIFIER_URL = "http://localhost:3001/verifier";
+
+export const API_KEY = "e7fd7ec9-33b2-4f33-a383-c2f1d151a7c2";
+export const API_SECRET = "6a79ffa2-5fe8-4764-8edf-0ebc5dbcccf9";
+export const ZKPASS_SERVICE_URL = "https://staging-zkpass.ssi.id/proof";

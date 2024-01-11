@@ -6,8 +6,8 @@
  *   Zulchaidir (zulchaidir@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: December 15th 2023
- * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Last Modified: January 11th 2024
+ * Modified By: handrianalandi (handrian.alandi@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -34,6 +34,9 @@ import {
   VERIFIER_JWKS_KID,
   VERIFIER_JWKS_URL,
   VERIFIER_PRIVATE_KEY_PEM,
+  API_KEY,
+  API_SECRET,
+  ZKPASS_SERVICE_URL,
 } from "@/utils/constants";
 
 const ASSET_PATH = "public/verifier/";
@@ -90,11 +93,7 @@ function _setHeader(response: NextResponse) {
 }
 
 async function _generateSignedDVR(user: User) {
-  const API_KEY = new ZkPassApiKey(
-    process.env.API_KEY ?? "",
-    process.env.API_SECRET ?? ""
-  );
-  const ZKPASS_SERVICE_URL = process.env.ZKPASS_SERVICE_URL ?? "";
+  const API_KEY_OBJ = new ZkPassApiKey(API_KEY ?? "", API_SECRET ?? "");
 
   const issuerVerifyingKeyJKWS = {
     jku: ISSUER_JWKS_URL,
@@ -112,7 +111,7 @@ async function _generateSignedDVR(user: User) {
   /**
    * Step 1: Instantiate the ZkPassClient object.
    */
-  const zkPassClient = new ZkPassClient(ZKPASS_SERVICE_URL, API_KEY);
+  const zkPassClient = new ZkPassClient(ZKPASS_SERVICE_URL ?? "", API_KEY_OBJ);
 
   /**
    * Step 2: Call zkPassClient.getQueryEngineVersionInfo.
