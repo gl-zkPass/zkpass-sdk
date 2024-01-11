@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: November 28th 2023
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Last Modified: December 15th 2023
+ * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -20,22 +20,35 @@
 import crypto from "crypto";
 
 export async function POST() {
+  const KEYPAIR_TYPE = "ec";
+  const KEYPAIR_CURVE = "prime256v1";
+  const PUBLIC_KEY_ENCODING_TYPE = "spki";
+  const PRIVATE_KEY_ENCODING_TYPE = "pkcs8";
+  const KEYPAIR_FORMAT = "pem";
+
   interface PublicKeyJWK {
     x: string;
     y: string;
     kid: string;
   }
 
-  const keypair = crypto.generateKeyPairSync("ec", {
-    namedCurve: "prime256v1",
-    publicKeyEncoding: { type: "spki", format: "pem" },
-    privateKeyEncoding: { type: "pkcs8", format: "pem" },
+  const keypair = crypto.generateKeyPairSync(KEYPAIR_TYPE, {
+    namedCurve: KEYPAIR_CURVE,
+    publicKeyEncoding: {
+      type: PUBLIC_KEY_ENCODING_TYPE,
+      format: KEYPAIR_FORMAT,
+    },
+    privateKeyEncoding: {
+      type: PRIVATE_KEY_ENCODING_TYPE,
+      format: KEYPAIR_FORMAT,
+    },
   });
   const lines: string[] = keypair.publicKey.trim().split("\n");
 
   const x = lines[1];
   const y = lines[2];
 
+  // You can use your own format for the kid
   const kid = crypto.createHash("sha256").update(x).digest("base64");
 
   const publicKey: PublicKeyJWK = {

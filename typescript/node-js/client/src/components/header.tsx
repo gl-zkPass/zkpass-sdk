@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: November 28th 2023
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Last Modified: December 15th 2023
+ * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -24,13 +24,14 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useRouter } from "next/navigation";
+import { MYNAMASTE_URL } from "@/utils/constants";
 
 export default function HeaderBar({ user }: { user: string | undefined }) {
   const router = useRouter();
 
   const _handleLogout = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    fetch("http://localhost:3000/api/logout", {
+    fetch(`${MYNAMASTE_URL}/api/logout`, {
       method: "POST",
       body: JSON.stringify({}),
     })
@@ -50,17 +51,17 @@ export default function HeaderBar({ user }: { user: string | undefined }) {
   };
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position='static'>
+      <AppBar position="static">
         <Toolbar>
-          <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             My Namaste
           </Typography>
           {!user ? (
-            <Button href='/' color='inherit'>
+            <Button href="/" color="inherit">
               Login
             </Button>
           ) : (
-            <Button href='/' color='inherit' onClick={_handleLogout}>
+            <Button href="/" color="inherit" onClick={_handleLogout}>
               Logout: {user}
             </Button>
           )}
