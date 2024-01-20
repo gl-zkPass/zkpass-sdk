@@ -1,9 +1,14 @@
 [package]
 name = "zkpass-demo"
-version = "0.1.0"
+version = "0.2.0-beta.2"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+default = ["oop"]
+straight = []     # no object-oriented programming style
+oop = []     # no object-oriented programming style
 
 [dependencies]
 futures = "0.3.28"
@@ -12,7 +17,7 @@ josekit = "0.8.3"
 serde = "1.0.188"
 serde_json = "1.0.107"
 sha2 = "0.10.8"
-zkpass-client = { path = "../../zkpass-client" }
+zkpass-client = { path = "../zkpass-client" }
 tokio = { version = "1.32.0", features = ["full"] }
 lazy_static = "1.4.0"
 uuid = { version = "1.2.2", features = ["v4"] }

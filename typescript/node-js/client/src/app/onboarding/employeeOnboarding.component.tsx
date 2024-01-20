@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: November 28th 2023
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Last Modified: December 15th 2023
+ * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -35,6 +35,7 @@ import React, { useEffect } from "react";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelIcon from "@mui/icons-material/Cancel";
 import * as jwt from "jsonwebtoken";
+import { VERIFIER_URL, ISSUER_URL, MYNAMASTE_URL } from "@/utils/constants";
 
 export default function EmployeeOnboarding({
   user,
@@ -75,8 +76,8 @@ export default function EmployeeOnboarding({
   useEffect(() => {
     if (!requestedDVR || !requestedBloodTest) {
       setIsLoading(true);
-      const dvrUrl = "http://localhost:3001/verifier/dvrs";
-      const bloodTestUrl = "http://localhost:3001/issuer/blood_tests";
+      const dvrUrl = `${VERIFIER_URL}/dvrs`;
+      const bloodTestUrl = `${ISSUER_URL}/blood_tests`;
       const fetchingDvr = fetch(dvrUrl, {
         method: "POST",
         body: JSON.stringify({ name: user }),
@@ -164,7 +165,7 @@ export default function EmployeeOnboarding({
     setConfirmBloodTest(true);
     setIsLoading(true);
     setLoadingMessage("Generating Proof...");
-    const url = "http://localhost:3000/api/proofs";
+    const url = `${MYNAMASTE_URL}/api/proofs`;
     interface ProofResponse {
       status: number;
       message?: string;
@@ -178,23 +179,22 @@ export default function EmployeeOnboarding({
     console.log({ proof: proofBody.data });
     if (proofBody.status == 200) {
       console.log("== proof body 200");
-      const validateProof = await fetch(
-        "http://localhost:3001/verifier/proofs",
-        {
-          method: "POST",
-          body: JSON.stringify({ proof: proofBody.data }),
-        }
-      );
+      const validateProof = await fetch(`${VERIFIER_URL}/proofs`, {
+        method: "POST",
+        body: JSON.stringify({ proof: proofBody.data }),
+      });
       interface ProofResult {
         status: number;
-        data: boolean;
+        data: {
+          result: boolean;
+        };
       }
       const validateProofBody: ProofResult = await validateProof.json();
       console.log({ validateProofBody });
 
       if (validateProofBody.status == 200) {
         console.log("== validate proof body 200");
-        setProofResult(validateProofBody.data);
+        setProofResult(validateProofBody.data.result);
       } else {
         console.log("== validate proof body not 200");
         setProofResult(false);
@@ -221,11 +221,12 @@ export default function EmployeeOnboarding({
         onClose={() => setOpen(false)}
         message={message}
       />
-      <div className='flex flex-col justify-start items-center h-screen pt-8'>
+      <div className="flex flex-col justify-start items-center h-screen pt-8">
         <Paper
           elevation={3}
-          className='w-3/5 p-7 flex flex-col items-center gap-5'>
-          <div className='flex items-center text-lg'>
+          className="w-3/5 p-7 flex flex-col items-center gap-5"
+        >
+          <div className="flex items-center text-lg">
             {_formatUsername(user!)}'s Employee Onboarding.
           </div>
           <Stepper activeStep={activeStep}>
@@ -244,18 +245,20 @@ export default function EmployeeOnboarding({
           {loadedProof && proofResult ? (
             <Paper
               elevation={2}
-              className='flex flex-row items-center gap-2 p-4 bg-green-200'>
+              className="flex flex-row items-center gap-2 p-4 bg-green-200"
+            >
               <CheckCircleOutlineIcon
                 sx={{ color: "rgb(74 222 128)" }}
-                fontSize='large'
+                fontSize="large"
               />
               The blood test succeeded onboarding requirements.
             </Paper>
           ) : loadedProof && !proofResult ? (
             <Paper
               elevation={2}
-              className='flex flex-row items-center gap-2 p-4 bg-red-200'>
-              <CancelIcon sx={{ color: "rgb(248 113 113)" }} fontSize='large' />
+              className="flex flex-row items-center gap-2 p-4 bg-red-200"
+            >
+              <CancelIcon sx={{ color: "rgb(248 113 113)" }} fontSize="large" />
               The blood test failed onboarding requirements.
             </Paper>
           ) : (
@@ -263,7 +266,7 @@ export default function EmployeeOnboarding({
           )}
 
           {isLoading ? (
-            <div className='flex flex-col justify-center items-center gap-4'>
+            <div className="flex flex-col justify-center items-center gap-4">
               <Box sx={{ display: "flex" }}>
                 <CircularProgress />
               </Box>
@@ -276,20 +279,23 @@ export default function EmployeeOnboarding({
           {!confirmBloodTest && requestedDVR && requestedBloodTest ? (
             <Paper
               elevation={2}
-              className='p-6 flex items-center flex-col gap-4 bg-gray-200'>
+              className="p-6 flex items-center flex-col gap-4 bg-gray-200"
+            >
               {!confirmBloodTest && !confirmDVR ? (
                 <>
-                  <div className='text-base'>
+                  <div className="text-base">
                     Please review the Employee Onboarding questionnaires
                   </div>
                   <Paper
                     elevation={1}
-                    className='max-h-96 max-w-lg overflow-scroll p-5'>
+                    className="max-h-96 max-w-lg overflow-scroll p-5"
+                  >
                     <pre dangerouslySetInnerHTML={{ __html: formatedDVR }} />
                   </Paper>
                   <Button
-                    variant='outlined'
-                    onClick={() => setConfirmDVR(true)}>
+                    variant="outlined"
+                    onClick={() => setConfirmDVR(true)}
+                  >
                     Confirm and Continue
                   </Button>
                 </>
@@ -299,15 +305,15 @@ export default function EmployeeOnboarding({
 
               {confirmDVR && !confirmBloodTest ? (
                 <>
-                  <div className='text-base'>
+                  <div className="text-base">
                     Please review the Blood Test Result
                   </div>
-                  <Paper elevation={1} className='max-h-96 overflow-scroll p-5'>
+                  <Paper elevation={1} className="max-h-96 overflow-scroll p-5">
                     <pre
                       dangerouslySetInnerHTML={{ __html: formatedBloodTest }}
                     />
                   </Paper>
-                  <Button variant='outlined' onClick={_handleGenerateProof}>
+                  <Button variant="outlined" onClick={_handleGenerateProof}>
                     Confirm and Generate Proof
                   </Button>
                 </>

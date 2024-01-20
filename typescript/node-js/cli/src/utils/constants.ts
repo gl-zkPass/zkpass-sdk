@@ -1,12 +1,14 @@
 /*
  * constants.ts
  *
+ * Values within constants.ts are strictly used for testing purposes only
+ *
  * Authors:
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 29th 2023
  * -----
- * Last Modified: November 29th 2023
- * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Last Modified: January 20th 2024
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
  *   Nugraha Tejapermana (nugraha.tejapermana@gdplabs.id)
@@ -17,9 +19,10 @@
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
 
+import { ZkPassApiKey } from "@didpass/zkpass-client-ts";
+
 // Holder constants
-export const ZKPASS_SERVICE_URL: string =
-  "https://playground-zkpass.ssi.id/proof";
+export const ZKPASS_SERVICE_URL: string = "https://playground-zkpass.ssi.id/proof";
 
 // Issuer constants
 export const ISSUER_PRIVKEY: string =
@@ -41,3 +44,9 @@ export const VERIFIER_PRIVKEY: string = `-----BEGIN PRIVATE KEY-----
 export const VERIFIER_KID: string = "k-1";
 export const VERIFIER_JKU: string =
   "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/verifier-key.json";
+export const EXPECTED_DVR_TTL: number = 600;
+
+// API Keys
+export const KEY = "5ecb2229-ddee-460e-b598-a0001c10fff1";
+export const SECRET = "074a53a8-a252-45de-a9d5-0961a6362df6";
+export const API_KEY: ZkPassApiKey = new ZkPassApiKey(KEY, SECRET);

@@ -3,17 +3,15 @@ mod data_issuer;
 mod proof_verifier;
 mod test;
 
+use data_holder::holder::MyDataHolder;
 use std::env;
 use tokio::runtime::Runtime;
-use data_holder::DataHolder;
 
 fn run_data_holder(data_file: &String, dvr_file: &String) {
-    let data_holder = DataHolder;
+    let data_holder = MyDataHolder;
     let rt = Runtime::new().unwrap();
 
-    rt.block_on(
-        data_holder.start(data_file.as_str(), dvr_file.as_str())
-    );
+    rt.block_on(data_holder.start(data_file.as_str(), dvr_file.as_str()));
 }
 
 fn main() {

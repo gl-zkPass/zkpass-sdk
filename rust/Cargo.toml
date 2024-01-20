@@ -4,5 +4,5 @@ members = [
     "zkpass-core",
     "zkpass-client",
 
-    "apps/zkpass-demo"
+    "zkpass-demo"
 ]

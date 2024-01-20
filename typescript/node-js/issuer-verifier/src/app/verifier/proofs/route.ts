@@ -6,8 +6,8 @@
  *   Zulchaidir (zulchaidir@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: November 28th 2023
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Last Modified: January 11th 2024
+ * Modified By: handrianalandi (handrian.alandi@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -18,13 +18,16 @@
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
 
-import { ZkPassClient } from "@didpass/zkpass-client-ts";
+import { ZkPassApiKey, ZkPassClient } from "@didpass/zkpass-client-ts";
 import { MyValidator } from "./proofValidator";
+import { API_KEY, API_SECRET, ZKPASS_SERVICE_URL } from "@/utils/constants";
 
 export async function POST(req: Request) {
   console.log("*** POST verifier/proofs ***");
 
   try {
+    const API_KEY_OBJ = new ZkPassApiKey(API_KEY ?? "", API_SECRET ?? "");
+
     const { proof } = await req.json();
     console.log({ proof });
     const myValidator = new MyValidator();
@@ -32,7 +35,10 @@ export async function POST(req: Request) {
     /**
      * Step 1: Instantiate the zkpassClient object.
      */
-    const zkPassClient = new ZkPassClient();
+    const zkPassClient = new ZkPassClient(
+      ZKPASS_SERVICE_URL ?? "",
+      API_KEY_OBJ
+    );
 
     /**
      * Step 2: Call zkpassClient.verifyZkpassProof to verify the proof.

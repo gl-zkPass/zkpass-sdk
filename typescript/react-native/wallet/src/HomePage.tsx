@@ -6,11 +6,13 @@
  *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * Created at: November 7th 2023
  * -----
- * Last Modified: November 29th 2023
+ * Last Modified: January 20th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
  *   JaniceLaksana (janice.laksana@gdplabs.id)
+ *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ *   Zulchaidir (zulchaidir@gdplabs.id)
  * ---
  * References:
  *   NONE
@@ -23,8 +25,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { styles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { generateZkPassProof } from '@didpass/zkpass-client-react-native';
-import Config from 'react-native-config';
+import {
+  ZkPassApiKey,
+  ZkPassClient,
+} from '@didpass/zkpass-client-react-native';
 import { JwtPayload, decode } from 'jsonwebtoken';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {
@@ -35,7 +39,13 @@ import {
   writeFile,
 } from 'react-native-fs';
 import JsonDisplayer from './json-displayer/JsonDisplayer';
-import { StatusCodes } from 'http-status-codes';
+import { 
+  DVR_TOKEN, 
+  USER_DATA_TOKEN, 
+  ZKPASS_API_KEY, 
+  ZKPASS_API_SECRET, 
+  ZKPASS_URL 
+} from './constants';
 
 enum PageState {
   DVR,
@@ -53,16 +63,15 @@ const HomePage = () => {
 
   useEffect(() => {
     const loadInitialData = async () => {
-      if (!Config.USER_DATA_TOKEN || !Config.DVR_TOKEN) {
+      try {
+        const userDataPayload = decode(USER_DATA_TOKEN) as JwtPayload;
+        setUserData(userDataPayload?.data);
+
+        const dvrPayload = decode(DVR_TOKEN) as JwtPayload;
+        setDvr(JSON.parse(dvrPayload?.data.query));
+      } catch (error) {
         setIsError(true);
-        return;
       }
-
-      const userDataPayload = decode(Config.USER_DATA_TOKEN) as JwtPayload;
-      setUserData(userDataPayload?.data);
-
-      const dvrPayload = decode(Config.DVR_TOKEN) as JwtPayload;
-      setDvr(JSON.parse(dvrPayload?.data.query));
     };
 
     loadInitialData();
@@ -99,7 +108,7 @@ const HomePage = () => {
     setIsError(false);
   };
 
-  const truncateToken = (token:string) => {
+  const truncateToken = (token: string) => {
     const TOKEN_LIMIT = 1000;
     return token.substring(0, TOKEN_LIMIT) + '...';
   };
@@ -115,7 +124,10 @@ const HomePage = () => {
       .then(() => {
         readFile(path)
           .then(() => {
-            Alert.alert('File Downloaded', 'The proof_token.json is stored in Downloads folder');
+            Alert.alert(
+              'File Downloaded',
+              'The proof_token.json is stored in Downloads folder'
+            );
           })
           .catch((err) => {
             Alert.alert('Error Reading Saved JSON', err.message);
@@ -128,37 +140,33 @@ const HomePage = () => {
 
   const generateProof = async () => {
     try {
-      if (!Config.USER_DATA_TOKEN || !Config.DVR_TOKEN || !Config.ZKPASS_URL) {
-        setIsError(true);
-        return;
-      }
-
       /**
        * Step 1
-       * Provide ZKPass Url, User Data Token, and Dvr Token
+       * Provide ZKPass Url, User Data Token, Dvr Token, zkPassApiKey, and ZkPassClient
        */
-      const userDataToken = Config.USER_DATA_TOKEN;
-      const dvrToken = Config.DVR_TOKEN;
-      const zkPassUrl = Config.ZKPASS_URL;
+      const userDataToken = USER_DATA_TOKEN;
+      const dvrToken = DVR_TOKEN;
+      const zkPassUrl = ZKPASS_URL;
+
+      const zkPassApiKey = new ZkPassApiKey(
+        ZKPASS_API_KEY,
+        ZKPASS_API_SECRET
+      );
+
+      const zkPassClient = new ZkPassClient(zkPassUrl, zkPassApiKey);
 
       /**
        * Step 2
        * Generate ZkPass Proof by ZkPass Url
        */
-      const result: any = await generateZkPassProof(
-        zkPassUrl!,
+      const result: any = await zkPassClient.generateZkpassProof(
         userDataToken!,
         dvrToken!
       );
 
-      if (result.status == StatusCodes.OK && result.proof) {
-        setPageState(PageState.ShowTokenProof);
-        setProofToken(result.proof);
-        setIsError(false);
-      } 
-      else {
-        throw new Error('Error Generating Proof');
-      }
+      setPageState(PageState.ShowTokenProof);
+      setProofToken(result);
+      setIsError(false);
     } catch (error) {
       setProofToken('');
       setIsError(true);

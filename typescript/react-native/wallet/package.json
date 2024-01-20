@@ -7,11 +7,11 @@
     "ios": "react-native run-ios",
     "lint": "eslint . --fix",
     "start": "react-native start",
-    "postinstall": "rn-nodeify --install crypto,stream,util,events --hack && patch-package",
+    "postinstall": "patch-package && rn-nodeify --install crypto,stream,util,events --hack",
     "test": "jest"
   },
   "dependencies": {
-    "@didpass/zkpass-client-react-native": "^0.1.0-beta.2",
+    "@didpass/zkpass-client-react-native": "^0.2.0-beta.2",
     "@react-native-clipboard/clipboard": "^1.12.1",
     "@tradle/react-native-http": "^2.0.1",
     "events": "^1.1.1",

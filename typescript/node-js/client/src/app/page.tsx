@@ -23,6 +23,7 @@ import * as React from "react";
 import HeaderBar from "@components/header";
 import { Paper, TextField, Button, Card, Snackbar } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { MYNAMASTE_URL } from "@/utils/constants";
 
 export default function Home() {
   const [open, setOpen] = React.useState(false);
@@ -37,7 +38,7 @@ export default function Home() {
       setOpen(true);
       return;
     }
-    fetch("http://localhost:3000/api/login", {
+    fetch(`${MYNAMASTE_URL}/api/login`, {
       method: "POST",
       body: JSON.stringify({ username, password }),
     })
@@ -69,24 +70,25 @@ export default function Home() {
         onClose={() => setOpen(false)}
         message={message}
       />
-      <div className='flex justify-center items-center h-screen'>
+      <div className="flex justify-center items-center h-screen">
         <Paper
           elevation={3}
-          className='w-2/5 p-7 flex flex-col items-center gap-5'>
-          <div className='text-lg'>ZKPass Demo : My Namaste</div>
+          className="w-2/5 p-7 flex flex-col items-center gap-5"
+        >
+          <div className="text-lg">ZKPass Demo : My Namaste</div>
           <TextField
-            id='username'
-            label='Username'
-            variant='outlined'
-            className='w-4/6'
+            id="username"
+            label="Username"
+            variant="outlined"
+            className="w-4/6"
             onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
-            id='password'
-            label='Password'
-            type='password'
-            variant='outlined'
-            className='w-4/6'
+            id="password"
+            label="Password"
+            type="password"
+            variant="outlined"
+            className="w-4/6"
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -94,7 +96,7 @@ export default function Home() {
               }
             }}
           />
-          <Button variant='outlined' onClick={_handleLogin}>
+          <Button variant="outlined" onClick={_handleLogin}>
             Login
           </Button>
         </Paper>

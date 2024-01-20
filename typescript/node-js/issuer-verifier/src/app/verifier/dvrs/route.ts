@@ -6,8 +6,8 @@
  *   Zulchaidir (zulchaidir@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: November 28th 2023
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Last Modified: January 11th 2024
+ * Modified By: handrianalandi (handrian.alandi@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -24,11 +24,23 @@ import { NextResponse } from "next/server";
 import {
   ZkPassClient,
   DataVerificationRequest,
+  ZkPassApiKey,
 } from "@didpass/zkpass-client-ts";
 import { v4 as uuidv4 } from "uuid";
 import { dvrLookup } from "./dvrHelper";
+import {
+  ISSUER_JWKS_KID,
+  ISSUER_JWKS_URL,
+  VERIFIER_JWKS_KID,
+  VERIFIER_JWKS_URL,
+  VERIFIER_PRIVATE_KEY_PEM,
+  API_KEY,
+  API_SECRET,
+  ZKPASS_SERVICE_URL,
+} from "@/utils/constants";
 
 const ASSET_PATH = "public/verifier/";
+const USER_FILE = "users.json";
 
 interface User {
   firstName: string;
@@ -42,7 +54,7 @@ export async function POST(req: Request) {
   const { name } = await req.json();
   const userName = name;
 
-  const usersFilePath = path.join(process.cwd(), ASSET_PATH, "users.json");
+  const usersFilePath = path.join(process.cwd(), ASSET_PATH, USER_FILE);
   const usersFileContents = fs.readFileSync(usersFilePath, "utf8");
   const users: { [key: string]: User } = JSON.parse(usersFileContents);
 
@@ -65,7 +77,7 @@ export async function GET() {
   return Response.json({ data: "get api dvrs" });
 }
 
-export async function OPTION() {
+export async function OPTIONS() {
   let response = _setHeader(NextResponse.json({ status: 200 }));
   return response;
 }
@@ -81,23 +93,25 @@ function _setHeader(response: NextResponse) {
 }
 
 async function _generateSignedDVR(user: User) {
-  const PRIVATE_KEY_PEM =
-    "-----BEGIN PRIVATE KEY-----\n" +
-    "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgLxxbcd7aVcNEdE/C\n" +
-    "EGPwLzM6lkLuDYzhd3FqALuuHCahRANCAASnpYmXAC2V39TiEOaa64x1kJW0x5Qh\n" +
-    "PfGQN1TAs6+xVUD6KJLB9pfgeoqVE8MYb4XpYaOfHKz1Pka017ee97A4\n" +
-    "-----END PRIVATE KEY-----\n";
+  const API_KEY_OBJ = new ZkPassApiKey(API_KEY ?? "", API_SECRET ?? "");
 
-  const verifyingKeyJKWS = {
-    jku: "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/verifier-key.json",
-    kid: "k-1",
+  const issuerVerifyingKeyJKWS = {
+    jku: ISSUER_JWKS_URL,
+    kid: ISSUER_JWKS_KID,
   };
+  const verifierVerifyingKeyJKWS = {
+    jku: VERIFIER_JWKS_URL,
+    kid: VERIFIER_JWKS_KID,
+  };
+  const DVR_TITLE = "Onboarding Blood Test";
+  const USER_DATA_URL = "http://localhost:3000/verifier";
+
   const dvrQuery = _generateBloodTestQuery(user);
 
   /**
    * Step 1: Instantiate the ZkPassClient object.
    */
-  const zkPassClient = new ZkPassClient();
+  const zkPassClient = new ZkPassClient(ZKPASS_SERVICE_URL ?? "", API_KEY_OBJ);
 
   /**
    * Step 2: Call zkPassClient.getQueryEngineVersionInfo.
@@ -110,14 +124,17 @@ async function _generateSignedDVR(user: User) {
    * Step 3: Create the DVR object.
    */
   const data = DataVerificationRequest.fromJSON({
-    dvr_title: "Onboarding Blood Test",
+    dvr_title: DVR_TITLE,
     dvr_id: uuidv4(),
     query_engine_ver: queryEngineVersion,
     query_method_ver: queryMethodVersion,
     query: dvrQuery,
-    user_data_url: "http://localhost:3000/verifier",
+    user_data_url: USER_DATA_URL,
     user_data_verifying_key: {
-      KeysetEndpoint: verifyingKeyJKWS,
+      KeysetEndpoint: issuerVerifyingKeyJKWS,
+    },
+    dvr_verifying_key: {
+      KeysetEndpoint: verifierVerifyingKeyJKWS,
     },
   });
 
@@ -125,7 +142,10 @@ async function _generateSignedDVR(user: User) {
    * Step 4: Call zkPassClient.signToJwsToken.
    *         to digitally-sign the dvr data.
    */
-  const dvrToken = await data.signToJwsToken(PRIVATE_KEY_PEM, verifyingKeyJKWS);
+  const dvrToken = await data.signToJwsToken(
+    VERIFIER_PRIVATE_KEY_PEM,
+    verifierVerifyingKeyJKWS
+  );
 
   console.log({ DataVerificationRequest: data });
   // Save the dvr to a global hash table
