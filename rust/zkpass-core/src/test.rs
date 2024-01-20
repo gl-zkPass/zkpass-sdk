@@ -57,7 +57,7 @@ mod tests {
     struct DummyResolver;
     #[async_trait]
     impl KeysetEndpointResolver for DummyResolver {
-        async fn get_key(&self, jku: &str, kid: &str) -> PublicKey {
+        async fn get_key(&self, _jku: &str, _kid: &str) -> PublicKey {
             let future = async {
                 PublicKey {
                     x: String::from(
@@ -97,6 +97,7 @@ mod tests {
                 x: String::from(x),
                 y: String::from(y),
             }),
+            dvr_verifying_key: None,
         };
         let dvr2 = dvr.clone();
 
