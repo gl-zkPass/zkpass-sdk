@@ -7,8 +7,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 29th 2023
  * -----
- * Last Modified: January 9th 2024, 9:07:20 am
- * Modified By: GDPWinnerPranata (winner.pranata@gdplabs.id)
+ * Last Modified: January 19th 2024
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
  *   Nugraha Tejapermana (nugraha.tejapermana@gdplabs.id)
@@ -22,7 +22,7 @@
 import { ZkPassApiKey } from "@didpass/zkpass-client-ts";
 
 // Holder constants
-export const ZKPASS_SERVICE_URL: string = "https://staging-zkpass.ssi.id/proof";
+export const ZKPASS_SERVICE_URL: string = "https://playground-zkpass.ssi.id/proof";
 
 // Issuer constants
 export const ISSUER_PRIVKEY: string =
