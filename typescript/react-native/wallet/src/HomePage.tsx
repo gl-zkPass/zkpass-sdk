@@ -6,8 +6,8 @@
  *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * Created at: November 7th 2023
  * -----
- * Last Modified: January 17th 2024
- * Modified By: handrianalandi (handrian.alandi@gdplabs.id)
+ * Last Modified: January 20th 2024
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
  *   JaniceLaksana (janice.laksana@gdplabs.id)
@@ -29,7 +29,6 @@ import {
   ZkPassApiKey,
   ZkPassClient,
 } from '@didpass/zkpass-client-react-native';
-import Config from 'react-native-config';
 import { JwtPayload, decode } from 'jsonwebtoken';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {
@@ -40,6 +39,13 @@ import {
   writeFile,
 } from 'react-native-fs';
 import JsonDisplayer from './json-displayer/JsonDisplayer';
+import { 
+  DVR_TOKEN, 
+  USER_DATA_TOKEN, 
+  ZKPASS_API_KEY, 
+  ZKPASS_API_SECRET, 
+  ZKPASS_URL 
+} from './constants';
 
 enum PageState {
   DVR,
@@ -57,16 +63,15 @@ const HomePage = () => {
 
   useEffect(() => {
     const loadInitialData = async () => {
-      if (!Config.USER_DATA_TOKEN || !Config.DVR_TOKEN) {
+      try {
+        const userDataPayload = decode(USER_DATA_TOKEN) as JwtPayload;
+        setUserData(userDataPayload?.data);
+
+        const dvrPayload = decode(DVR_TOKEN) as JwtPayload;
+        setDvr(JSON.parse(dvrPayload?.data.query));
+      } catch (error) {
         setIsError(true);
-        return;
       }
-
-      const userDataPayload = decode(Config.USER_DATA_TOKEN) as JwtPayload;
-      setUserData(userDataPayload?.data);
-
-      const dvrPayload = decode(Config.DVR_TOKEN) as JwtPayload;
-      setDvr(JSON.parse(dvrPayload?.data.query));
     };
 
     loadInitialData();
@@ -135,28 +140,17 @@ const HomePage = () => {
 
   const generateProof = async () => {
     try {
-      if (
-        !Config.USER_DATA_TOKEN ||
-        !Config.DVR_TOKEN ||
-        !Config.ZKPASS_URL ||
-        !Config.ZKPASS_API_KEY ||
-        !Config.ZKPASS_API_SECRET
-      ) {
-        setIsError(true);
-        return;
-      }
-
       /**
        * Step 1
        * Provide ZKPass Url, User Data Token, Dvr Token, zkPassApiKey, and ZkPassClient
        */
-      const userDataToken = Config.USER_DATA_TOKEN;
-      const dvrToken = Config.DVR_TOKEN;
-      const zkPassUrl = Config.ZKPASS_URL;
+      const userDataToken = USER_DATA_TOKEN;
+      const dvrToken = DVR_TOKEN;
+      const zkPassUrl = ZKPASS_URL;
 
       const zkPassApiKey = new ZkPassApiKey(
-        Config.ZKPASS_API_KEY,
-        Config.ZKPASS_API_SECRET
+        ZKPASS_API_KEY,
+        ZKPASS_API_SECRET
       );
 
       const zkPassClient = new ZkPassClient(zkPassUrl, zkPassApiKey);
