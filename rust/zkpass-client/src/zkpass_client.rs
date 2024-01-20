@@ -1,9 +1,66 @@
+/*
+ * zkpass_client.rs
+ * File contains the implementation of zkpass client
+ *
+ * Authors:
+ *   Antony Halim (antony.halim@gdplabs.id)
+ *   GDPWinnerPranata (winner.pranata@gdplabs.id)
+ *   Zulchaidir (zulchaidir@gdplabs.id)
+ *   WilliamhGDP (william.h.hendrawan@gdplabs.id)
+ *   JaniceLaksana (janice.laksana@gdplabs.id)
+ * Created at: September 21st 2023
+ * -----
+ * Last Modified: January 19th 2024
+ * Modified By: Janice Laksana (janice.laksana@gdplabs.id)
+ * -----
+ * Reviewers:
+ *   GDPWinnerPranata (winner.pranata@gdplabs.id)
+ *   Zulchaidir (zulchaidir@gdplabs.id)
+ *   WilliamhGDP (william.h.hendrawan@gdplabs.id)
+ *   Khandar William (khandar.william@gdplabs.id)
+ *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * ---
+ * References:
+ *   NONE
+ * ---
+ * Copyright (c) 2024 PT Darta Media Indonesia. All rights reserved.
+ */
+
+use crate::core::*;
+use crate::interface::*;
 use async_trait::async_trait;
+use base64::{engine::general_purpose, Engine};
 use serde_json::{json, Value};
-use zkpass_core::interface::{sign_data_to_jws_token, verify_jws_token, encrypt_data_to_jwe_token, decrypt_jwe_token};
-use crate::core::{*};
-use crate::interface::{*};
+use tracing::info;
+use zkpass_core::interface::{
+    decrypt_jwe_token, encrypt_data_to_jwe_token, sign_data_to_jws_token, verify_jws_token,
+};
 //use zkpass_core::interface::verify_jws_token;
+
+impl ZkPassClient {
+    pub fn new(zkpass_service_url: &str, zkpass_api_key: ZkPassApiKey) -> ZkPassClient {
+        ZkPassClient {
+            zkpass_service_url: String::from(zkpass_service_url),
+            zkpass_api_key: Some(zkpass_api_key),
+        }
+    }
+    pub fn get_api_token(&self) -> Result<String, ZkPassError> {
+        let zkpass_api_key = match self.zkpass_api_key.clone() {
+            Some(zkpass_api_key) => zkpass_api_key,
+            None => {
+                return Err(ZkPassError::MissingApiKey);
+            }
+        };
+        Ok(zkpass_api_key.get_api_token())
+    }
+}
+
+impl ZkPassApiKey {
+    pub fn get_api_token(&self) -> String {
+        let formatted_api_key = format!("{}:{}", self.api_key, self.secret_api_key);
+        general_purpose::STANDARD.encode(formatted_api_key)
+    }
+}
 
 impl ZkPassUtility for ZkPassClient {
     fn sign_data_to_jws_token(
@@ -34,22 +91,23 @@ impl ZkPassUtility for ZkPassClient {
 
 #[async_trait]
 impl ZkPassProofGenerator for ZkPassClient {
+    #[tracing::instrument(skip(_user_data_token, _dvr_token))]
     async fn generate_zkpass_proof(
         &self,
-        _zkpass_service_url: &str,
         _user_data_token: &str,
         _dvr_token: &str,
     ) -> Result<String, ZkPassError> {
+        info!("entered");
+
         const ENCRYPTION_PUB: &str = r"-----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU
 IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==
 -----END PUBLIC KEY-----";
 
-        let user_data_enc = self
-            .encrypt_data_to_jwe_token(
-                ENCRYPTION_PUB,
-                Value::String(String::from(_user_data_token)),
-            )?;
+        let user_data_enc = self.encrypt_data_to_jwe_token(
+            ENCRYPTION_PUB,
+            Value::String(String::from(_user_data_token)),
+        )?;
         let dvr_enc = self
             .encrypt_data_to_jwe_token(ENCRYPTION_PUB, Value::String(String::from(_dvr_token)))?;
 
@@ -58,16 +116,27 @@ IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==
             "dvr_token": &dvr_enc
         });
 
+        let api_key_token = format!("Basic {}", self.get_api_token()?);
         let client = reqwest::Client::new();
-        let response = match client.post(_zkpass_service_url).json(&data).send().await {
+        let response = match client
+            .post(&self.zkpass_service_url)
+            .header("Authorization", api_key_token)
+            .json(&data)
+            .send()
+            .await
+        {
             Ok(response) => response,
-            Err(e) => return Err(ZkPassError::CustomError(format!("{:?}", e))),
+            Err(e) => {
+                return Err(ZkPassError::custom_error(format!("{:?}", e)));
+            }
         };
 
         if response.status().is_success() {
             let mut response_body = match response.text().await {
                 Ok(body) => body,
-                Err(e) => return Err(ZkPassError::CustomError(format!("{:?}", e))),
+                Err(e) => {
+                    return Err(ZkPassError::custom_error(format!("{:?}", e)));
+                }
             };
             // extract the proof under the root "proof" element
             let proof: Value = serde_json::from_str(&response_body).unwrap();
@@ -75,30 +144,36 @@ IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==
 
             Ok(response_body)
         } else {
-            Err(ZkPassError::CustomError(format!(
+            Err(ZkPassError::custom_error(format!(
                 "Request failed with status code: {}",
-                response.status(),
+                response.status()
             )))
         }
     }
 }
 
 impl ZkPassProofVerifier for ZkPassClient {
+    #[tracing::instrument(skip(zkpass_proof_token))]
     fn verify_zkpass_proof_internal(
         &self,
-        zkpass_proof_token:                 &str
+        zkpass_proof_token: &str,
     ) -> Result<(bool, ZkPassProof), ZkPassError> {
-        const ZKPASS_DSA_PUBKEY_X: &str = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU";
-        const ZKPASS_DSA_PUBKEY_Y: &str ="IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==";
+        info!("entered");
+
+        const ZKPASS_DSA_PUBKEY_X: &str =
+            "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU";
+        const ZKPASS_DSA_PUBKEY_Y: &str =
+            "IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==";
 
         let zkpass_proof_verifying_key = PublicKey {
             x: String::from(ZKPASS_DSA_PUBKEY_X),
-            y: String::from(ZKPASS_DSA_PUBKEY_Y)
+            y: String::from(ZKPASS_DSA_PUBKEY_Y),
         };
 
         let (zkpass_proof, _header) = verify_jws_token(
             zkpass_proof_verifying_key.to_pem().as_str(),
-            zkpass_proof_token)?;
+            zkpass_proof_token,
+        )?;
         let zkpass_proof: ZkPassProof = serde_json::from_value(zkpass_proof).unwrap();
         //
         //  zkp verification
@@ -109,7 +184,10 @@ impl ZkPassProofVerifier for ZkPassClient {
     }
 
     fn get_query_engine_version_info(&self) -> (String, String) {
-        (crate::import::get_query_engine_version(), crate::import::get_query_method_version())
+        (
+            crate::import::get_query_engine_version(),
+            crate::import::get_query_method_version(),
+        )
     }
 }
 
@@ -147,8 +225,11 @@ mod tests {
             {"name":"John", "age":30}
         );
         let data2 = data.clone();
-        println!("data={:#?}", data);
-        let zkpass_client = ZkPassClient;
+        info!("data={:#?}", data);
+        let zkpass_client = ZkPassClient {
+            zkpass_service_url: String::from("https://hostname.com"),
+            zkpass_api_key: None,
+        };
 
         let kid = String::from("mykey");
         let jku = String::from("https://hostname.com/jwks");
@@ -162,7 +243,7 @@ mod tests {
             .unwrap();
 
         //let ver_token = zkpass_client.verify_data_nested_token(SENDER_PUBKEY, RECIPIENT_PRIVKEY, jwe_token.as_str()).unwrap();
-        //println!("ver_token.payload={:#?}", ver_token.payload);
+        //info!("ver_token.payload={:#?}", ver_token.payload);
         //assert!(data2 == ver_token.payload);
     }
 
@@ -178,14 +259,20 @@ mod tests {
         let user_data_token = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
         let dvr_token = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
 
-        let zkpass_client = ZkPassClient {};
+        let zkpass_api_key = ZkPassApiKey {
+            api_key: String::from("my-api-key"),
+            secret_api_key: String::from("my-secret-api-key"),
+        };
+        let zkpass_service_url = server.url("/generate-proof");
+        let zkpass_client = ZkPassClient::new(&zkpass_service_url, zkpass_api_key);
         let result = zkpass_client
-            .generate_zkpass_proof(&server.url("/generate-proof"), user_data_token, dvr_token)
-            .await.unwrap();
-        println!("Result: {:?}", result);
+            .generate_zkpass_proof(user_data_token, dvr_token)
+            .await
+            .unwrap();
+        info!("Result: {:?}", result);
     }
 
-    /* 
+    /*
     struct DummyResolver;
     #[async_trait]
     impl KeysetEndpointResolver for DummyResolver {
