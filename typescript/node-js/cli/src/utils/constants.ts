@@ -7,8 +7,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 29th 2023
  * -----
- * Last Modified: January 9th 2024, 9:07:20 am
- * Modified By: GDPWinnerPranata (winner.pranata@gdplabs.id)
+ * Last Modified: January 20th 2024
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
  *   Nugraha Tejapermana (nugraha.tejapermana@gdplabs.id)
@@ -22,7 +22,7 @@
 import { ZkPassApiKey } from "@didpass/zkpass-client-ts";
 
 // Holder constants
-export const ZKPASS_SERVICE_URL: string = "https://staging-zkpass.ssi.id/proof";
+export const ZKPASS_SERVICE_URL: string = "https://playground-zkpass.ssi.id/proof";
 
 // Issuer constants
 export const ISSUER_PRIVKEY: string =
@@ -47,6 +47,6 @@ export const VERIFIER_JKU: string =
 export const EXPECTED_DVR_TTL: number = 600;
 
 // API Keys
-export const KEY = "e7fd7ec9-33b2-4f33-a383-c2f1d151a7c2";
-export const SECRET = "6a79ffa2-5fe8-4764-8edf-0ebc5dbcccf9";
+export const KEY = "5ecb2229-ddee-460e-b598-a0001c10fff1";
+export const SECRET = "074a53a8-a252-45de-a9d5-0961a6362df6";
 export const API_KEY: ZkPassApiKey = new ZkPassApiKey(KEY, SECRET);
