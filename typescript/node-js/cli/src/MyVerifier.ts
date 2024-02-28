@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 21st 2023
  * -----
- * Last Modified: January 9th 2024
+ * Last Modified: February 28th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -37,6 +37,7 @@ import {
   VERIFIER_JKU,
   VERIFIER_KID,
   VERIFIER_PRIVKEY,
+  ZKPASS_ZKVM,
 } from "./utils/constants";
 
 class MyMetadataValidator implements ZkPassProofMetadataValidator {
@@ -111,6 +112,7 @@ export class MyVerifier extends Verifier {
       dvr_verifying_key: {
         KeysetEndpoint: verifierPubkey,
       },
+      zkvm: ZKPASS_ZKVM
     };
 
     //

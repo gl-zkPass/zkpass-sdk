@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023
  * -----
- * Last Modified: January 3rd 2024
+ * Last Modified: February 28th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -23,7 +23,8 @@ import { MyIssuer } from "./MyIssuer";
 import { MyVerifier } from "./MyVerifier";
 import { 
   API_KEY,
-  ZKPASS_SERVICE_URL 
+  ZKPASS_SERVICE_URL, 
+  ZKPASS_ZKVM
 } from "./utils/constants";
 
 async function main() {
@@ -54,7 +55,8 @@ async function main() {
       userDataToken,
       dvrToken,
       ZKPASS_SERVICE_URL,
-      API_KEY
+      API_KEY,
+      ZKPASS_ZKVM
     ).catch((e) => {
       console.error(`Proof generation failed: ${e}`);
       process.exit();

@@ -7,7 +7,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 29th 2023
  * -----
- * Last Modified: January 20th 2024
+ * Last Modified: February 28th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -50,3 +50,4 @@ export const EXPECTED_DVR_TTL: number = 600;
 export const KEY = "5ecb2229-ddee-460e-b598-a0001c10fff1";
 export const SECRET = "074a53a8-a252-45de-a9d5-0961a6362df6";
 export const API_KEY: ZkPassApiKey = new ZkPassApiKey(KEY, SECRET);
+export const ZKPASS_ZKVM = "sp1";
