@@ -6,8 +6,8 @@
  *   Zulchaidir (zulchaidir@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: January 11th 2024
- * Modified By: handrianalandi (handrian.alandi@gdplabs.id)
+ * Last Modified: February 28th 2024
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -20,7 +20,7 @@
 
 import { NextResponse } from "next/server";
 import { ZkPassApiKey, ZkPassClient } from "@didpass/zkpass-client-ts";
-import { API_KEY, API_SECRET, ZKPASS_SERVICE_URL } from "@/utils/constants";
+import { API_KEY, API_SECRET, ZKPASS_SERVICE_URL, ZKPASS_ZKVM } from "@/utils/constants";
 
 export async function POST(req: Request) {
   try {
@@ -32,10 +32,11 @@ export async function POST(req: Request) {
     /**
      * Step 1: Instantiate the ZkPassClient object.
      */
-    const zkPassClient = new ZkPassClient(
-      ZKPASS_SERVICE_URL ?? "",
-      API_KEY_OBJ
-    );
+    const zkPassClient = new ZkPassClient({
+      zkpassServiceUrl: ZKPASS_SERVICE_URL ?? "",
+      zkpassApiKey: API_KEY_OBJ,
+      zkvm: ZKPASS_ZKVM ?? "",
+    });
 
     /**
      * Step 2: Call the zkpassClient.generateZkpassProof
