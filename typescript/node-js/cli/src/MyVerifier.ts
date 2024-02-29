@@ -23,7 +23,7 @@ import {
   MetadataValidatorResult,
   PublicKeyWrapped,
   KeysetEndpointWrapped,
-  VerifyZkpassProofResult,
+  VerifyZkPassProofResult,
   ZkPassProofMetadataValidator
 } from "@didpass/zkpass-client-ts";
 import { dvrTable } from "./utils/dvrTable";
@@ -135,7 +135,7 @@ export class MyVerifier extends Verifier {
 
   async verifyZkPassProof(
     zkPassProofToken: string
-  ): Promise<VerifyZkpassProofResult> {
+  ): Promise<VerifyZkPassProofResult> {
     console.log("\n#### starting zkPass proof verification...");
     const start = Date.now();
 
@@ -145,7 +145,7 @@ export class MyVerifier extends Verifier {
     // In this example, we have instantiated the zkPassClient object in the constructor.
 
     // Step 2: Call zkPassClient.verifyZkPassProof to verify the proof.
-    const proofResult = await this.zkPassClient.verifyZkpassProof(
+    const proofResult = await this.zkPassClient.verifyZkPassProof(
       zkPassProofToken,
       proofMetadataValidator
     );

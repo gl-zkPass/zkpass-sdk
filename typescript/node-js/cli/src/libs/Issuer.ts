@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 19th 2023
  * -----
- * Last Modified: February 28th 2024
+ * Last Modified: February 29th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -39,8 +39,8 @@ export abstract class Issuer {
     // Step 1: Instantiate the zkPassClient object
     //
     const zkPassClient: ZkPassClient = new ZkPassClient({ 
-      zkpassServiceUrl: "",
-      zkvm: ZKPASS_ZKVM
+      zkPassServiceUrl: "",
+      zkVm: ZKPASS_ZKVM
     });
 
     //

@@ -32,16 +32,16 @@ export abstract class Holder {
     // Step 1: Instantiate the ZkPassClient object.
     //
     const zkPassClient = new ZkPassClient({
-      zkpassServiceUrl: zkPassServiceUrl,
-      zkpassApiKey: apiKey,
-      zkvm: zkPassZkvm
+      zkPassServiceUrl: zkPassServiceUrl,
+      zkPassApiKey: apiKey,
+      zkVm: zkPassZkvm
     });
 
     //
     // Step 2: Call the zkPassClient.generateZkPassProof
     //         to get the zkPassProofToken.
     //
-    const zkPassProofToken = await zkPassClient.generateZkpassProof(
+    const zkPassProofToken = await zkPassClient.generateZkPassProof(
       userDataToken,
       dvrToken
     );
