@@ -46,7 +46,7 @@ class MyMetadataValidator implements ZkPassProofMetadataValidator {
   async validate(dvrId: string): Promise<MetadataValidatorResult> {
     // Modify this function to validate the metadata of the proof
     // In this example, we are validating that the DVR title matches the one we issued.
-    const dvr = dvrTable.value.getDVR(dvrId);
+    const dvr = dvrTable.value.getDvr(dvrId);
     if (!dvr) {
       throw new Error("DVR not found");
     }
@@ -128,7 +128,7 @@ export class MyVerifier extends Verifier {
     // Save the dvr to a global hash table
     // This will be needed by the validator to check the proof metadata
     const dvr = this.getDvr();
-    dvrTable.value.addDVR(dvr);
+    dvrTable.value.addDvr(dvr);
 
     return dvrToken;
   }

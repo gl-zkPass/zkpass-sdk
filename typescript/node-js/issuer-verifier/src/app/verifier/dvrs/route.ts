@@ -6,7 +6,7 @@
  *   Zulchaidir (zulchaidir@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: February 28th 2024
+ * Last Modified: February 29th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -156,7 +156,7 @@ async function _generateSignedDVR(user: User) {
   console.log({ DataVerificationRequest: data });
   // Save the dvr to a global hash table
   // This will be needed by the validator to check the proof metadata
-  dvrLookup.value.addDVR(data);
+  dvrLookup.value.addDvr(data);
 
   return dvrToken;
 }

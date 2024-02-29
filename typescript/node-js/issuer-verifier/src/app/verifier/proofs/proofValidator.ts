@@ -44,7 +44,7 @@ export class MyValidator implements ZkPassProofMetadataValidator {
      * This validate method will be called first inside verifyZkPassProof
      * you can modify the logic here to suit your needs
      */
-    const dvr = dvrLookup.value.getDVR(dvrId);
+    const dvr = dvrLookup.value.getDvr(dvrId);
     console.log("=== MyValidator.validate ===");
     console.log({ dvr });
     if (!dvr) {
