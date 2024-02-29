@@ -36,15 +36,15 @@ export async function POST(req: Request) {
      * Step 1: Instantiate the zkPassClient object.
      */
     const zkPassClient = new ZkPassClient({
-      zkpassServiceUrl: ZKPASS_SERVICE_URL ?? "",
-      zkpassApiKey: API_KEY_OBJ,
-      zkvm: ZKPASS_ZKVM ?? "",
+      zkPassServiceUrl: ZKPASS_SERVICE_URL ?? "",
+      zkPassApiKey: API_KEY_OBJ,
+      zkVm: ZKPASS_ZKVM ?? "",
     });
 
     /**
      * Step 2: Call zkPassClient.verifyZkPassProof to verify the proof.
      */
-    const proofResult = await zkPassClient.verifyZkpassProof(
+    const proofResult = await zkPassClient.verifyZkPassProof(
       proof,
       myValidator
     );

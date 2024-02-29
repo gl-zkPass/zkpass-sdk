@@ -113,9 +113,9 @@ async function _generateSignedDVR(user: User) {
    * Step 1: Instantiate the ZkPassClient object.
    */
   const zkPassClient = new ZkPassClient({
-    zkpassServiceUrl: ZKPASS_SERVICE_URL ?? "",
-    zkpassApiKey: API_KEY_OBJ,
-    zkvm: ZKPASS_ZKVM ?? "",
+    zkPassServiceUrl: ZKPASS_SERVICE_URL ?? "",
+    zkPassApiKey: API_KEY_OBJ,
+    zkVm: ZKPASS_ZKVM ?? "",
   });
 
   /**

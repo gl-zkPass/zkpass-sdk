@@ -22,9 +22,10 @@ import {
   MetadataValidatorResult,
   PublicKeyWrapped,
   ZkPassProofMetadataValidator,
+  KeysetEndpointWrapped, 
+  PublicKey
 } from "@didpass/zkpass-client-ts/";
 import { dvrLookup } from "../dvrs/dvrHelper";
-import { KeysetEndpointWrapped, PublicKey } from "@didpass/zkpass-client-ts";
 
 export class MyValidator implements ZkPassProofMetadataValidator {
   EXPECTED_DVR_TTL: number = 600;

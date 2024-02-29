@@ -33,16 +33,16 @@ export async function POST(req: Request) {
      * Step 1: Instantiate the ZkPassClient object.
      */
     const zkPassClient = new ZkPassClient({
-      zkpassServiceUrl: ZKPASS_SERVICE_URL ?? "",
-      zkpassApiKey: API_KEY_OBJ,
-      zkvm: ZKPASS_ZKVM ?? "",
+      zkPassServiceUrl: ZKPASS_SERVICE_URL ?? "",
+      zkPassApiKey: API_KEY_OBJ,
+      zkVm: ZKPASS_ZKVM ?? "",
     });
 
     /**
      * Step 2: Call the zkPassClient.generateZkPassProof
      *         to get the zkPassProofToken.
      */
-    const proof = await zkPassClient.generateZkpassProof(blood_test, dvr);
+    const proof = await zkPassClient.generateZkPassProof(blood_test, dvr);
     console.log({ proof });
     return Response.json({ status: 200, data: proof });
   } catch (error) {
