@@ -6,7 +6,7 @@
  *   Zulchaidir (zulchaidir@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: February 28th 2024
+ * Last Modified: February 29th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -39,8 +39,8 @@ export async function POST(req: Request) {
     });
 
     /**
-     * Step 2: Call the zkpassClient.generateZkpassProof
-     *         to get the zkpassProofToken.
+     * Step 2: Call the zkPassClient.generateZkPassProof
+     *         to get the zkPassProofToken.
      */
     const proof = await zkPassClient.generateZkpassProof(blood_test, dvr);
     console.log({ proof });

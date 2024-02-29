@@ -6,7 +6,7 @@
  *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * Created at: November 7th 2023
  * -----
- * Last Modified: January 20th 2024
+ * Last Modified: February 29th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -142,7 +142,7 @@ const HomePage = () => {
     try {
       /**
        * Step 1
-       * Provide ZKPass Url, User Data Token, Dvr Token, zkPassApiKey, and ZkPassClient
+       * Provide zkPass Url, User Data Token, Dvr Token, zkPassApiKey, and zkPassClient
        */
       const userDataToken = USER_DATA_TOKEN;
       const dvrToken = DVR_TOKEN;

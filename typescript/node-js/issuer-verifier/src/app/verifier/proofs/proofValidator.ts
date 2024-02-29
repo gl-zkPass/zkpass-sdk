@@ -6,8 +6,8 @@
  *   Zulchaidir (zulchaidir@gdplabs.id)
  * Created at: November 2nd 2023
  * -----
- * Last Modified: December 15th 2023
- * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Last Modified: February 29th 2024
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -41,7 +41,7 @@ export class MyValidator implements ZkPassProofMetadataValidator {
    */
   async validate(dvrId: string): Promise<MetadataValidatorResult> {
     /**
-     * This validate method will be called first inside verifyZkpassProof
+     * This validate method will be called first inside verifyZkPassProof
      * you can modify the logic here to suit your needs
      */
     const dvr = dvrLookup.value.getDVR(dvrId);

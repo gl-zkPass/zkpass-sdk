@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 19th 2023
  * -----
- * Last Modified: February 28th 2024
+ * Last Modified: February 29th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -31,22 +31,22 @@ export abstract class Holder {
     //
     // Step 1: Instantiate the ZkPassClient object.
     //
-    const zkpassClient = new ZkPassClient({
+    const zkPassClient = new ZkPassClient({
       zkpassServiceUrl: zkPassServiceUrl,
       zkpassApiKey: apiKey,
       zkvm: zkPassZkvm
     });
 
     //
-    // Step 2: Call the zkpassClient.generateZkpassProof
-    //         to get the zkpassProofToken.
+    // Step 2: Call the zkPassClient.generateZkPassProof
+    //         to get the zkPassProofToken.
     //
-    const zkpassProofToken = await zkpassClient.generateZkpassProof(
+    const zkPassProofToken = await zkPassClient.generateZkpassProof(
       userDataToken,
       dvrToken
     );
 
-    return zkpassProofToken;
+    return zkPassProofToken;
   }
 
   abstract start(

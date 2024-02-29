@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023
  * -----
- * Last Modified: February 28th 2024
+ * Last Modified: February 29th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -48,10 +48,10 @@ async function main() {
     const userDataToken = await myIssuer.getUserDataToken(dataFile);
 
     //
-    //  Generate the zkpassProofToken using user data token & dvr token
+    //  Generate the zkPassProofToken using user data token & dvr token
     //
     const myHolder = new MyHolder();
-    const zkpassProofToken = await myHolder.start(
+    const zkPassProofToken = await myHolder.start(
       userDataToken,
       dvrToken,
       ZKPASS_SERVICE_URL,
@@ -65,7 +65,7 @@ async function main() {
     //
     //  Verifier verifies the proof
     //
-    const queryResult = await myVerifier.verifyZkpassProof(zkpassProofToken);
+    const queryResult = await myVerifier.verifyZkPassProof(zkPassProofToken);
 
     console.log(`the query result is ${queryResult.result}`);
   } else {

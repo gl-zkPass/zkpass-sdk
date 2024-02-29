@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: November 28th 2023
+ * Last Modified: February 29th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -75,7 +75,7 @@ export default function Home() {
           elevation={3}
           className="w-2/5 p-7 flex flex-col items-center gap-5"
         >
-          <div className="text-lg">ZKPass Demo : My Namaste</div>
+          <div className="text-lg">zkPass Demo : My Namaste</div>
           <TextField
             id="username"
             label="Username"

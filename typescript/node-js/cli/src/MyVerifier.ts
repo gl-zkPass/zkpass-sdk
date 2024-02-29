@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 21st 2023
  * -----
- * Last Modified: February 28th 2024
+ * Last Modified: February 29th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -133,10 +133,10 @@ export class MyVerifier extends Verifier {
     return dvrToken;
   }
 
-  async verifyZkpassProof(
-    zkpassProofToken: string
+  async verifyZkPassProof(
+    zkPassProofToken: string
   ): Promise<VerifyZkpassProofResult> {
-    console.log("\n#### starting zkpass proof verification...");
+    console.log("\n#### starting zkPass proof verification...");
     const start = Date.now();
 
     const proofMetadataValidator = new MyMetadataValidator();
@@ -144,9 +144,9 @@ export class MyVerifier extends Verifier {
     // Step 1: Instantiate the zkPassClient object.
     // In this example, we have instantiated the zkPassClient object in the constructor.
 
-    // Step 2: Call zkPassClient.verifyZkpassProof to verify the proof.
+    // Step 2: Call zkPassClient.verifyZkPassProof to verify the proof.
     const proofResult = await this.zkPassClient.verifyZkpassProof(
-      zkpassProofToken,
+      zkPassProofToken,
       proofMetadataValidator
     );
 

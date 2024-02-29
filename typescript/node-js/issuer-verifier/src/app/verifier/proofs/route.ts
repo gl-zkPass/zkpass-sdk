@@ -6,7 +6,7 @@
  *   Zulchaidir (zulchaidir@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: February 28th 2024
+ * Last Modified: February 29th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     const myValidator = new MyValidator();
 
     /**
-     * Step 1: Instantiate the zkpassClient object.
+     * Step 1: Instantiate the zkPassClient object.
      */
     const zkPassClient = new ZkPassClient({
       zkpassServiceUrl: ZKPASS_SERVICE_URL ?? "",
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     });
 
     /**
-     * Step 2: Call zkpassClient.verifyZkpassProof to verify the proof.
+     * Step 2: Call zkPassClient.verifyZkPassProof to verify the proof.
      */
     const proofResult = await zkPassClient.verifyZkpassProof(
       proof,
