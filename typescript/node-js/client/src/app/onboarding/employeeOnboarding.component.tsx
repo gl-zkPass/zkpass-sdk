@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: December 15th 2023
- * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Last Modified: February 29th 2024
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -49,17 +49,17 @@ export default function EmployeeOnboarding({
     "Verify Blood Test Result",
   ];
   const [activeStep, setActiveStep] = React.useState(0);
-  const [requestedDVR, setRequestedDVR] = React.useState(false);
+  const [requestedDvr, setRequestedDvr] = React.useState(false);
   const [requestedBloodTest, setRequestedBloodTest] = React.useState(false);
-  const [dvr, setDVR] = React.useState("");
+  const [dvr, setDvr] = React.useState("");
   const [bloodTest, setBloodTest] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = React.useState("");
-  const [formatedDVR, setFormatedDVR] = React.useState("<div></div>");
+  const [formatedDvr, setFormatedDvr] = React.useState("<div></div>");
   const [formatedBloodTest, setFormatedBloodTest] =
     React.useState("<div></div>");
-  const [confirmDVR, setConfirmDVR] = React.useState(false);
+  const [confirmDvr, setConfirmDvr] = React.useState(false);
   const [confirmBloodTest, setConfirmBloodTest] = React.useState(false);
   const [loadingMessage, setLoadingMessage] = React.useState("Loading...");
   const [proofResult, setProofResult] = React.useState(false);
@@ -74,7 +74,7 @@ export default function EmployeeOnboarding({
   }, [dvr, bloodTest]);
 
   useEffect(() => {
-    if (!requestedDVR || !requestedBloodTest) {
+    if (!requestedDvr || !requestedBloodTest) {
       setIsLoading(true);
       const dvrUrl = `${VERIFIER_URL}/dvrs`;
       const bloodTestUrl = `${ISSUER_URL}/blood_tests`;
@@ -103,12 +103,12 @@ export default function EmployeeOnboarding({
             dvrFetchResponse.status == 200 &&
             bloodTestFetchResponse.status == 200
           ) {
-            setDVR(dvrResult.data as string);
-            _getDVRPayload(dvrResult.data as string);
+            setDvr(dvrResult.data as string);
+            _getDvrPayload(dvrResult.data as string);
             setBloodTest(bloodTestResult.data as string);
             _getBloodTestPayload(bloodTestResult.data as string);
             setIsLoading(false);
-            setRequestedDVR(true);
+            setRequestedDvr(true);
             setRequestedBloodTest(true);
             setActiveStep(2);
           } else {
@@ -122,26 +122,26 @@ export default function EmployeeOnboarding({
     }
   }, []);
 
-  const _getDVRPayload = async (dvrJwt: string) => {
-    console.log("_getDVRPayload before if");
+  const _getDvrPayload = async (dvrJwt: string) => {
+    console.log("_getDvrPayload before if");
 
     if (dvrJwt.length === 0) {
       return;
     }
-    console.log("_getDVRPayload");
+    console.log("_getDvrPayload");
 
     const payload = jwt.decode(dvrJwt, { complete: true })?.payload;
     console.log({ dvrJwtPayload: payload });
-    interface DVRPayload {
+    interface DvrPayload {
       data: {
         query: string;
         [key: string]: any;
       };
     }
-    const DVRPayload = payload as unknown as DVRPayload;
-    DVRPayload.data.query = JSON.parse(DVRPayload.data.query);
-    const formatedDVR = JSON.stringify(DVRPayload, null, 2);
-    setFormatedDVR(formatedDVR);
+    const DvrPayload = payload as unknown as DvrPayload;
+    DvrPayload.data.query = JSON.parse(DvrPayload.data.query);
+    const formatedDvr = JSON.stringify(DvrPayload, null, 2);
+    setFormatedDvr(formatedDvr);
   };
   const _getBloodTestPayload = async (bloodTestJwt: string) => {
     if (bloodTestJwt.length === 0) {
@@ -276,12 +276,12 @@ export default function EmployeeOnboarding({
             <></>
           )}
 
-          {!confirmBloodTest && requestedDVR && requestedBloodTest ? (
+          {!confirmBloodTest && requestedDvr && requestedBloodTest ? (
             <Paper
               elevation={2}
               className="p-6 flex items-center flex-col gap-4 bg-gray-200"
             >
-              {!confirmBloodTest && !confirmDVR ? (
+              {!confirmBloodTest && !confirmDvr ? (
                 <>
                   <div className="text-base">
                     Please review the Employee Onboarding questionnaires
@@ -290,11 +290,11 @@ export default function EmployeeOnboarding({
                     elevation={1}
                     className="max-h-96 max-w-lg overflow-scroll p-5"
                   >
-                    <pre dangerouslySetInnerHTML={{ __html: formatedDVR }} />
+                    <pre dangerouslySetInnerHTML={{ __html: formatedDvr }} />
                   </Paper>
                   <Button
                     variant="outlined"
-                    onClick={() => setConfirmDVR(true)}
+                    onClick={() => setConfirmDvr(true)}
                   >
                     Confirm and Continue
                   </Button>
@@ -303,7 +303,7 @@ export default function EmployeeOnboarding({
                 <></>
               )}
 
-              {confirmDVR && !confirmBloodTest ? (
+              {confirmDvr && !confirmBloodTest ? (
                 <>
                   <div className="text-base">
                     Please review the Blood Test Result

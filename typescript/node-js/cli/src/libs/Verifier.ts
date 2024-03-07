@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 19th 2023
  * -----
- * Last Modified: January 4th 2024
+ * Last Modified: February 29th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -24,6 +24,7 @@ import {
   KeysetEndpoint,
   PublicKeyOption,
 } from "@didpass/zkpass-client-ts";
+import { ZKPASS_ZKVM } from "../utils/constants";
 
 export type DvrData = {
   dvr_title: string;
@@ -32,13 +33,17 @@ export type DvrData = {
   user_data_url: string;
   user_data_verifying_key: PublicKeyOption;
   dvr_verifying_key: PublicKeyOption;
+  zkvm: string;
 };
 
 export abstract class Verifier {
   zkPassClient: ZkPassClient;
   dvr: DataVerificationRequest | null;
   constructor() {
-    this.zkPassClient = new ZkPassClient("");
+    this.zkPassClient = new ZkPassClient({ 
+      zkPassServiceUrl: "",
+      zkVm: ZKPASS_ZKVM
+    });
     this.dvr = null;
   }
 
