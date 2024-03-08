@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created at: December 15th 2023
  * -----
- * Last Modified: February 28th 2024
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Last Modified: March 8th 2024
+ * Modified By: handrianalandi (handrian.alandi@gdplabs.id)
  * -----
  * Reviewers:
  *   NONE
@@ -26,4 +26,4 @@ export const VERIFIER_URL = "http://localhost:3001/verifier";
 export const API_KEY = "api_1";
 export const API_SECRET = "secret_api_1";
 export const ZKPASS_SERVICE_URL = "http://localhost:10888/proof";
-export const ZKPASS_ZKVM = "sp1";
+export const ZKPASS_ZKVM = "r0";
