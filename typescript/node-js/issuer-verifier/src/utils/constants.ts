@@ -41,8 +41,8 @@ export const ISSUER_JWKS_KID = "k-1";
 
 // export const API_KEY = "5ecb2229-ddee-460e-b598-a0001c10fff1";
 // export const API_SECRET = "074a53a8-a252-45de-a9d5-0961a6362df6";
-// export const ZKPASS_SERVICE_URL = "https://playground-zkpass.ssi.id/proof";
+// export const ZKPASS_SERVICE_URL = "https://playground-zkpass.ssi.id";
 export const API_KEY = "api_1";
 export const API_SECRET = "secret_api_1";
-export const ZKPASS_SERVICE_URL = "http://localhost:10888/proof";
+export const ZKPASS_SERVICE_URL = "http://localhost:10888";
 export const ZKPASS_ZKVM = "r0";
