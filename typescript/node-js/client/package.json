@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@didpass/zkpass-client-ts": "file:didpass-zkpass-client-ts-0.3.0-alpha.2.tgz",
+    "@didpass/zkpass-client-ts": "^0.3.0-alpha.3",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.15",
