@@ -40,7 +40,7 @@ pub trait ZkPassProofGenerator {
     async fn generate_zkpass_proof(
         &self,
         user_data_token: &str,
-        dvr_token: &str,
+        dvr_token: &str
     ) -> Result<String, ZkPassError>;
 }
 
@@ -69,7 +69,7 @@ pub trait ZkPassUtility {
         &self,
         signing_key: &str,
         data: Value,
-        verifying_key_jwks: Option<KeysetEndpoint>,
+        verifying_key_jwks: Option<KeysetEndpoint>
     ) -> Result<String, ZkPassError>;
 
     /// # Description
@@ -120,14 +120,14 @@ pub trait ZkPassUtility {
     fn decrypt_jwe_token(
         &self,
         key: &str,
-        jwe_token: &str,
+        jwe_token: &str
     ) -> Result<(String, String), ZkPassError>;
 }
 
 //
 /// <span style="font-size: 1.1em; color: #996515;"> ***Defines a callback function for post-ZKP metadata validation on the DVR.*** </span>
 ///
-pub trait ZkPassProofMetadataValidator {
+pub trait ZkPassProofMetadataValidator: Sync + Send {
     /// # **Description**
     /// <span style="font-size: 1.2em; color: #996515;"> ***Validates the metadata of a DVR.*** </span>
     ///
@@ -142,10 +142,11 @@ pub trait ZkPassProofMetadataValidator {
     /// |<span style="color: green;"> **`Result<(DataVerificationRequest, PublicKey, u64), ZkPassError>`** </span> | On Ok, the (expected DVR, expected verifying DVR key, expected ttl) are returned  <br> On Err, the ZkPassError is returned |
     fn validate(
         &self,
-        dvr_id: &str,
+        dvr_id: &str
     ) -> Result<(DataVerificationRequest, PublicKey, u64), ZkPassError>;
 }
 
+#[async_trait]
 /// <span style="font-size: 1.1em; color: #996515;"> ***Defines functions for proof verification.*** </span>
 ///
 pub trait ZkPassProofVerifier {
@@ -162,29 +163,30 @@ pub trait ZkPassProofVerifier {
     /// | Return Value                                                   | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
     /// |<span style="color: green;"> **`Result<(bool, ZkPassProof), ZkPassError>`** </span> | On Ok, the query result returned as a bool, and the ZkPassProof value is also returned<br> On Err, the ZkPassError is returned |
-    fn verify_zkpass_proof(
+    async fn verify_zkpass_proof(
         &self,
         zkpass_proof_token: &str,
-        validator: &Box<dyn ZkPassProofMetadataValidator>,
+        validator: &Box<dyn ZkPassProofMetadataValidator>
     ) -> Result<(bool, ZkPassProof), ZkPassError> {
         //
         //  zkp verification
         //
-        let (result, zkpass_proof) = self.verify_zkpass_proof_internal(zkpass_proof_token)?;
+        let (result, zkpass_proof) = self.verify_zkpass_proof_internal(zkpass_proof_token).await?;
 
         //
         //  post-zkp metadata validations
         //  call the metadata validator callback, passing the dvr_id
         //    the callback returns the expected: (dvr, dvr_verifying_key, ttl)
         //
-        let (expected_dvr, expected_dvr_verifying_key, expected_ttl) =
-            validator.validate(zkpass_proof.dvr_id.as_str())?;
+        let (expected_dvr, expected_dvr_verifying_key, expected_ttl) = validator.validate(
+            zkpass_proof.dvr_id.as_str()
+        )?;
 
         //
         //  checking for valid dvr
         //
         if zkpass_proof.dvr_digest != expected_dvr.get_sha256_digest() {
-            return Err(ZkPassError::mismatched_user_data_verifying_key());
+            return Err(ZkPassError::MismatchedUserDataVerifyingKey);
         }
 
         //
@@ -193,22 +195,22 @@ pub trait ZkPassProofVerifier {
         match expected_dvr.user_data_verifying_key {
             PublicKeyOption::PublicKey(key) => {
                 if key != zkpass_proof.user_data_verifying_key {
-                    return Err(ZkPassError::mismatched_user_data_verifying_key());
+                    return Err(ZkPassError::MismatchedUserDataVerifyingKey);
                 }
             }
             _ => {} // get the pubkey from endpoint
         }
         if zkpass_proof.dvr_verifying_key != expected_dvr_verifying_key {
-            return Err(ZkPassError::mismatched_dvr_verifying_key());
+            return Err(ZkPassError::MismatchedDvrVerifyingKey);
         }
 
         //
         // checking for proof token timeout
         //
         let now = get_current_timestamp();
-        if (expected_ttl > 0) && (now > zkpass_proof.time_stamp) {
-            if (now - zkpass_proof.time_stamp) > expected_ttl {
-                return Err(ZkPassError::expired_zkpass_proof());
+        if expected_ttl > 0 && now > zkpass_proof.time_stamp {
+            if now - zkpass_proof.time_stamp > expected_ttl {
+                return Err(ZkPassError::ExpiredZkPassProof);
             }
         }
 
@@ -227,9 +229,9 @@ pub trait ZkPassProofVerifier {
     /// | Return Value                                                   | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
     /// |<span style="color: green;"> **`Result<(bool, ZkPassProof), ZkPassError>`** </span> | On Ok, the query result returned as a bool, and the ZkPassProof value is also returned<br> On Err, the ZkPassError is returned |
-    fn verify_zkpass_proof_internal(
+    async fn verify_zkpass_proof_internal(
         &self,
-        zkpass_proof_token: &str,
+        zkpass_proof_token: &str
     ) -> Result<(bool, ZkPassProof), ZkPassError>;
 
     /// # **Description**
@@ -239,8 +241,8 @@ pub trait ZkPassProofVerifier {
     ///
     /// | Return Value                                                   | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// |<span style="color: green;"> **`(String, String)`** </span> | The query engine version and the query method version are returned as Strings |
-    fn get_query_engine_version_info(&self) -> (String, String);
+    /// |<span style="color: green;"> **`Result<(String, String), ZkPassError>`** </span> | The query engine version and the query method version are returned as Strings |
+    fn get_query_engine_version_info(&self) -> Result<(String, String), ZkPassError>;
 }
 
 //
@@ -253,12 +255,13 @@ pub trait ZkPassProofVerifier {
 pub struct ZkPassClient {
     pub zkpass_service_url: String,
     pub zkpass_api_key: Option<ZkPassApiKey>,
+    pub zkvm: String,
 }
 
 //
 /// <span style="font-size: 1.1em; color: #996515;"> ***The API key struct which ZkPassClient struct implements*** </span>
 ///
-/// You only need to specify this struct below if you want to generate zkPass proofs.
+/// You only need to specify this struct below if you want to generate & verify zkPass proofs.
 /// Otherwise, you don't need to specify them.
 ///
 #[derive(Debug, Clone)]

@@ -87,6 +87,7 @@ mod tests {
         let y = "08989839";
 
         let dvr = DataVerificationRequest {
+            zkvm: String::from("r0"),
             dvr_title: String::from("The DVR Title"),
             dvr_id: String::from(dvr_id),
             query_engine_ver: String::from("123456"),
