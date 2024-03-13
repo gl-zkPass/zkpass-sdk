@@ -161,7 +161,6 @@ const HomePage = () => {
        * Step 2
        * Generate ZkPass Proof by ZkPass Url
        */
-      console.log({userDataToken,dvrToken})
       const result: any = await zkPassClient.generateZkPassProof(
         userDataToken!,
         dvrToken!
@@ -171,7 +170,6 @@ const HomePage = () => {
       setProofToken(result);
       setIsError(false);
     } catch (error) {
-      console.log({error})
       setProofToken('');
       setIsError(true);
     }
