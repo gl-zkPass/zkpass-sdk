@@ -22,7 +22,7 @@
 import { ZkPassApiKey } from "@didpass/zkpass-client-ts";
 
 // Holder constants
-export const ZKPASS_SERVICE_URL: string = "https://staging-zkpass.ssi.id";
+export const ZKPASS_SERVICE_URL: string = "https://playground-zkpass.ssi.id";
 // export const ZKPASS_SERVICE_URL: string = "http://localhost:10888";
 
 // Issuer constants
