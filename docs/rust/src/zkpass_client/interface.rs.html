@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `zkpass-client/src/interface.rs`."><title>interface.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="zkpass_client" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `zkpass-client/src/interface.rs`."><title>interface.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-b1a3e7f8283b8434.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="zkpass_client" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (7ffc697ce 2024-01-24)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../zkpass_client/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -266,6 +268,9 @@
 <a href="#266" id="266">266</a>
 <a href="#267" id="267">267</a>
 <a href="#268" id="268">268</a>
+<a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::core::<span class="kw-2">*</span>;
 <span class="kw">use </span>async_trait::async_trait;
 <span class="kw">use </span>serde_json::Value;
@@ -273,7 +278,7 @@
 
 <span class="attr">#[async_trait]
 </span><span class="doccomment">///
-/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***Defines a function for generating zkPass Proof.*** &lt;/span&gt;
+/// &lt;span style="font-size: 1.1em; color: #996515;"&gt; ***Defines a function for generating zkPass Proof.*** &lt;/span&gt;
 ///
 /// `ZkPassProofGenerator` provides an asynchronous abstraction for generating
 /// zkPass Proofs Implement this trait to define custom proof generation logic
@@ -285,78 +290,78 @@
 ///
 </span><span class="kw">pub trait </span>ZkPassProofGenerator {
     <span class="doccomment">/// # **Description**
-    /// &lt;span style=&quot;font-size: 1.2em; color: #996515;&quot;&gt; ***Generates a ZkPass proof.*** &lt;/span&gt;
+    /// &lt;span style="font-size: 1.2em; color: #996515;"&gt; ***Generates a ZkPass proof.*** &lt;/span&gt;
     ///
     /// This function calls the corresponding RESTful API provided by the zkPass Service,
     /// where the query in the DVR is processed and the proof is generated.
     /// It encrypts both the signed user data token and the signed DVR token prior to sending it to the zkPass Service.
     ///
     /// This function is asynchronous and must be awaited.
-    /// It&#39;s designed to be used in asynchronous contexts, for example within
+    /// It's designed to be used in asynchronous contexts, for example within
     /// async functions or blocks.
     ///
     /// # **Parameters**
     ///
     /// | Argument                                                       | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`user_data_token`** &lt;/span&gt;      | The signed user data JWS token |
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`dvr_token`** &lt;/span&gt;            | The signed DVR JWS token
+    /// | &lt;span style="color: blue;"&gt; **`user_data_token`** &lt;/span&gt;      | The signed user data JWS token |
+    /// | &lt;span style="color: blue;"&gt; **`dvr_token`** &lt;/span&gt;            | The signed DVR JWS token
     ///
     /// | Return Value                                                   | Description                                |
     /// |----------------------------------------------------------------|--------------------------------------------|
-    /// |&lt;span style=&quot;color: green;&quot;&gt; **`Result&lt;String, ZkPassError&gt;`** &lt;/span&gt; | On Ok, the signed `ZkPassProof` token is returned as a String &lt;br&gt; On Err, the ZkPassError is returned |
+    /// |&lt;span style="color: green;"&gt; **`Result&lt;String, ZkPassError&gt;`** &lt;/span&gt; | On Ok, the signed `ZkPassProof` token is returned as a String &lt;br&gt; On Err, the ZkPassError is returned |
     </span><span class="kw">async fn </span>generate_zkpass_proof(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         user_data_token: <span class="kw-2">&amp;</span>str,
-        dvr_token: <span class="kw-2">&amp;</span>str,
+        dvr_token: <span class="kw-2">&amp;</span>str
     ) -&gt; <span class="prelude-ty">Result</span>&lt;String, ZkPassError&gt;;
 }
 
 <span class="doccomment">///
-/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***Defines functions for digital signature and encryption.*** &lt;/span&gt;
+/// &lt;span style="font-size: 1.1em; color: #996515;"&gt; ***Defines functions for digital signature and encryption.*** &lt;/span&gt;
 ///
 /// Speficially it has functions for:
 /// - signing/verifying the signature of JWT (JSON Web Signature) tokens
 /// - encrypting/decrypting the JWE (JSON Web Encryption) tokens
 </span><span class="kw">pub trait </span>ZkPassUtility {
     <span class="doccomment">/// # Description
-    /// &lt;span style=&quot;font-size: 1.2em; color: #996515;&quot;&gt; ***Signs data into a JWS token.*** &lt;/span&gt;
+    /// &lt;span style="font-size: 1.2em; color: #996515;"&gt; ***Signs data into a JWS token.*** &lt;/span&gt;
     ///
     /// # Parameters
     ///
     /// | Argument                                                       | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`signing_key`** &lt;/span&gt;          | The public key used to sign the data      |
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`data`** &lt;/span&gt;                 | The JSON value to be signed               |
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`verifying_key_jwks`** &lt;/span&gt;   | The optional JWKS endpoint of the public key to be set in the header of the JWS token |
+    /// | &lt;span style="color: blue;"&gt; **`signing_key`** &lt;/span&gt;          | The public key used to sign the data      |
+    /// | &lt;span style="color: blue;"&gt; **`data`** &lt;/span&gt;                 | The JSON value to be signed               |
+    /// | &lt;span style="color: blue;"&gt; **`verifying_key_jwks`** &lt;/span&gt;   | The optional JWKS endpoint of the public key to be set in the header of the JWS token |
     ///
     /// | Return Value                                                   | Description                                |
     /// |----------------------------------------------------------------|--------------------------------------------|
-    /// |&lt;span style=&quot;color: green;&quot;&gt; **`Result&lt;String, ZkPassError&gt;`** &lt;/span&gt; | On Ok, the signed JWS token is returned as a String &lt;br&gt; On Err, the ZkPassError is returned |
+    /// |&lt;span style="color: green;"&gt; **`Result&lt;String, ZkPassError&gt;`** &lt;/span&gt; | On Ok, the signed JWS token is returned as a String &lt;br&gt; On Err, the ZkPassError is returned |
     </span><span class="kw">fn </span>sign_data_to_jws_token(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         signing_key: <span class="kw-2">&amp;</span>str,
         data: Value,
-        verifying_key_jwks: <span class="prelude-ty">Option</span>&lt;KeysetEndpoint&gt;,
+        verifying_key_jwks: <span class="prelude-ty">Option</span>&lt;KeysetEndpoint&gt;
     ) -&gt; <span class="prelude-ty">Result</span>&lt;String, ZkPassError&gt;;
 
     <span class="doccomment">/// # Description
-    /// &lt;span style=&quot;font-size: 1.2em; color: #996515;&quot;&gt; ***Verifies the signature of a JWS token.*** &lt;/span&gt;
+    /// &lt;span style="font-size: 1.2em; color: #996515;"&gt; ***Verifies the signature of a JWS token.*** &lt;/span&gt;
     ///
     /// # Parameters
     ///
     /// | Argument                                                       | Description                                                  |
     /// |----------------------------------------------------------------|--------------------------------------------------------------|
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`key`** &lt;/span&gt;                  | The public key used to verify the signature of the JWS token |
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`jws_token`** &lt;/span&gt;            | The JWS token to be verified                                 |
+    /// | &lt;span style="color: blue;"&gt; **`key`** &lt;/span&gt;                  | The public key used to verify the signature of the JWS token |
+    /// | &lt;span style="color: blue;"&gt; **`jws_token`** &lt;/span&gt;            | The JWS token to be verified                                 |
     ///
     /// | Return Value                                                   | Description                                |
     /// |----------------------------------------------------------------|--------------------------------------------|
-    /// |&lt;span style=&quot;color: green;&quot;&gt; **`Result&lt;(Value, String), ZkPassError&gt;`** &lt;/span&gt; | On Ok, the verified value is returned as a Value, and the JWT header is also returned as a String&lt;br&gt; On Err, the ZkPassError is returned |
+    /// |&lt;span style="color: green;"&gt; **`Result&lt;(Value, String), ZkPassError&gt;`** &lt;/span&gt; | On Ok, the verified value is returned as a Value, and the JWT header is also returned as a String&lt;br&gt; On Err, the ZkPassError is returned |
     </span><span class="kw">fn </span>verify_jws_token(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str, jws_token: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;(Value, String), ZkPassError&gt;;
 
     <span class="doccomment">/// # Description
-    /// &lt;span style=&quot;font-size: 1.2em; color: #996515;&quot;&gt; ***Encrypts data into a JWE token.*** &lt;/span&gt;
+    /// &lt;span style="font-size: 1.2em; color: #996515;"&gt; ***Encrypts data into a JWE token.*** &lt;/span&gt;
     ///
     /// The encryption is based on ECDH-ES with GCM/AES256 encryption. The key pair used for encryption/decryption is an ECDH key pair.
     ///
@@ -364,95 +369,97 @@
     ///
     /// | Argument                                                       | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`key`** &lt;/span&gt;                  | The public ECDH key used for the encryption purpose |
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`data`** &lt;/span&gt;                 | The JSON value to be encrypted            |
+    /// | &lt;span style="color: blue;"&gt; **`key`** &lt;/span&gt;                  | The public ECDH key used for the encryption purpose |
+    /// | &lt;span style="color: blue;"&gt; **`data`** &lt;/span&gt;                 | The JSON value to be encrypted            |
     ///
     /// | Return Value                                                   | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// |&lt;span style=&quot;color: green;&quot;&gt; **`Result&lt;String, ZkPassError&gt;`** &lt;/span&gt; | On Ok, the encrypted JWE token is returned as a String &lt;br&gt; On Err, the ZkPassError is returned |
+    /// |&lt;span style="color: green;"&gt; **`Result&lt;String, ZkPassError&gt;`** &lt;/span&gt; | On Ok, the encrypted JWE token is returned as a String &lt;br&gt; On Err, the ZkPassError is returned |
     </span><span class="kw">fn </span>encrypt_data_to_jwe_token(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str, data: Value) -&gt; <span class="prelude-ty">Result</span>&lt;String, ZkPassError&gt;;
 
     <span class="doccomment">/// # Description
-    /// &lt;span style=&quot;font-size: 1.2em; color: #996515;&quot;&gt; ***Decrypts a JWT token.*** &lt;/span&gt;
+    /// &lt;span style="font-size: 1.2em; color: #996515;"&gt; ***Decrypts a JWT token.*** &lt;/span&gt;
     ///
     /// # Parameters
     ///
     /// | Argument                                                       | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`key`** &lt;/span&gt;                  | The private ECDH key used to the decryption purpose|
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`jwe_token`** &lt;/span&gt;            | The JWE token to be decrypted             |
+    /// | &lt;span style="color: blue;"&gt; **`key`** &lt;/span&gt;                  | The private ECDH key used to the decryption purpose|
+    /// | &lt;span style="color: blue;"&gt; **`jwe_token`** &lt;/span&gt;            | The JWE token to be decrypted             |
     ///
     /// | Return Value                                                   | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// |&lt;span style=&quot;color: green;&quot;&gt; **`Result&lt;(String, String), ZkPassError&gt;`** &lt;/span&gt; | On Ok, the decrypted value is returned as a String, and the JWT header is also returned as a String &lt;br&gt; On Err, the ZkPassError is returned |
+    /// |&lt;span style="color: green;"&gt; **`Result&lt;(String, String), ZkPassError&gt;`** &lt;/span&gt; | On Ok, the decrypted value is returned as a String, and the JWT header is also returned as a String &lt;br&gt; On Err, the ZkPassError is returned |
     </span><span class="kw">fn </span>decrypt_jwe_token(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         key: <span class="kw-2">&amp;</span>str,
-        jwe_token: <span class="kw-2">&amp;</span>str,
+        jwe_token: <span class="kw-2">&amp;</span>str
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(String, String), ZkPassError&gt;;
 }
 
 <span class="comment">//
-</span><span class="doccomment">/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***Defines a callback function for post-ZKP metadata validation on the DVR.*** &lt;/span&gt;
+</span><span class="doccomment">/// &lt;span style="font-size: 1.1em; color: #996515;"&gt; ***Defines a callback function for post-ZKP metadata validation on the DVR.*** &lt;/span&gt;
 ///
-</span><span class="kw">pub trait </span>ZkPassProofMetadataValidator {
+</span><span class="kw">pub trait </span>ZkPassProofMetadataValidator: Sync + Send {
     <span class="doccomment">/// # **Description**
-    /// &lt;span style=&quot;font-size: 1.2em; color: #996515;&quot;&gt; ***Validates the metadata of a DVR.*** &lt;/span&gt;
+    /// &lt;span style="font-size: 1.2em; color: #996515;"&gt; ***Validates the metadata of a DVR.*** &lt;/span&gt;
     ///
     /// # **Parameters**
     ///
     /// | Argument                                                       | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`dvr_id`** &lt;/span&gt;               | The unique id of the DVR that needs to be validated. The validator needs to find the DVR and return it. |
+    /// | &lt;span style="color: blue;"&gt; **`dvr_id`** &lt;/span&gt;               | The unique id of the DVR that needs to be validated. The validator needs to find the DVR and return it. |
     ///
     /// | Return Value                                                   | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// |&lt;span style=&quot;color: green;&quot;&gt; **`Result&lt;(DataVerificationRequest, PublicKey, u64), ZkPassError&gt;`** &lt;/span&gt; | On Ok, the (expected DVR, expected verifying DVR key, expected ttl) are returned  &lt;br&gt; On Err, the ZkPassError is returned |
+    /// |&lt;span style="color: green;"&gt; **`Result&lt;(DataVerificationRequest, PublicKey, u64), ZkPassError&gt;`** &lt;/span&gt; | On Ok, the (expected DVR, expected verifying DVR key, expected ttl) are returned  &lt;br&gt; On Err, the ZkPassError is returned |
     </span><span class="kw">fn </span>validate(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        dvr_id: <span class="kw-2">&amp;</span>str,
+        dvr_id: <span class="kw-2">&amp;</span>str
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(DataVerificationRequest, PublicKey, u64), ZkPassError&gt;;
 }
 
-<span class="doccomment">/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***Defines functions for proof verification.*** &lt;/span&gt;
+<span class="attr">#[async_trait]
+</span><span class="doccomment">/// &lt;span style="font-size: 1.1em; color: #996515;"&gt; ***Defines functions for proof verification.*** &lt;/span&gt;
 ///
 </span><span class="kw">pub trait </span>ZkPassProofVerifier {
     <span class="doccomment">/// # **Description**
-    /// &lt;span style=&quot;font-size: 1.2em; color: #996515;&quot;&gt; ***Verifies a zkPass Proof.*** &lt;/span&gt;
+    /// &lt;span style="font-size: 1.2em; color: #996515;"&gt; ***Verifies a zkPass Proof.*** &lt;/span&gt;
     ///
     /// # **Parameters**
     ///
     /// | Argument                                                       | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`zkpass_proof_token`** &lt;/span&gt;   | The signed zkPass Proof JWS token to be verified|
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`validator`** &lt;/span&gt;            | The validator callback that implements `ZkPassProofMetadataValidator` trait. The validator is used to validate the DVR metadata used by the zkPass Service.|
+    /// | &lt;span style="color: blue;"&gt; **`zkpass_proof_token`** &lt;/span&gt;   | The signed zkPass Proof JWS token to be verified|
+    /// | &lt;span style="color: blue;"&gt; **`validator`** &lt;/span&gt;            | The validator callback that implements `ZkPassProofMetadataValidator` trait. The validator is used to validate the DVR metadata used by the zkPass Service.|
     ///
     /// | Return Value                                                   | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// |&lt;span style=&quot;color: green;&quot;&gt; **`Result&lt;(bool, ZkPassProof), ZkPassError&gt;`** &lt;/span&gt; | On Ok, the query result returned as a bool, and the ZkPassProof value is also returned&lt;br&gt; On Err, the ZkPassError is returned |
-    </span><span class="kw">fn </span>verify_zkpass_proof(
+    /// |&lt;span style="color: green;"&gt; **`Result&lt;(bool, ZkPassProof), ZkPassError&gt;`** &lt;/span&gt; | On Ok, the query result returned as a bool, and the ZkPassProof value is also returned&lt;br&gt; On Err, the ZkPassError is returned |
+    </span><span class="kw">async fn </span>verify_zkpass_proof(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         zkpass_proof_token: <span class="kw-2">&amp;</span>str,
-        validator: <span class="kw-2">&amp;</span>Box&lt;<span class="kw">dyn </span>ZkPassProofMetadataValidator&gt;,
+        validator: <span class="kw-2">&amp;</span>Box&lt;<span class="kw">dyn </span>ZkPassProofMetadataValidator&gt;
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(bool, ZkPassProof), ZkPassError&gt; {
         <span class="comment">//
         //  zkp verification
         //
-        </span><span class="kw">let </span>(result, zkpass_proof) = <span class="self">self</span>.verify_zkpass_proof_internal(zkpass_proof_token)<span class="question-mark">?</span>;
+        </span><span class="kw">let </span>(result, zkpass_proof) = <span class="self">self</span>.verify_zkpass_proof_internal(zkpass_proof_token).<span class="kw">await</span><span class="question-mark">?</span>;
 
         <span class="comment">//
         //  post-zkp metadata validations
         //  call the metadata validator callback, passing the dvr_id
         //    the callback returns the expected: (dvr, dvr_verifying_key, ttl)
         //
-        </span><span class="kw">let </span>(expected_dvr, expected_dvr_verifying_key, expected_ttl) =
-            validator.validate(zkpass_proof.dvr_id.as_str())<span class="question-mark">?</span>;
+        </span><span class="kw">let </span>(expected_dvr, expected_dvr_verifying_key, expected_ttl) = validator.validate(
+            zkpass_proof.dvr_id.as_str()
+        )<span class="question-mark">?</span>;
 
         <span class="comment">//
         //  checking for valid dvr
         //
         </span><span class="kw">if </span>zkpass_proof.dvr_digest != expected_dvr.get_sha256_digest() {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::mismatched_user_data_verifying_key());
+            <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::MismatchedUserDataVerifyingKey);
         }
 
         <span class="comment">//
@@ -461,22 +468,22 @@
         </span><span class="kw">match </span>expected_dvr.user_data_verifying_key {
             PublicKeyOption::PublicKey(key) =&gt; {
                 <span class="kw">if </span>key != zkpass_proof.user_data_verifying_key {
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::mismatched_user_data_verifying_key());
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::MismatchedUserDataVerifyingKey);
                 }
             }
             <span class="kw">_ </span>=&gt; {} <span class="comment">// get the pubkey from endpoint
         </span>}
         <span class="kw">if </span>zkpass_proof.dvr_verifying_key != expected_dvr_verifying_key {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::mismatched_dvr_verifying_key());
+            <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::MismatchedDvrVerifyingKey);
         }
 
         <span class="comment">//
         // checking for proof token timeout
         //
         </span><span class="kw">let </span>now = get_current_timestamp();
-        <span class="kw">if </span>(expected_ttl &gt; <span class="number">0</span>) &amp;&amp; (now &gt; zkpass_proof.time_stamp) {
-            <span class="kw">if </span>(now - zkpass_proof.time_stamp) &gt; expected_ttl {
-                <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::expired_zkpass_proof());
+        <span class="kw">if </span>expected_ttl &gt; <span class="number">0 </span>&amp;&amp; now &gt; zkpass_proof.time_stamp {
+            <span class="kw">if </span>now - zkpass_proof.time_stamp &gt; expected_ttl {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::ExpiredZkPassProof);
             }
         }
 
@@ -484,35 +491,35 @@
     }
 
     <span class="doccomment">/// # **Description**
-    /// &lt;span style=&quot;font-size: 1.2em; color: #996515;&quot;&gt; ***Verifies a zkPass Proof internally.*** &lt;/span&gt;
+    /// &lt;span style="font-size: 1.2em; color: #996515;"&gt; ***Verifies a zkPass Proof internally.*** &lt;/span&gt;
     ///
     /// # **Parameters**
     ///
     /// | Argument                                                       | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// | &lt;span style=&quot;color: blue;&quot;&gt; **`zkpass_proof_token`** &lt;/span&gt;   | The signed zkPass Proof JWS token to be verified|
+    /// | &lt;span style="color: blue;"&gt; **`zkpass_proof_token`** &lt;/span&gt;   | The signed zkPass Proof JWS token to be verified|
     ///
     /// | Return Value                                                   | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// |&lt;span style=&quot;color: green;&quot;&gt; **`Result&lt;(bool, ZkPassProof), ZkPassError&gt;`** &lt;/span&gt; | On Ok, the query result returned as a bool, and the ZkPassProof value is also returned&lt;br&gt; On Err, the ZkPassError is returned |
-    </span><span class="kw">fn </span>verify_zkpass_proof_internal(
+    /// |&lt;span style="color: green;"&gt; **`Result&lt;(bool, ZkPassProof), ZkPassError&gt;`** &lt;/span&gt; | On Ok, the query result returned as a bool, and the ZkPassProof value is also returned&lt;br&gt; On Err, the ZkPassError is returned |
+    </span><span class="kw">async fn </span>verify_zkpass_proof_internal(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        zkpass_proof_token: <span class="kw-2">&amp;</span>str,
+        zkpass_proof_token: <span class="kw-2">&amp;</span>str
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(bool, ZkPassProof), ZkPassError&gt;;
 
     <span class="doccomment">/// # **Description**
-    /// &lt;span style=&quot;font-size: 1.2em; color: #996515;&quot;&gt; ***Returns the version information about the query engine.*** &lt;/span&gt;
+    /// &lt;span style="font-size: 1.2em; color: #996515;"&gt; ***Returns the version information about the query engine.*** &lt;/span&gt;
     ///
     /// # **Parameters**
     ///
     /// | Return Value                                                   | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// |&lt;span style=&quot;color: green;&quot;&gt; **`(String, String)`** &lt;/span&gt; | The query engine version and the query method version are returned as Strings |
-    </span><span class="kw">fn </span>get_query_engine_version_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (String, String);
+    /// |&lt;span style="color: green;"&gt; **`Result&lt;(String, String), ZkPassError&gt;`** &lt;/span&gt; | The query engine version and the query method version are returned as Strings |
+    </span><span class="kw">fn </span>get_query_engine_version_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(String, String), ZkPassError&gt;;
 }
 
 <span class="comment">//
-</span><span class="doccomment">/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***The main struct which implements all of the traits defined in this module.*** &lt;/span&gt;
+</span><span class="doccomment">/// &lt;span style="font-size: 1.1em; color: #996515;"&gt; ***The main struct which implements all of the traits defined in this module.*** &lt;/span&gt;
 ///
 /// You only need to specify the zkpass_api_key if you want to generate zkPass proofs
 /// Otherwise, you can leave them as None.
@@ -521,13 +528,14 @@
 </span><span class="kw">pub struct </span>ZkPassClient {
     <span class="kw">pub </span>zkpass_service_url: String,
     <span class="kw">pub </span>zkpass_api_key: <span class="prelude-ty">Option</span>&lt;ZkPassApiKey&gt;,
+    <span class="kw">pub </span>zkvm: String,
 }
 
 <span class="comment">//
-</span><span class="doccomment">/// &lt;span style=&quot;font-size: 1.1em; color: #996515;&quot;&gt; ***The API key struct which ZkPassClient struct implements*** &lt;/span&gt;
+</span><span class="doccomment">/// &lt;span style="font-size: 1.1em; color: #996515;"&gt; ***The API key struct which ZkPassClient struct implements*** &lt;/span&gt;
 ///
-/// You only need to specify this struct below if you want to generate zkPass proofs.
-/// Otherwise, you don&#39;t need to specify them.
+/// You only need to specify this struct below if you want to generate &amp; verify zkPass proofs.
+/// Otherwise, you don't need to specify them.
 ///
 </span><span class="attr">#[derive(Debug, Clone)]
 </span><span class="kw">pub struct </span>ZkPassApiKey {
