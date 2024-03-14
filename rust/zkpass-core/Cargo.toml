@@ -1,6 +1,6 @@
 [package]
 name = "zkpass-core"
-version = "0.2.0-beta.2"
+version = "0.3.0-rc.1"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -16,7 +16,4 @@ serde = { version = "1.0.188", features = ["derive"] }
 serde_json = "1.0.107"
 thiserror = "1.0.50"
 sha2 = "0.10.8"
-fluent = "0.16.0"
-fluent-langneg = "0.13.0"
-unic-langid = "0.9.0"
-lazy_static = "1.4.0"
+paste = "1.0.14"

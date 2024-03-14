@@ -1,5 +1,4 @@
 #[cfg(test)]
-
 mod tests {
     use hex;
     use sha2::{Digest, Sha256};
@@ -16,8 +15,8 @@ mod tests {
             x: String::from("1234"),
             y: String::from("9123"),
         };
-        let pubkey3 = pubkey2.clone();
         let _dvr = DataVerificationRequest {
+            zkvm: String::from("r0"),
             dvr_title: String::from("title"),
             dvr_id: String::from("myid"),
             user_data_url: Some(String::from("https://xyz-issuer.com")),
@@ -25,7 +24,7 @@ mod tests {
             query_engine_ver: String::from("1.0.2"),
             query_method_ver: String::from("12122121"),
             query: String::from(""),
-            dvr_verifying_key: Some(PublicKeyOption::PublicKey(pubkey3)),
+            dvr_verifying_key: None,
         };
 
         let pubkey = PublicKey {

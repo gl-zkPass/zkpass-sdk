@@ -5,8 +5,8 @@
  *   Antony Halim (antony.halim@gdplabs.id)
  * Created at: September 26th 2023
  * -----
- * Last Modified: December 19th 2023
- * Modified By: GDPWinnerPranata (winner.pranata@gdplabs.id)
+ * Last Modified: March 7th 2024
+ * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -32,15 +32,25 @@
 //!
 
 pub mod interface;
+mod helpers;
 mod zkpass_client;
 //use zkpass_core::interface::*;
 pub mod core {
-    use serde::{Deserialize, Serialize};
+    use serde::{ Deserialize, Serialize };
     // Re-export all types from zkpass-core
     pub use zkpass_core::interface::{
-        decrypt_jwe_token, encrypt_data_to_jwe_token, sign_data_to_jws_token, verify_jws_token,
-        DataVerificationRequest, KeysetEndpoint, KeysetEndpointResolver, PublicKey,
-        PublicKeyOption, ZkPassError, ZkPassProof,
+        DataVerificationRequest,
+        KeysetEndpoint,
+        PublicKey,
+        ZkPassProof,
+        PublicKeyOption,
+        ZkPassError,
+        KeysetEndpointResolver,
+        sign_data_to_jws_token,
+        verify_jws_token,
+        encrypt_data_to_jwe_token,
+        decrypt_jwe_token,
+        Jwk,
     };
 
     ///
@@ -54,33 +64,80 @@ pub mod core {
 }
 
 mod import {
-    use crate::core::*;
-    const ZKPASS_QUERY_DLL: &str = "libr0_zkpass_query.so";
+    use crate::core::{ * };
+    use tracing::info;
+    use zkpass_query_types::ZkPassQueryEngineError;
 
-    pub(crate) fn verify_zkproof(receipt: &str) -> ProofMethodOutput {
+    const ZKPASS_QUERY_DLL: &str = "zkpass_query.so";
+    const VERIFY_ZKPROOF_INTERNAL_FN: &str = "verify_zkproof_internal";
+    const GET_QUERY_METHOD_VERSION_INTERNAL_FN: &str = "get_query_method_version_internal";
+    const GET_QUERY_ENGINE_VERSION_INTERNAL_FN: &str = "get_query_engine_version_internal";
+
+    pub(crate) fn verify_zkproof(
+        zkvm: &str,
+        receipt: &str
+    ) -> Result<ProofMethodOutput, ZkPassError> {
+        let dll = format!("lib{}_{}", zkvm, ZKPASS_QUERY_DLL);
+        let function = format!("{}_{}", zkvm, VERIFY_ZKPROOF_INTERNAL_FN);
+
         unsafe {
-            let lib = libloading::Library::new(ZKPASS_QUERY_DLL).unwrap();
-            let func: libloading::Symbol<unsafe extern "C" fn(&str) -> ProofMethodOutput> =
-                lib.get(b"verify_zkproof_internal").unwrap();
-            func(receipt)
+            info!(">> verify_zkproof");
+            let lib = libloading::Library
+                ::new(dll)
+                .map_err(|_| ZkPassError::MissingZkPassQueryLibrary)?;
+
+            let func: libloading::Symbol<
+                unsafe extern "C" fn(&str) -> Result<ProofMethodOutput, ZkPassQueryEngineError>
+            > = lib.get(function.as_bytes()).map_err(|_| ZkPassError::FunctionRetrievalError)?;
+
+            info!("<< verify_zkproof");
+            let result = func(receipt).map_err(|err|
+                ZkPassError::QueryEngineError(format!("{:?}", err))
+            )?;
+            Ok(result)
         }
     }
 
-    pub(crate) fn get_query_method_version() -> String {
+    pub(crate) fn get_query_method_version(zkvm: &str) -> Result<String, ZkPassError> {
+        let dll = format!("lib{}_{}", zkvm, ZKPASS_QUERY_DLL);
+        let function = format!("{}_{}", zkvm, GET_QUERY_METHOD_VERSION_INTERNAL_FN);
+
         unsafe {
-            let lib = libloading::Library::new(ZKPASS_QUERY_DLL).unwrap();
-            let func: libloading::Symbol<unsafe extern "C" fn() -> String> =
-                lib.get(b"get_query_method_version_internal").unwrap();
-            func()
+            info!(">> get_query_method_version");
+            let lib = libloading::Library
+                ::new(dll)
+                .map_err(|_| ZkPassError::MissingZkPassQueryLibrary)?;
+            let func: libloading::Symbol<unsafe extern "C" fn() -> String> = lib
+                .get(function.as_bytes())
+                .map_err(|_| ZkPassError::FunctionRetrievalError)?;
+
+            info!("<< get_query_method_version");
+            Ok(func())
         }
     }
 
-    pub(crate) fn get_query_engine_version() -> String {
+    pub(crate) fn get_query_engine_version(zkvm: &str) -> Result<String, ZkPassError> {
+        let dll = format!("lib{}_{}", zkvm, ZKPASS_QUERY_DLL);
+        let function = format!("{}_{}", zkvm, GET_QUERY_ENGINE_VERSION_INTERNAL_FN);
+
+        println!("#### dll={}", dll);
+        println!("#### function={}", function);
+
         unsafe {
-            let lib = libloading::Library::new(ZKPASS_QUERY_DLL).unwrap();
-            let func: libloading::Symbol<unsafe extern "C" fn() -> String> =
-                lib.get(b"get_query_engine_version_internal").unwrap();
-            func()
+            info!(">> get_query_engine_version");
+            let lib = libloading::Library
+                ::new(dll)
+                .map_err(|_| ZkPassError::MissingZkPassQueryLibrary)?;
+            let func: libloading::Symbol<unsafe extern "C" fn() -> String> = lib
+                .get(function.as_bytes())
+                .map_err(|_| ZkPassError::FunctionRetrievalError)?;
+
+            info!("<< get_query_engine_version");
+            Ok(func())
         }
     }
+}
+
+pub fn package_version() -> &'static str {
+    env!("CARGO_PKG_VERSION")
 }
