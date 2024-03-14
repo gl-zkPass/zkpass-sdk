@@ -10,8 +10,8 @@
  *   JaniceLaksana (janice.laksana@gdplabs.id)
  * Created at: September 21st 2024
  * -----
- * Last Modified: January 19th 2024
- * Modified By: Janice Laksana (janice.laksana@gdplabs.id)
+ * Last Modified: March 4th 2024
+ * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
  * -----
  * Reviewers:
  *   GDPWinnerPranata (winner.pranata@gdplabs.id)
@@ -25,210 +25,75 @@
  * ---
  * Copyright (c) 2024 PT Darta Media Indonesia. All rights reserved.
  */
-use crate::{errors::LocalizableError, localization};
 use async_trait::async_trait;
 use hex;
 use josekit::{
-    jwe::{JweHeader, ECDH_ES},
-    jws::{JwsHeader, ES256},
-    jwt::{self, JwtPayload},
+    jwe::{ JweHeader, ECDH_ES },
+    jws::{ JwsHeader, ES256 },
+    jwt::{ self, JwtPayload },
     JoseError,
 };
-use jsonwebtoken::{decode, DecodingKey, Header, Validation};
-use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
-use sha2::{Digest, Sha256};
-use std::fmt;
-use std::time::{SystemTime, UNIX_EPOCH};
-
+use jsonwebtoken::{ decode, DecodingKey, Header, Validation };
+use serde::{ Deserialize, Serialize };
+use serde_json::{ json, Value };
+use sha2::{ Digest, Sha256 };
+use std::time::{ SystemTime, UNIX_EPOCH };
+use thiserror::Error;
 ///
 /// <span style="font-size: 1.1em; color: #996515;"> ***Defines various errors that come from the zkPass Service.*** </span>
 ///
-#[derive(Debug)]
+#[derive(Debug, Error)]
 pub enum ZkPassError {
-    MismatchedUserDataVerifyingKey,
+    #[error("Missing Root Data Element")]
     MissingRootDataElementError,
+
+    #[error("Not Implemented")]
     NotImplementedError,
-    JoseError,
+
+    #[error(transparent)] JoseError(#[from] JoseError),
+
+    #[error("Mismatched User Data Verifying Key")]
+    MismatchedUserDataVerifyingKey,
+
+    #[error("Mismatched Dvr Verifying Key")]
     MismatchedDvrVerifyingKey,
+
+    #[error("Mismatched Dvr Id")]
     MismatchedDvrId,
+
+    #[error("Mismatched Dvr Title")]
     MismatchedDvrTitle,
+
+    #[error("Mismatched Dvr Digest")]
     MismatchedDvrDigest,
+
+    #[error("Expired ZkPass Proof")]
     ExpiredZkPassProof,
+
+    #[error("Missing Keyset field")]
     MissingKeysetEndpoint,
-    InvalidPublicKey,
+
+    #[error("Missing Public Key")]
     MissingPublicKey,
+
+    #[error("{0}")] CustomError(String),
+
+    #[error("Invalid Public Key")]
+    InvalidPublicKey,
+
+    #[error("Missing API Key")]
     MissingApiKey,
-    HttpRequestError,
-    HttpResponseError,
-    InvalidResponse,
-    CustomError,
-    Error(String),
-}
 
-impl fmt::Display for ZkPassError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:?}", self)
-    }
-}
+    #[error("Missing ZkPass Query Library")]
+    MissingZkPassQueryLibrary,
 
-impl std::error::Error for ZkPassError {}
+    #[error("Failed to Retrieve Function from ZKPass Query Library")]
+    FunctionRetrievalError,
 
-impl ZkPassError {
-    pub fn mismatched_user_data_verifying_key() -> ZkPassError {
-        let localized_error =
-            localization::get_localized_error_message(&ZkPassError::MismatchedUserDataVerifyingKey);
-        ZkPassError::Error(localized_error)
-    }
+    #[error("Invalid ZKVM name")]
+    InvalidZkVm,
 
-    pub fn missing_root_data_element_error() -> ZkPassError {
-        let localized_error =
-            localization::get_localized_error_message(&ZkPassError::MissingRootDataElementError);
-        ZkPassError::Error(localized_error)
-    }
-
-    pub fn not_implemented_error() -> ZkPassError {
-        let localized_error =
-            localization::get_localized_error_message(&ZkPassError::NotImplementedError);
-        ZkPassError::Error(localized_error)
-    }
-
-    pub fn jose_error(error: JoseError) -> ZkPassError {
-        let localized_error = localization::get_localized_error_with_custom_message(
-            &ZkPassError::JoseError,
-            &error.to_string(),
-        );
-        ZkPassError::Error(localized_error)
-    }
-
-    pub fn mismatched_dvr_verifying_key() -> ZkPassError {
-        let localized_error =
-            localization::get_localized_error_message(&ZkPassError::MismatchedDvrVerifyingKey);
-        ZkPassError::Error(localized_error)
-    }
-
-    pub fn mismatched_dvr_id() -> ZkPassError {
-        let localized_error =
-            localization::get_localized_error_message(&ZkPassError::MismatchedDvrId);
-        ZkPassError::Error(localized_error)
-    }
-
-    pub fn mismatched_dvr_title() -> ZkPassError {
-        let localized_error =
-            localization::get_localized_error_message(&ZkPassError::MismatchedDvrTitle);
-        ZkPassError::Error(localized_error)
-    }
-
-    pub fn mismatched_dvr_digest() -> ZkPassError {
-        let localized_error =
-            localization::get_localized_error_message(&ZkPassError::MismatchedDvrDigest);
-        ZkPassError::Error(localized_error)
-    }
-
-    pub fn expired_zkpass_proof() -> ZkPassError {
-        let localized_error =
-            localization::get_localized_error_message(&ZkPassError::ExpiredZkPassProof);
-        ZkPassError::Error(localized_error)
-    }
-
-    pub fn invalid_public_key() -> ZkPassError {
-        let localized_error =
-            localization::get_localized_error_message(&ZkPassError::InvalidPublicKey);
-        ZkPassError::Error(localized_error)
-    }
-
-    pub fn missing_public_key() -> ZkPassError {
-        let localized_error =
-            localization::get_localized_error_message(&ZkPassError::MissingPublicKey);
-        ZkPassError::Error(localized_error)
-    }
-
-    pub fn missing_api_key() -> ZkPassError {
-        let localized_error =
-            localization::get_localized_error_message(&ZkPassError::MissingApiKey);
-        ZkPassError::Error(localized_error)
-    }
-
-    pub fn missing_keyset_endpoint() -> ZkPassError {
-        let localized_error =
-            localization::get_localized_error_message(&ZkPassError::MissingKeysetEndpoint);
-        ZkPassError::Error(localized_error)
-    }
-
-    pub fn http_request_error() -> ZkPassError {
-        let localized_error =
-            localization::get_localized_error_message(&ZkPassError::HttpRequestError);
-        ZkPassError::Error(localized_error)
-    }
-
-    pub fn http_response_error() -> ZkPassError {
-        let localized_error =
-            localization::get_localized_error_message(&ZkPassError::HttpResponseError);
-        ZkPassError::Error(localized_error)
-    }
-
-    pub fn invalid_response() -> ZkPassError {
-        let localized_error =
-            localization::get_localized_error_message(&ZkPassError::InvalidResponse);
-        ZkPassError::Error(localized_error)
-    }
-
-    pub fn custom_error(message: String) -> ZkPassError {
-        let error_message = message.clone();
-        let localized_error = localization::get_localized_error_with_custom_message(
-            &ZkPassError::CustomError,
-            &error_message,
-        );
-        ZkPassError::Error(localized_error)
-    }
-}
-
-impl LocalizableError for ZkPassError {
-    fn get_code(&self) -> &'static str {
-        match self {
-            ZkPassError::MismatchedUserDataVerifyingKey => "E1001-EUserKeyMismatch",
-            ZkPassError::MissingRootDataElementError => "E1002-ERootMissing",
-            ZkPassError::NotImplementedError => "E1003-ENotImpl",
-            ZkPassError::JoseError => "E1004-EJoseError",
-            ZkPassError::MismatchedDvrVerifyingKey => "E1005-EDvrKeyMismatch",
-            ZkPassError::MismatchedDvrId => "E1006-EDvrIdMismatch",
-            ZkPassError::MismatchedDvrTitle => "E1007-EDvrTitleMismatch",
-            ZkPassError::MismatchedDvrDigest => "E1008-EDvrDigestMismatch",
-            ZkPassError::ExpiredZkPassProof => "E1009-EProofExpired",
-            ZkPassError::InvalidPublicKey => "E1010-EInvalidPubKey",
-            ZkPassError::MissingPublicKey => "E1011-EMissingPublicKey",
-            ZkPassError::MissingApiKey => "E1012-EMissingApiKey",
-            ZkPassError::MissingKeysetEndpoint => "E1013-EMissingKeysetEndpoint",
-            ZkPassError::HttpRequestError => "E1014-HttpRequestError",
-            ZkPassError::HttpResponseError => "E1015-HttpResponseError",
-            ZkPassError::InvalidResponse => "E1016-InvalidResponse",
-            ZkPassError::CustomError => "E1017-ECustom",
-            ZkPassError::Error(_) => "E1018-EError",
-        }
-    }
-
-    fn get_error_key(&self) -> &str {
-        match self {
-            ZkPassError::MismatchedUserDataVerifyingKey => "MismatchedUserDataVerifyingKey",
-            ZkPassError::MissingRootDataElementError => "MissingRootDataElementError",
-            ZkPassError::NotImplementedError => "NotImplementedError",
-            ZkPassError::JoseError => "JoseError",
-            ZkPassError::MismatchedDvrVerifyingKey => "MismatchedDvrVerifyingKey",
-            ZkPassError::MismatchedDvrId => "MismatchedDvrId",
-            ZkPassError::MismatchedDvrTitle => "MismatchedDvrTitle",
-            ZkPassError::MismatchedDvrDigest => "MismatchedDvrDigest",
-            ZkPassError::ExpiredZkPassProof => "ExpiredZkPassProof",
-            ZkPassError::CustomError => "CustomError",
-            ZkPassError::InvalidPublicKey => "InvalidPublicKey",
-            ZkPassError::MissingPublicKey => "MissingPublicKey",
-            ZkPassError::MissingApiKey => "MissingApiKey",
-            ZkPassError::MissingKeysetEndpoint => "MissingKeysetEndpoint",
-            ZkPassError::HttpRequestError => "HttpRequestError",
-            ZkPassError::HttpResponseError => "HttpResponseError",
-            ZkPassError::InvalidResponse => "InvalidResponse",
-            ZkPassError::Error(_) => "Error",
-        }
-    }
+    #[error("{0}")] QueryEngineError(String),
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
@@ -319,6 +184,9 @@ pub struct ZkPassProof {
 ///
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct DataVerificationRequest {
+    /// The type of zkvm used to process the DVR
+    pub zkvm: String,
+
     /// The title of the DVR
     pub dvr_title: String,
 
@@ -432,26 +300,22 @@ pub fn encrypt_data_to_jwe_token(key: &str, data: Value) -> Result<String, ZkPas
 
     let mut payload = JwtPayload::new();
     let user_data: Option<Value> = Some(data);
-    payload
-        .set_claim("data", user_data)
-        .map_err(|e| ZkPassError::jose_error(e))?;
+    payload.set_claim("data", user_data).map_err(|e| ZkPassError::JoseError(e))?;
 
     // Encrypting JWT
-    let encrypter = ECDH_ES
-        .encrypter_from_pem(&key)
-        .map_err(|e| ZkPassError::jose_error(e))?;
-    let jwe_token = jwt::encode_with_encrypter(&payload, &header, &encrypter)
-        .map_err(|e| ZkPassError::jose_error(e))?;
+    let encrypter = ECDH_ES.encrypter_from_pem(&key).map_err(|e| ZkPassError::JoseError(e))?;
+    let jwe_token = jwt
+        ::encode_with_encrypter(&payload, &header, &encrypter)
+        .map_err(|e| ZkPassError::JoseError(e))?;
 
     Ok(jwe_token)
 }
 
 pub fn decrypt_jwe_token(key: &str, jwe_token: &str) -> Result<(String, String), ZkPassError> {
-    let decrypter = ECDH_ES
-        .decrypter_from_pem(&key)
-        .map_err(|e| ZkPassError::jose_error(e))?;
-    let (payload, header) = jwt::decode_with_decrypter(&jwe_token, &decrypter)
-        .map_err(|e| ZkPassError::jose_error(e))?;
+    let decrypter = ECDH_ES.decrypter_from_pem(&key).map_err(|e| ZkPassError::JoseError(e))?;
+    let (payload, header) = jwt
+        ::decode_with_decrypter(&jwe_token, &decrypter)
+        .map_err(|e| ZkPassError::JoseError(e))?;
 
     if let Some(data) = payload.claim("data") {
         Ok((data.to_string(), header.to_string()))
@@ -463,7 +327,7 @@ pub fn decrypt_jwe_token(key: &str, jwe_token: &str) -> Result<(String, String),
 pub fn sign_data_to_jws_token(
     signing_key: &str,
     data: Value,
-    verifying_key_jwks: Option<KeysetEndpoint>,
+    verifying_key_jwks: Option<KeysetEndpoint>
 ) -> Result<String, ZkPassError> {
     //
     // set the header
@@ -480,26 +344,22 @@ pub fn sign_data_to_jws_token(
 
     let mut payload = JwtPayload::new();
     let user_data: Option<Value> = Some(data);
-    payload
-        .set_claim("data", user_data)
-        .map_err(|e| ZkPassError::jose_error(e))?;
+    payload.set_claim("data", user_data).map_err(|e| ZkPassError::JoseError(e))?;
 
     // Signing JWT
-    let signer = ES256
-        .signer_from_pem(&signing_key)
-        .map_err(|e| ZkPassError::jose_error(e))?;
-    let jws_token = jwt::encode_with_signer(&payload, &header, &signer)
-        .map_err(|e| ZkPassError::jose_error(e))?;
+    let signer = ES256.signer_from_pem(&signing_key).map_err(|e| ZkPassError::JoseError(e))?;
+    let jws_token = jwt
+        ::encode_with_signer(&payload, &header, &signer)
+        .map_err(|e| ZkPassError::JoseError(e))?;
 
     Ok(jws_token)
 }
 
 pub fn verify_jws_token(key: &str, jws_token: &str) -> Result<(Value, String), ZkPassError> {
-    let verifier = ES256
-        .verifier_from_pem(&key)
-        .map_err(|e| ZkPassError::jose_error(e))?;
-    let (payload, header) =
-        jwt::decode_with_verifier(&jws_token, &verifier).map_err(|e| ZkPassError::jose_error(e))?;
+    let verifier = ES256.verifier_from_pem(&key).map_err(|e| ZkPassError::JoseError(e))?;
+    let (payload, header) = jwt
+        ::decode_with_verifier(&jws_token, &verifier)
+        .map_err(|e| ZkPassError::JoseError(e))?;
 
     if let Some(data) = payload.claim("data") {
         Ok((data.clone(), header.to_string()))
@@ -508,10 +368,33 @@ pub fn verify_jws_token(key: &str, jws_token: &str) -> Result<(Value, String), Z
     }
 }
 
+pub fn verify_key_token(key: &str, jws_token: &str) -> Result<(String, PublicKey), ZkPassError> {
+    let verifier = ES256.verifier_from_pem(&key).map_err(|e| ZkPassError::JoseError(e))?;
+    let (payload, _header) = jwt
+        ::decode_with_verifier(&jws_token, &verifier)
+        .map_err(|e| ZkPassError::JoseError(e))?;
+
+    if let Some(private_key) = payload.claim("privateKey") {
+        if let Some(public_key) = payload.claim("publicKey") {
+            let private_key: String = serde_json
+                ::from_value(private_key.clone())
+                .map_err(|err| ZkPassError::CustomError(err.to_string()))?;
+            let public_key: PublicKey = serde_json
+                ::from_value(public_key.clone())
+                .map_err(|err| ZkPassError::CustomError(err.to_string()))?;
+            Ok((private_key, public_key))
+        } else {
+            Err(ZkPassError::MissingRootDataElementError)
+        }
+    } else {
+        Err(ZkPassError::MissingRootDataElementError)
+    }
+}
+
 pub fn tokenize_data(
     signing_key: &str,
     encrypting_key: &str,
-    data: Value,
+    data: Value
 ) -> Result<String, ZkPassError> {
     let kid = "mykey";
     let jku = "https://hostname.com/jwks";
@@ -529,7 +412,7 @@ pub fn tokenize_data(
 pub fn verify_data_nested_token(
     verifying_key: &str,
     decrypting_key: &str,
-    jwe_token: &str,
+    jwe_token: &str
 ) -> Result<VerifiedNestedTokenData, ZkPassError> {
     // step 1: decrypt the outer token to get the inner token
     let (jws_token, outer_header) = decrypt_jwe_token(decrypting_key, jwe_token)?;
@@ -565,9 +448,11 @@ fn get_keyset_endpoint_params(header: Header) -> Result<KeysetEndpoint, ZkPassEr
         Some(result) => Ok(result),
         None => Err(ZkPassError::MissingKeysetEndpoint),
     })?;
-    let jku: String = serde_json::from_str(&header_jku.to_string())
+    let jku: String = serde_json
+        ::from_str(&header_jku.to_string())
         .map_err(|_| ZkPassError::MissingKeysetEndpoint)?;
-    let kid: String = serde_json::from_str(&header_kid.to_string())
+    let kid: String = serde_json
+        ::from_str(&header_kid.to_string())
         .map_err(|_| ZkPassError::MissingKeysetEndpoint)?;
 
     let ep = KeysetEndpoint { jku, kid };
@@ -576,7 +461,7 @@ fn get_keyset_endpoint_params(header: Header) -> Result<KeysetEndpoint, ZkPassEr
 
 fn get_public_key(
     payload: &DataVerificationRequest,
-    is_user_data: bool,
+    is_user_data: bool
 ) -> Result<PublicKeyOption, ZkPassError> {
     let dvr = payload.clone();
     if is_user_data {
@@ -586,14 +471,15 @@ fn get_public_key(
         }
     } else {
         match dvr.dvr_verifying_key {
-            Some(dvr_key) => match dvr_key {
-                PublicKeyOption::KeysetEndpoint(keyset) => {
-                    Ok(PublicKeyOption::KeysetEndpoint(keyset))
+            Some(dvr_key) =>
+                match dvr_key {
+                    PublicKeyOption::KeysetEndpoint(keyset) => {
+                        Ok(PublicKeyOption::KeysetEndpoint(keyset))
+                    }
+                    PublicKeyOption::PublicKey(publick_key) => {
+                        Ok(PublicKeyOption::PublicKey(publick_key))
+                    }
                 }
-                PublicKeyOption::PublicKey(publick_key) => {
-                    Ok(PublicKeyOption::PublicKey(publick_key))
-                }
-            },
             None => Err(ZkPassError::MissingPublicKey),
         }
     }
@@ -609,13 +495,13 @@ fn decode_unsecured(jwt: &str) -> Result<(DataVerificationRequest, Header), ZkPa
         (match decode::<WrappedDataVerificationRequest>(jwt, &decoding_key, &validation) {
             Ok(dvr_wrapped) => Ok((dvr_wrapped.claims.data, dvr_wrapped.header)),
             Err(_err) => Err(ZkPassError::MissingRootDataElementError),
-        })?,
+        })?
     )
 }
 
 pub fn get_public_key_options(
     jwt: &str,
-    is_user_data: bool,
+    is_user_data: bool
 ) -> Result<Option<PublicKeyOption>, ZkPassError> {
     let (payload, header) = decode_unsecured(jwt)?;
     if is_user_data {
@@ -638,7 +524,7 @@ pub async fn verify_dvr_nested_token(
     // resolver:               &Box<dyn KeysetEndpointResolver>,
     verify_dvr_publickey: PublicKey,
     decrypting_key: &str,
-    jwe_token: &str,
+    jwe_token: &str
 ) -> Result<VerifiedNestedTokenDvr, ZkPassError> {
     // step 1:
     // decrypt the outer token to get the inner token
@@ -674,4 +560,14 @@ pub async fn verify_dvr_nested_token(
         dvr,
         dvr_verifying_key,
     })
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Jwk {
+    pub kty: String,
+    pub crv: String,
+    pub kid: String,
+    pub x: String,
+    pub y: String,
+    pub jwt: Option<String>,
 }
