@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023
  * -----
- * Last Modified: November 29th 2023
- * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Last Modified: February 29th 2024
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -39,18 +39,18 @@ class GlobalRef<T> {
   }
 }
 
-interface DVRTable {
+interface DvrTable {
   [key: string]: DataVerificationRequest;
 }
 
-class DVRLookupTable {
-  private table: DVRTable = {};
+class DvrLookupTable {
+  private table: DvrTable = {};
 
-  public addDVR(dvr: DataVerificationRequest): void {
+  public addDvr(dvr: DataVerificationRequest): void {
     this.table[dvr.dvrId] = dvr;
   }
 
-  public getDVR(key: string): DataVerificationRequest | undefined {
+  public getDvr(key: string): DataVerificationRequest | undefined {
     const item = this.table[key];
 
     if (item) {
@@ -62,9 +62,9 @@ class DVRLookupTable {
   }
 }
 const DVR_TABLE_NAME = "zkpass.dvr_table";
-const dvrTable = new GlobalRef<DVRLookupTable>(DVR_TABLE_NAME);
+const dvrTable = new GlobalRef<DvrLookupTable>(DVR_TABLE_NAME);
 if (!dvrTable.value) {
-  dvrTable.value = new DVRLookupTable();
+  dvrTable.value = new DvrLookupTable();
 }
 
 export { dvrTable };

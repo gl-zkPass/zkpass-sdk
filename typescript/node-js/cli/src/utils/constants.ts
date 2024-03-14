@@ -7,8 +7,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 29th 2023
  * -----
- * Last Modified: January 20th 2024
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Last Modified: March 14th 2024
+ * Modified By: handrianalandi (handrian.alandi@gdplabs.id)
  * -----
  * Reviewers:
  *   Nugraha Tejapermana (nugraha.tejapermana@gdplabs.id)
@@ -22,7 +22,7 @@
 import { ZkPassApiKey } from "@didpass/zkpass-client-ts";
 
 // Holder constants
-export const ZKPASS_SERVICE_URL: string = "https://playground-zkpass.ssi.id/proof";
+export const ZKPASS_SERVICE_URL: string = "https://playground-zkpass.ssi.id";
 
 // Issuer constants
 export const ISSUER_PRIVKEY: string =
@@ -33,7 +33,7 @@ export const ISSUER_PRIVKEY: string =
   "-----END PRIVATE KEY-----\n";
 export const ISSUER_KID: string = "k-1";
 export const ISSUER_JKU: string =
-  "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/issuer-key.json";
+  "https://raw.githubusercontent.com/gl-zkPass/zkpass-sdk/main/docs/zkpass/sample-jwks/issuer-key.json";
 
 // Verifier constants
 export const VERIFIER_PRIVKEY: string = `-----BEGIN PRIVATE KEY-----
@@ -43,10 +43,11 @@ export const VERIFIER_PRIVKEY: string = `-----BEGIN PRIVATE KEY-----
     -----END PRIVATE KEY-----`;
 export const VERIFIER_KID: string = "k-1";
 export const VERIFIER_JKU: string =
-  "https://gdp-admin.github.io/zkpass-sdk/zkpass/sample-jwks/verifier-key.json";
+  "https://raw.githubusercontent.com/gl-zkPass/zkpass-sdk/main/docs/zkpass/sample-jwks/verifier-key.json";
 export const EXPECTED_DVR_TTL: number = 600;
 
 // API Keys
 export const KEY = "5ecb2229-ddee-460e-b598-a0001c10fff1";
 export const SECRET = "074a53a8-a252-45de-a9d5-0961a6362df6";
 export const API_KEY: ZkPassApiKey = new ZkPassApiKey(KEY, SECRET);
+export const ZKPASS_ZKVM = "r0";

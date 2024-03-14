@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 21st 2023
  * -----
- * Last Modified: January 9th 2024
+ * Last Modified: February 29th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -23,7 +23,7 @@ import {
   MetadataValidatorResult,
   PublicKeyWrapped,
   KeysetEndpointWrapped,
-  VerifyZkpassProofResult,
+  VerifyZkPassProofResult,
   ZkPassProofMetadataValidator
 } from "@didpass/zkpass-client-ts";
 import { dvrTable } from "./utils/dvrTable";
@@ -37,6 +37,7 @@ import {
   VERIFIER_JKU,
   VERIFIER_KID,
   VERIFIER_PRIVKEY,
+  ZKPASS_ZKVM,
 } from "./utils/constants";
 
 class MyMetadataValidator implements ZkPassProofMetadataValidator {
@@ -45,7 +46,7 @@ class MyMetadataValidator implements ZkPassProofMetadataValidator {
   async validate(dvrId: string): Promise<MetadataValidatorResult> {
     // Modify this function to validate the metadata of the proof
     // In this example, we are validating that the DVR title matches the one we issued.
-    const dvr = dvrTable.value.getDVR(dvrId);
+    const dvr = dvrTable.value.getDvr(dvrId);
     if (!dvr) {
       throw new Error("DVR not found");
     }
@@ -111,6 +112,7 @@ export class MyVerifier extends Verifier {
       dvr_verifying_key: {
         KeysetEndpoint: verifierPubkey,
       },
+      zkvm: ZKPASS_ZKVM
     };
 
     //
@@ -126,15 +128,15 @@ export class MyVerifier extends Verifier {
     // Save the dvr to a global hash table
     // This will be needed by the validator to check the proof metadata
     const dvr = this.getDvr();
-    dvrTable.value.addDVR(dvr);
+    dvrTable.value.addDvr(dvr);
 
     return dvrToken;
   }
 
-  async verifyZkpassProof(
-    zkpassProofToken: string
-  ): Promise<VerifyZkpassProofResult> {
-    console.log("\n#### starting zkpass proof verification...");
+  async verifyZkPassProof(
+    zkPassProofToken: string
+  ): Promise<VerifyZkPassProofResult> {
+    console.log("\n#### starting zkPass proof verification...");
     const start = Date.now();
 
     const proofMetadataValidator = new MyMetadataValidator();
@@ -142,9 +144,9 @@ export class MyVerifier extends Verifier {
     // Step 1: Instantiate the zkPassClient object.
     // In this example, we have instantiated the zkPassClient object in the constructor.
 
-    // Step 2: Call zkPassClient.verifyZkpassProof to verify the proof.
-    const proofResult = await this.zkPassClient.verifyZkpassProof(
-      zkpassProofToken,
+    // Step 2: Call zkPassClient.verifyZkPassProof to verify the proof.
+    const proofResult = await this.zkPassClient.verifyZkPassProof(
+      zkPassProofToken,
       proofMetadataValidator
     );
 

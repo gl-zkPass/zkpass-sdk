@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 21st 2023
  * -----
- * Last Modified: January 3rd 2024
+ * Last Modified: February 29th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -26,18 +26,20 @@ export class MyHolder extends Holder {
     userDataToken: string,
     dvrToken: string,
     zkPassServiceUrl: string,
-    apiKey: ZkPassApiKey
+    apiKey: ZkPassApiKey,
+    zkPassZkvm: string,
   ): Promise<string> {
-    console.log("\n#### starting zkpass proof generation...");
+    console.log("\n#### starting zkPass proof generation...");
     const start = Date.now();
 
     //
     // Step 1: Create zkPass proof
     //         using the userDataToken and dvrToken
     //
-    const zkpassProofToken = await this.createZkPassProof(
+    const zkPassProofToken = await this.createZkPassProof(
       zkPassServiceUrl,
       apiKey,
+      zkPassZkvm,
       userDataToken,
       dvrToken,
     );
@@ -45,6 +47,6 @@ export class MyHolder extends Holder {
     const duration = Date.now() - start;
     console.log(`#### generation completed [time=${duration}ms]`);
 
-    return zkpassProofToken;
+    return zkPassProofToken;
   }
 }
