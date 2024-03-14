@@ -6,8 +6,8 @@
  *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * Created at: November 7th 2023
  * -----
- * Last Modified: February 29th 2024
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Last Modified: March 13th 2024
+ * Modified By: handrianalandi (handrian.alandi@gdplabs.id)
  * -----
  * Reviewers:
  *   JaniceLaksana (janice.laksana@gdplabs.id)
@@ -153,13 +153,15 @@ const HomePage = () => {
         ZKPASS_API_SECRET
       );
 
-      const zkPassClient = new ZkPassClient(zkPassUrl, zkPassApiKey);
+      const zkPassClient = new ZkPassClient({
+        zkPassServiceUrl: zkPassUrl, 
+        zkPassApiKey});
 
       /**
        * Step 2
        * Generate ZkPass Proof by ZkPass Url
        */
-      const result: any = await zkPassClient.generateZkpassProof(
+      const result: any = await zkPassClient.generateZkPassProof(
         userDataToken!,
         dvrToken!
       );
