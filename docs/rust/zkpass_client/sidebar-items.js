@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["core","interface"]};
+window.SIDEBAR_ITEMS = {"fn":["package_version"],"mod":["core","interface"]};
