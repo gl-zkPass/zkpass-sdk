@@ -6,11 +6,11 @@
  *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * Created at: January 20th 2024
  * -----
- * Last Modified: March 13th 2024
+ * Last Modified: April 3rd 2024
  * Modified By: handrianalandi (handrian.alandi@gdplabs.id)
  * -----
  * Reviewers:
- *   
+ *
  * ---
  * References:
  *   NONE
@@ -32,6 +32,6 @@ export const USER_DATA_TOKEN =
 // 5. Account Savings Balance >= 30000000
 export const DVR_TOKEN =
   'eyJ0eXAiOiJKV1QiLCJqa3UiOiJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vZ2wtemtQYXNzL3prcGFzcy1zZGsvbWFpbi9kb2NzL3prcGFzcy9zYW1wbGUtandrcy92ZXJpZmllci1rZXkuanNvbiIsImtpZCI6ImstMSIsImFsZyI6IkVTMjU2In0.eyJkYXRhIjp7Inprdm0iOiJyMCIsImR2cl90aXRsZSI6Ik15IERWUiIsImR2cl9pZCI6IjEyMzQ1Njc4IiwicXVlcnlfZW5naW5lX3ZlciI6IjAuMy4wLXJjLjEiLCJxdWVyeV9tZXRob2RfdmVyIjoiNGFlZGY2NGE3YzRlMzcxMzUyNzRiNzYyNzRkMTRhMTkyZTNhZmJlNGViYTEyZjNjOTA0MmI1ZTc5ZjJkNTQiLCJxdWVyeSI6IntcImFuZFwiOlt7XCI9PVwiOltcImJjYURvY0lEXCIsXCJET0M4OTc5MjNDUFwiXX0se1wifj09XCI6W1wicGVyc29uYWxJbmZvLmZpcnN0TmFtZVwiLFwiRGV3aVwiXX0se1wifj09XCI6W1wicGVyc29uYWxJbmZvLmxhc3ROYW1lXCIsXCJQdXRyaVwiXX0se1wifj09XCI6W1wicGVyc29uYWxJbmZvLmRyaXZlckxpY2Vuc2VOdW1iZXJcIixcIkRMMTIzNDU2Nzg5XCJdfSx7XCI-PVwiOltcImZpbmFuY2lhbEluZm8uY3JlZGl0UmF0aW5ncy5wZWZpbmRvXCIsNjUwXX0se1wiPj1cIjpbXCJmaW5hbmNpYWxJbmZvLmFjY291bnRzLnNhdmluZ3MuYmFsYW5jZVwiLDMwMDAwMDAwXX1dfSIsInVzZXJfZGF0YV91cmwiOiJodHRwczovL3h5ei5jb20iLCJ1c2VyX2RhdGFfdmVyaWZ5aW5nX2tleSI6eyJLZXlzZXRFbmRwb2ludCI6eyJqa3UiOiJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vZ2wtemtQYXNzL3prcGFzcy1zZGsvbWFpbi9kb2NzL3prcGFzcy9zYW1wbGUtandrcy9pc3N1ZXIta2V5Lmpzb24iLCJraWQiOiJrLTEifX0sImR2cl92ZXJpZnlpbmdfa2V5Ijp7IktleXNldEVuZHBvaW50Ijp7ImprdSI6Imh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9nbC16a1Bhc3MvemtwYXNzLXNkay9tYWluL2RvY3MvemtwYXNzL3NhbXBsZS1qd2tzL3ZlcmlmaWVyLWtleS5qc29uIiwia2lkIjoiay0xIn19fX0.gWc8T2-1fomPF8OCUSzLLobkb6fgBe-7vyB5zdji0hDudkOa3UvR3hp4uPOxjBxsI_aAUYg4v06TJkVKq7um5w';
-export const ZKPASS_URL = 'https://playground-zkpass.ssi.id';
-export const ZKPASS_API_KEY = '5ecb2229-ddee-460e-b598-a0001c10fff1';
-export const ZKPASS_API_SECRET = '074a53a8-a252-45de-a9d5-0961a6362df6';
+export const ZKPASS_URL = 'https://staging-zkpass.ssi.id';
+export const ZKPASS_API_KEY = 'e7fd7ec9-33b2-4f33-a383-c2f1d151a7c2';
+export const ZKPASS_API_SECRET = '6a79ffa2-5fe8-4764-8edf-0ebc5dbcccf9';

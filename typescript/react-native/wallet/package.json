@@ -11,7 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@didpass/zkpass-client-react-native": "^0.3.0-rc.1",
+    "@didpass/zkpass-client-react-native": "^1.0.0-alpha.1",
     "@react-native-clipboard/clipboard": "^1.12.1",
     "@tradle/react-native-http": "^2.0.1",
     "events": "^1.1.1",
