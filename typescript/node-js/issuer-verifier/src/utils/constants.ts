@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created at: December 15th 2023
  * -----
- * Last Modified: March 14th 2024
- * Modified By: handrianalandi (handrian.alandi@gdplabs.id)
+ * Last Modified: April 16th 2024
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
  *   NONE
@@ -39,8 +39,11 @@ export const ISSUER_JWKS_URL =
   "https://raw.githubusercontent.com/gl-zkPass/zkpass-sdk/main/docs/zkpass/sample-jwks/issuer-key.json";
 export const ISSUER_JWKS_KID = "k-1";
 
-export const API_KEY = "5ecb2229-ddee-460e-b598-a0001c10fff1";
-export const API_SECRET = "074a53a8-a252-45de-a9d5-0961a6362df6";
-export const ZKPASS_SERVICE_URL = "https://playground-zkpass.ssi.id";
+// export const API_KEY = "5ecb2229-ddee-460e-b598-a0001c10fff1";
+// export const API_SECRET = "074a53a8-a252-45de-a9d5-0961a6362df6";
+// export const ZKPASS_SERVICE_URL = "https://playground-zkpass.ssi.id";
+export const API_KEY = "api_1";
+export const API_SECRET = "secret_api_1";
+export const ZKPASS_SERVICE_URL = "http://localhost:10888";
 
 export const ZKPASS_ZKVM = "r0";
