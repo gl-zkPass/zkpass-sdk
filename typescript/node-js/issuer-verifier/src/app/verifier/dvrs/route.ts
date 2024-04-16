@@ -6,7 +6,7 @@
  *   Zulchaidir (zulchaidir@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: February 29th 2024
+ * Last Modified: April 16th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -165,28 +165,66 @@ function _generateBloodTestQuery(user: User): string {
   /**
    * Update this query to match your needs.
    */
-  const query = {
-    and: [
-      {
-        "==": ["lab.ID", "QH801874"],
+  const query = [
+    {
+      assign: {
+        lab_id: {"==": [{ dvar: "lab.ID" }, "QH801874"]}
+      }
+    },
+    {
+      assign: {
+        test_id: {
+          "==": [{ dvar: "testID" }, "SCREEN-7083-12345"]
+        }
+      }
+    },
+    {
+      assign: {
+        subject_first_name: {
+          "~==": [{ dvar: "subject.firstName" }, user.firstName]
+        }
+      }
+    },
+    {
+      assign: {
+        subject_last_name: {
+          "~==": [{ dvar: "subject.lastName" }, user.lastName]
+        }
+      }
+    },
+    {
+      assign: {
+        subject_date_of_birth: {
+          "==": [
+            { dvar: "subject.dateOfBirth" },
+            user.dateOfBirth,
+          ]
+        }
+      }
+    },
+    {
+      assign: {
+        measuredPanelsNgML_cocaine: {
+          "<=": [{ dvar: "measuredPanelsNgML.cocaine" }, 10]
+        }
+      }
+    },
+    {
+      assign: {
+        test_passed: {
+          and: [
+            { lvar: "lab_id" },
+            { lvar: "test_id" },
+            { lvar: "subject_first_name" },
+            { lvar: "subject_last_name" },
+            { lvar: "subject_date_of_birth" },
+            { lvar: "measuredPanelsNgML_cocaine" },
+          ],
+        },
       },
-      {
-        "==": ["testID", "SCREEN-7083-12345"],
-      },
-      {
-        "~==": ["subject.firstName", user.firstName],
-      },
-      {
-        "~==": ["subject.lastName", user.lastName],
-      },
-      {
-        "==": ["subject.dateOfBirth", user.dateOfBirth],
-      },
-      {
-        "<=": ["measuredPanelsNgML.cocaine", 10],
-      },
-    ],
-  };
+    },
+    { output: { result: { lvar: "test_passed" } } },
+  ];
 
   return JSON.stringify(query);
 }
