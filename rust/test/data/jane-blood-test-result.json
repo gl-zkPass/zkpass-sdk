@@ -9,20 +9,15 @@
   },
   "subject": {
     "firstName": "Jane",
-    "lastName":  "Doe",
+    "_firstName_zkpass_public_": true,
+    "lastName": "Doe",
     "dateOfBirth": "1985-12-12",
     "bloodType": "A+",
     "DNAInfo": {
       "markers": {
-        "APOE": [
-          "E3",
-          "E3"
-        ],
+        "APOE": ["E3", "E3"],
         "BRCA1": "Normal",
-        "MTHFR": [
-          "C677T",
-          "A1298C"
-        ]
+        "MTHFR": ["C677T", "A1298C"]
       },
       "haplogroups": {
         "paternal": "R1b1",
@@ -31,6 +26,7 @@
     },
     "contact": {
       "email": "jane.doe@gmail.com",
+      "_email_zkpass_public_": true,
       "phone": "650-555-1234"
     },
     "address": {
@@ -47,4 +43,3 @@
     "benzodiazepines": 0
   }
 }
-

@@ -1,6 +1,6 @@
 use crate::constants;
 use lazy_static::lazy_static;
-use serde_json::{json, Value};
+use serde_json::{ json, Value };
 use std::collections::HashMap;
 use std::io::prelude::*;
 use std::sync::Mutex;
@@ -8,10 +8,17 @@ use std::time::Instant;
 use tracing::trace;
 use uuid::Uuid;
 use zkpass_client::core::{
-    DataVerificationRequest, KeysetEndpoint, PublicKey, PublicKeyOption, ZkPassError,
+    DataVerificationRequest,
+    KeysetEndpoint,
+    PublicKey,
+    PublicKeyOption,
+    ZkPassError,
 };
 use zkpass_client::interface::{
-    ZkPassClient, ZkPassProofMetadataValidator, ZkPassProofVerifier, ZkPassUtility,
+    ZkPassClient,
+    ZkPassProofMetadataValidator,
+    ZkPassProofVerifier,
+    ZkPassUtility,
 };
 
 //
@@ -63,15 +70,11 @@ impl MyMetadataValidator {
 impl ZkPassProofMetadataValidator for MyMetadataValidator {
     fn validate(
         &self,
-        dvr_id: &str,
+        dvr_id: &str
     ) -> Result<(DataVerificationRequest, PublicKey, u64), ZkPassError> {
         let expected_ttl: u64 = 600;
 
-        Ok((
-            self.get_expected_dvr(dvr_id)?,
-            self.get_expected_dvr_verifying_key(),
-            expected_ttl,
-        ))
+        Ok((self.get_expected_dvr(dvr_id)?, self.get_expected_dvr_verifying_key(), expected_ttl))
     }
 }
 
@@ -85,22 +88,20 @@ impl ProofVerifier {
     //  Simulating the Proof Verifier's get_dvr_token REST API
     //
     pub fn get_dvr_token(&self, zkvm: &str, dvr_file: &str) -> String {
-        const VERIFIER_PRIVKEY: &str = r"-----BEGIN PRIVATE KEY-----
+        const VERIFIER_PRIVKEY: &str =
+            r"-----BEGIN PRIVATE KEY-----
         MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgLxxbcd7aVcNEdE/C
         EGPwLzM6lkLuDYzhd3FqALuuHCahRANCAASnpYmXAC2V39TiEOaa64x1kJW0x5Qh
         PfGQN1TAs6+xVUD6KJLB9pfgeoqVE8MYb4XpYaOfHKz1Pka017ee97A4
         -----END PRIVATE KEY-----";
-
         let mut query_content = std::fs::File::open(dvr_file).expect("Cannot find the dvr file");
         let mut query = String::new();
-        query_content
-            .read_to_string(&mut query)
-            .expect("Should not have I/O errors");
+        query_content.read_to_string(&mut query).expect("Should not have I/O errors");
         trace!("query={}", query);
 
         let kid = String::from("k-1");
         let jku = String::from(
-            "https://raw.githubusercontent.com/gl-zkPass/zkpass-sdk/main/docs/zkpass/sample-jwks/verifier-key.json",
+            "https://raw.githubusercontent.com/gl-zkPass/zkpass-sdk/main/docs/zkpass/sample-jwks/verifier-key.json"
         );
         let ep = KeysetEndpoint { jku, kid };
         // issuer's pubkey params:
@@ -165,12 +166,13 @@ impl ProofVerifier {
     //
     //  Simulating the Proof Verifier's verify_zkpass_proof REST API
     //
-    pub async fn verify_zkpass_proof(&self, zkvm: &str, zkpass_proof_token: &str) -> bool {
+    pub async fn verify_zkpass_proof(&self, zkvm: &str, zkpass_proof_token: &str) -> String {
         println!("\n#### starting zkpass proof verification...");
         let start = Instant::now();
 
-        let proof_metadata_validator =
-            Box::new(MyMetadataValidator) as Box<dyn ZkPassProofMetadataValidator>;
+        let proof_metadata_validator = Box::new(MyMetadataValidator) as Box<
+            dyn ZkPassProofMetadataValidator
+        >;
 
         //
         //  Proof Verifier's integration points with the zkpass-client SDK library
@@ -191,8 +193,7 @@ impl ProofVerifier {
         // Step 2: Call zkpass_client.verify_zkpass_proof to verify the proof.
         //
         let (result, _zkpass_proof) = zkpass_client
-            .verify_zkpass_proof(zkpass_proof_token, &proof_metadata_validator)
-            .await
+            .verify_zkpass_proof(zkpass_proof_token, &proof_metadata_validator).await
             .unwrap();
 
         let duration = start.elapsed();

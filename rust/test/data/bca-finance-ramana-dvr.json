@@ -1,41 +1,46 @@
-{
-    "and": [
-      {
-        "==": [
-          "bcaDocID",
-          "DOC897923CP"
-        ]
-      },
-      {
-        "~==": [
-          "personalInfo.firstName",
-          "Ramana"
-        ]
-      },
-      {
-        "~==": [
-          "personalInfo.lastName",
-          "Maharshi"
-        ]
-      },
-      {
-        "~==": [
-          "personalInfo.driverLicenseNumber",
-          "DL77108108"
-        ]
-      },
-      {
-        ">=": [
-          "financialInfo.creditRatings.pefindo",
-          650
-        ]
-      },
-      {
-        ">=": [
-          "financialInfo.accounts.savings.balance",
-          55000000
+[
+  {
+    "assign": {
+      "result_status": {
+        "and": [
+          {
+            "==": [{ "dvar": "bcaDocID" }, "DOC897923CP"]
+          },
+          {
+            ">=": [
+              {"get_age": [{ "dvar": "personalInfo.dateOfBirth" }, "MM/DD/YYYY"]},
+              21
+            ]
+          },
+          {
+            "~==": [
+              { "dvar": "contactInfo.address.city" },
+              "jakarta"
+            ]
+          },
+          {
+            ">=": [{ "dvar": "financialInfo.creditRatings.pefindo" }, 650]
+          },
+          {
+            ">=": [
+              { "dvar": "financialInfo.accounts.savings.balance" },
+              55000000
+            ]
+          }
         ]
       }
-    ]
-}
+    }
+  },
 
+  { "output": { "title": "Loan Query Results" } },
+  { "output": { "result": { "lvar": "result_status" } } },
+  {
+    "if": {
+      "condition": { "lvar": "result_status" },
+      "then": [
+        { "output": { "name": { "dvar": "personalInfo.firstName" } } },
+        { "output": { "email": { "dvar": "contactInfo.email" } } }
+      ]
+    }
+  }
+]
