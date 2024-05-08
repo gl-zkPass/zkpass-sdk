@@ -10,7 +10,7 @@
  *   JaniceLaksana (janice.laksana@gdplabs.id)
  * Created at: September 21st 2023
  * -----
- * Last Modified: April 29th 2024
+ * Last Modified: May 8th 2024
  * Modified By: Zulchaidir (zulchaidir@gdplabs.id)
  * -----
  * Reviewers:
@@ -25,6 +25,8 @@
  * ---
  * Copyright (c) 2024 PT Darta Media Indonesia. All rights reserved.
  */
+
+use std::time::Duration;
 
 use tracing::info;
 use async_trait::async_trait;
@@ -45,6 +47,7 @@ const GENERATE_PROOF_PATH: &str = "v1/proof";
 
 const KID_SERVICE_ENCRYPTION_PUB_KEY: &str = "ServiceEncryptionPubK";
 const KID_SERVICE_SIGNING_PUB_KEY: &str = "ServiceSigningPubK";
+const DEFAULT_TIMEOUT: u64 = 60;
 
 impl ZkPassClient {
     pub fn new(
@@ -171,10 +174,12 @@ impl ZkPassProofGenerator for ZkPassClient {
             "dvr_token": &dvr_enc
         });
 
+        let timeout = Duration::from_secs(DEFAULT_TIMEOUT);
         let api_key_token = format!("Basic {}", self.get_api_token()?);
         let request = reqwest::Client
             ::new()
             .post(format!("{}/{}", &self.zkpass_service_url, GENERATE_PROOF_PATH))
+            .timeout(timeout)
             .header("Authorization", api_key_token);
         let request = inject_client_version_header(request);
         let response = match request.json(&data).send().await {
@@ -192,8 +197,9 @@ impl ZkPassProofGenerator for ZkPassClient {
                 return Err(ZkPassError::CustomError(e.to_string()));
             }
         };
-        let response_body: Value = serde_json::from_str(&response_body).unwrap();
+
         if is_response_success {
+            let response_body: Value = serde_json::from_str(&response_body).unwrap();
             // extract the proof under the root "proof" element
             let proof = response_body["proof"].as_str().unwrap().to_string();
             Ok(proof)
