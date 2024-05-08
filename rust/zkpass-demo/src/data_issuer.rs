@@ -4,6 +4,8 @@ use tracing::info;
 use zkpass_client::core::KeysetEndpoint;
 use zkpass_client::interface::{ ZkPassClient, ZkPassUtility };
 
+use crate::constants::ISSUER_PRIVKEY;
+
 //
 //  Simulating the REST call to the Data Issuer
 //
@@ -17,13 +19,6 @@ impl DataIssuer {
     // This function simulates the Data Issuer's get_user_data_token REST API
     //
     pub fn get_user_data_token(&self, zkvm: &str, data_file: &str) -> String {
-        const ISSUER_PRIVKEY: &str =
-            r"-----BEGIN PRIVATE KEY-----
-        MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg3J/wAlzSD8ZyAU8f
-        bPkuCY/BSlq2Y2S5hym8sRccpZehRANCAATt/RChVSxxwH3IzAcBHuhWT8v5mRfx
-        moLVnRdNqPcExwyeqH5XN0dlffIYprf66E0CEpZbJ8H+v7cTys9Ie1dd
-        -----END PRIVATE KEY-----";
-
         let mut data_content = std::fs::File
             ::open(data_file)
             .expect("Cannot find the user data file");

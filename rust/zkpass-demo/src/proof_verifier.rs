@@ -1,4 +1,4 @@
-use crate::constants;
+use crate::constants::{ self, VERIFIER_PRIVKEY };
 use lazy_static::lazy_static;
 use serde_json::{ json, Value };
 use std::collections::HashMap;
@@ -88,12 +88,6 @@ impl ProofVerifier {
     //  Simulating the Proof Verifier's get_dvr_token REST API
     //
     pub fn get_dvr_token(&self, zkvm: &str, dvr_file: &str) -> String {
-        const VERIFIER_PRIVKEY: &str =
-            r"-----BEGIN PRIVATE KEY-----
-        MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgLxxbcd7aVcNEdE/C
-        EGPwLzM6lkLuDYzhd3FqALuuHCahRANCAASnpYmXAC2V39TiEOaa64x1kJW0x5Qh
-        PfGQN1TAs6+xVUD6KJLB9pfgeoqVE8MYb4XpYaOfHKz1Pka017ee97A4
-        -----END PRIVATE KEY-----";
         let mut query_content = std::fs::File::open(dvr_file).expect("Cannot find the dvr file");
         let mut query = String::new();
         query_content.read_to_string(&mut query).expect("Should not have I/O errors");
