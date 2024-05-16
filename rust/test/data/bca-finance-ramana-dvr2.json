@@ -1,0 +1,65 @@
+[
+  {
+    "assign": {
+      "age_status":
+          {
+            ">=": [
+              {"get_age": [{ "dvar": "personalInfo.dateOfBirth" }, "MM/DD/YYYY"]},
+              21
+            ]
+          }
+    }
+  },
+
+  {
+    "assign": {
+      "residence_status":
+          {
+            "~==": [
+              { "dvar": "contactInfo.address.city" },
+              "jakarta"
+            ]
+          }
+    }
+  },
+
+  {
+    "assign": {
+      "balance_status":
+          {
+            ">=": [
+              { "dvar": "financialInfo.accounts.savings.balance" },
+              55000000
+            ]
+          }
+    }
+  },
+
+  {
+    "assign": {
+      "loan_approval": {
+        "and": [
+          { "lvar": "age_status" },
+          { "lvar": "residence_status" },
+          { "lvar": "balance_status" }
+        ]
+      }
+    }
+  },
+
+  { "output": { "title": "Loan Query Results" } },
+  { "output": { "result": { "lvar": "loan_approval" } } },
+  {
+    "if": {
+      "condition": { "lvar": "loan_approval" },
+      "then": [
+        { "output": { "name": { "dvar": "personalInfo.firstName" } } }
+      ],
+      "else": [
+        { "output": { "age_status": { "lvar": "age_status" } } },
+        { "output": { "residence_status": { "lvar": "residence_status" } } },
+        { "output": { "balance_status": { "lvar": "balance_status" } } }
+      ]
+    }
+  }
+]
