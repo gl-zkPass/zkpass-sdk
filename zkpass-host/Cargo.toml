@@ -1,0 +1,31 @@
+[package]
+name = "zkpass-host"
+version = "1.0.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+zkpass-core = { path = "../zkpass-core" }
+r0-zkpass-query = { path = "../zkpass-query/risc0/host" }
+sp1-zkpass-query = { path = "../zkpass-query/sp1/script" }
+zkpass-svc-common = { path = "../zkpass-svc-common" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.97"
+futures = "0.3.28"
+clap = "3.2"
+openssl = { version = "0.10", features = ["vendored"] }
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+tracing-core = "0.1.17"
+chrono = "0.4"
+tokio = { version = "1", features = ["full"] }
+tokio-util = { version = "0.7", features = ["full"] }
+lazy_static = "1.4.0"
+base64 = "0.21.4"
+sha2 = "0.10.8"
+dotenvy = "0.15.7"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+vsock = "0.5.0"
+serial_test = "3.0.0"
