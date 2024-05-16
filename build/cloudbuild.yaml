@@ -1,0 +1,156 @@
+steps:
+  - id: decrypt env
+    name: gcr.io/cloud-builders/gcloud
+    dir: zkpass-ws
+    args:
+      - kms
+      - decrypt
+      - --ciphertext-file=stag-zkPass.env.enc
+      - --plaintext-file=zkPass.env
+      - --location=global
+      - --keyring=cloudbuild
+      - --key=zkpass
+
+  - id: Download Key from S3
+    name: amazon/aws-cli:2.15.15
+    entrypoint: /bin/bash
+    args:
+      - '-c'
+      - |
+        set -e
+        aws s3 cp --region ${_AWS_BUCKET_REGION} s3://${_AWS_KEYGEN_BUCKET_NAME}/ . --recursive
+    env:
+      - 'HOME=/root'
+    secretEnv:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+
+  - id: Build
+    name: gcr.io/cloud-builders/docker
+    entrypoint: /bin/bash
+    args:
+      - '-c'
+      - |
+        chown -R 1000:1000 .
+        docker compose -f build/docker-compose-gcb.yml run --rm ${_MODULE}
+    env:
+      - 'ENV=${_ENV}'
+
+  - id: Create PR Cargo Release
+    name: gcr.io/glair-ci/github:2.49.0    
+    entrypoint: /bin/bash
+    dir: build
+    args:
+      - '-c'
+      - |
+        set -e
+        git config --global --add safe.directory /workspace
+        /bin/bash create-pr.sh
+    secretEnv:
+      - 'GH_TOKEN'
+
+  - id: Build Host Image
+    name: gcr.io/cloud-builders/docker
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGISTRY_URL}/${_PROJECT}/host:${_ENV}'
+      - '--cache-from'
+      - '${_REGISTRY_URL}/${_PROJECT}/host:${_ENV}'
+      - '--build-arg'
+      - 'BUILDKIT_INLINE_CACHE=1'
+      - '-f'
+      - 'Dockerfile.host'
+      - '.'
+    waitFor:
+      - 'Build'
+
+  - id: Build WS Image
+    name: gcr.io/cloud-builders/docker
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGISTRY_URL}/${_PROJECT}/ws:${_ENV}'
+      - '--cache-from'
+      - '${_REGISTRY_URL}/${_PROJECT}/ws:${_ENV}'
+      - '--build-arg'
+      - 'BUILDKIT_INLINE_CACHE=1'
+      - '-f'
+      - 'Dockerfile.ws'
+      - '.'
+    waitFor:
+      - 'Build'
+
+  # - id: Upload Artifact
+  #   name: gcr.io/cloud-builders/gsutil
+  #   args: ['cp', 'target.tar.gz', 'gs://gdplabs-ci-artifact/$_PROJECT/${_ENV}/target-${SHORT_SHA}.tar.gz']
+  #   waitFor:
+  #     - 'Build'
+
+  - id: Upload Artifact to S3
+    name: amazon/aws-cli:2.15.15
+    entrypoint: /bin/bash
+    args:
+      - '-c'
+      - |
+        set -e
+        aws s3 cp --region ${_AWS_BUCKET_REGION} build/docker-compose.yml s3://${_AWS_BUCKET_NAME}/service/
+        aws s3 cp --region ${_AWS_BUCKET_REGION} zkpass-ws/zkPass.env s3://${_AWS_BUCKET_NAME}/service/
+    env:
+      - 'HOME=/root'
+    secretEnv:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+
+  - id: Push Container Image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: /bin/bash
+    args:
+      - '-c'
+      - |
+        docker push -a ${_REGISTRY_URL}/${_PROJECT}/host
+        docker push -a ${_REGISTRY_URL}/${_PROJECT}/ws
+
+  - id: Deployment
+    name: us.gcr.io/glair01/deployer:vision
+    entrypoint: 'bash'
+    dir: build
+    args:
+      - '-c'
+      - |
+        set -e
+        /bin/bash deploy.sh ${_AWS_ASG_NAME}
+    env:
+      - 'HOME=/root'
+      - 'AWS_DEFAULT_REGION=${_AWS_ASG_REGION}'
+    secretEnv:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+
+  - id: Remove Key
+    name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "bash"
+    args:
+      - '-c'
+      - |
+        rm -f key-pairs.json public-keys.json
+
+timeout: 60m
+substitutions:
+  _PROJECT: zkpass
+  _REGISTRY_URL: asia.gcr.io/gdp-labs
+
+
+options:
+  machineType: E2_HIGHCPU_32
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/SWISS_STAGING_AWS_ACCESS_KEY_ID/versions/latest
+      env: 'AWS_ACCESS_KEY_ID'
+    - versionName: projects/$PROJECT_ID/secrets/SWISS_STAGING_AWS_SECRET_ACCESS_KEY/versions/latest
+      env: 'AWS_SECRET_ACCESS_KEY'
+    - versionName: projects/$PROJECT_ID/secrets/INFRA_GL_GITHUB_TOKEN/versions/latest
+      env: 'GH_TOKEN'
+
+tags: ["swiss"]

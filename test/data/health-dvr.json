@@ -1,0 +1,12 @@
+[
+  {
+    "assign": {
+      "result_status": {
+        "==": [{ "dvar": "healthcheck" }, "ping"]
+      }
+    }
+  },
+  {
+    "output": { "result": { "lvar": "result_status" } }
+  }
+]
