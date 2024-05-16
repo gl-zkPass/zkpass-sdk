@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `User` ADD COLUMN `createdBy` VARCHAR(191) NOT NULL DEFAULT '',
+    ADD COLUMN `lastModifiedBy` VARCHAR(191) NOT NULL DEFAULT '';

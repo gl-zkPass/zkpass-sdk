@@ -1,0 +1,33 @@
+[
+  {
+    "assign": {
+      "status": {
+        "and": [
+          {
+            "==": [{ "dvar": "lab.ID" }, "XXXXQH801874"]
+          },
+          {
+            "==": [{ "dvar": "testID" }, "SCREEN-7083-12345"]
+          },
+          {
+            "==": [{ "dvar": "subject.firstName" }, "Jane"]
+          },
+          {
+            "==": [{ "dvar": "subject.lastName" }, "Doe"]
+          },
+          {
+            "==": [{ "dvar": "subject.dateOfBirth" }, "1985-12-12"]
+          },
+          {
+            "==": [{ "dvar": "measuredPanelsNgML.amphetamines" }, 0]
+          },
+          {
+            "<=": [{ "dvar": "measuredPanelsNgML.cocaine" }, 10]
+          }
+        ]
+      }
+    }
+  },
+  { "output": { "name": { "dvar": "subject.firstName" } } },
+  { "output": { "result": { "lvar": "status" } } }
+]
