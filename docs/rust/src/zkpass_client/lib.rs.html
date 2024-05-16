@@ -140,9 +140,6 @@
 <a href="#138" id="138">138</a>
 <a href="#139" id="139">139</a>
 <a href="#140" id="140">140</a>
-<a href="#141" id="141">141</a>
-<a href="#142" id="142">142</a>
-<a href="#143" id="143">143</a>
 </pre></div><pre class="rust"><code><span class="comment">/*
  * lib.rs
  *
@@ -150,8 +147,7 @@
  *   Antony Halim (antony.halim@gdplabs.id)
  * Created at: September 26th 2023
  * -----
- * Last Modified: March 7th 2024
- * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
+ * Last Modified: April 29th 2024
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -197,6 +193,7 @@
         decrypt_jwe_token,
         Jwk,
     };
+    <span class="kw">pub use </span>zkpass_query_types::{ Val, Entry, OutputReader };
 
     <span class="doccomment">///
     /// &lt;span style="font-size: 1.1em; color: #996515;"&gt; ***Contains the result of a zkPass query.*** &lt;/span&gt;
@@ -218,10 +215,7 @@
     <span class="kw">const </span>GET_QUERY_METHOD_VERSION_INTERNAL_FN: <span class="kw-2">&amp;</span>str = <span class="string">"get_query_method_version_internal"</span>;
     <span class="kw">const </span>GET_QUERY_ENGINE_VERSION_INTERNAL_FN: <span class="kw-2">&amp;</span>str = <span class="string">"get_query_engine_version_internal"</span>;
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>verify_zkproof(
-        zkvm: <span class="kw-2">&amp;</span>str,
-        receipt: <span class="kw-2">&amp;</span>str
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;ProofMethodOutput, ZkPassError&gt; {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>verify_zkproof(zkvm: <span class="kw-2">&amp;</span>str, receipt: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;String, ZkPassError&gt; {
         <span class="kw">let </span>dll = <span class="macro">format!</span>(<span class="string">"lib{}_{}"</span>, zkvm, ZKPASS_QUERY_DLL);
         <span class="kw">let </span>function = <span class="macro">format!</span>(<span class="string">"{}_{}"</span>, zkvm, VERIFY_ZKPROOF_INTERNAL_FN);
 
@@ -232,7 +226,7 @@
                 .map_err(|<span class="kw">_</span>| ZkPassError::MissingZkPassQueryLibrary)<span class="question-mark">?</span>;
 
             <span class="kw">let </span>func: libloading::Symbol&lt;
-                <span class="kw">unsafe extern </span><span class="string">"C" </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;ProofMethodOutput, ZkPassQueryEngineError&gt;
+                <span class="kw">unsafe extern </span><span class="string">"C" </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;String, ZkPassQueryEngineError&gt;
             &gt; = lib.get(function.as_bytes()).map_err(|<span class="kw">_</span>| ZkPassError::FunctionRetrievalError)<span class="question-mark">?</span>;
 
             <span class="macro">info!</span>(<span class="string">"&lt;&lt; verify_zkproof"</span>);
