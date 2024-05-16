@@ -1,0 +1,30 @@
+FROM ubuntu:22.04
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    pkg-config \
+    libssl-dev\
+    git
+
+RUN curl -O http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
+    dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb
+
+RUN useradd -ms /bin/bash builder
+
+USER builder
+
+RUN  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+ENV PATH="/home/builder/.cargo/bin:${PATH}:/home/builder/.sp1/bin"
+
+RUN curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash && \
+    rustup toolchain install nightly-2024-01-25-x86_64-unknown-linux-gnu && \
+    rustup override set nightly-2024-01-25-x86_64-unknown-linux-gnu && \
+    cargo install cargo-release && \
+    cargo binstall --no-confirm cargo-risczero && \
+    cargo risczero install && \
+    curl -L https://sp1.succinct.xyz | bash && sp1up
+
