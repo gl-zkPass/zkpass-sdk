@@ -1,0 +1,22 @@
+[
+  {
+    "api_key": "api_1",
+    "secret_api_key": "secret_api_1"
+  },
+  {
+    "api_key": "api_2",
+    "secret_api_key": "secret_api_2"
+  },
+  {
+    "api_key": "api_3",
+    "secret_api_key": "secret_api_3"
+  },
+  {
+    "api_key": "api_4",
+    "secret_api_key": "secret_api_4"
+  },
+  {
+    "api_key": "api_5",
+    "secret_api_key": "secret_api_5"
+  }
+]

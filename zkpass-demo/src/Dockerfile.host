@@ -1,0 +1,17 @@
+FROM asia.gcr.io/gdp-labs/gl-base/debian:stable-slim
+
+ENV TZ=Asia/Jakarta
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+COPY target/release/zkpass-host /
+
+COPY localization /localization
+
+COPY build/kms/kmstool_enclave_cli /
+
+COPY build/kms/libnsm.so /
+
+ENV LD_LIBRARY_PATH ":/libnsm.so"
+
+ENTRYPOINT ["/zkpass-host", "vsock", "--port", "5005", "--util-port", "50051"]

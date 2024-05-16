@@ -1,0 +1,17 @@
+services:
+  ws:
+    image: asia.gcr.io/gdp-labs/zkpass/ws:ENV
+    ports:
+      - "10888:10888"
+    security_opt:
+      - no-new-privileges:true
+    restart: always
+    mem_limit: ${MEM_LIMIT:-8g}
+    env_file:
+      - zkPass.env
+    networks:
+      - zkpass
+
+networks:
+  zkpass:
+    external: true
