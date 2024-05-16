@@ -1,47 +1,37 @@
-{
-    "and": [
-      {
-        "==": [
-          "lab.ID",
-          "QH801874"
-        ]
-      },
-      {
-        "==": [
-          "testID",
-          "SCREEN-7083-12345"
-        ]
-      },
-      {
-        "~==": [
-          "subject.firstName",
-          "jane"
-        ]
-      },
-      {
-        "~==": [
-          "subject.lastName",
-          "doe"
-        ]
-      },
-      {
-        "==": [
-          "subject.dateOfBirth",
-          "1985-12-12"
-        ]
-      },
-      {
-        "==": [
-          "measuredPanelsNgML.amphetamines",
-          0
-        ]
-      },
-      {
-        "<=": [
-          "measuredPanelsNgML.cocaine",
-          10
+[
+  {
+    "assign": {
+      "blood_test_status": {
+        "and": [
+          {
+            "==": [{ "dvar": "lab.ID" }, "QH801874"]
+          },
+          {
+            "==": [{ "dvar": "testID" }, "SCREEN-7083-12345"]
+          },
+          {
+            "~==": [{ "dvar": "subject.firstName" }, "jane"]
+          },
+          {
+            "~==": [{ "dvar": "subject.lastName" }, "doe"]
+          },
+          {
+            "==": [{ "dvar": "subject.dateOfBirth" }, "1985-12-12"]
+          },
+          {
+            "==": [{ "dvar": "subject.contact.email" }, "jane.doe@gmail.com"]
+          },
+          {
+            "==": [{ "dvar": "measuredPanelsNgML.amphetamines" }, 0]
+          },
+          {
+            "<=": [{ "dvar": "measuredPanelsNgML.cocaine" }, 10]
+          }
         ]
       }
-    ]
-}
-
+    }
+  },
+  { "output": { "name": { "dvar": "subject.firstName" } } },
+  { "output": { "email": { "dvar": "subject.contact.email" } } },
+  { "output": { "result": { "lvar": "blood_test_status" } } }
+]

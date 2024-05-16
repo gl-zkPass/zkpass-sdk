@@ -167,7 +167,7 @@ pub trait ZkPassProofVerifier {
         &self,
         zkpass_proof_token: &str,
         validator: &Box<dyn ZkPassProofMetadataValidator>
-    ) -> Result<(bool, ZkPassProof), ZkPassError> {
+    ) -> Result<(String, ZkPassProof), ZkPassError> {
         //
         //  zkp verification
         //
@@ -232,7 +232,7 @@ pub trait ZkPassProofVerifier {
     async fn verify_zkpass_proof_internal(
         &self,
         zkpass_proof_token: &str
-    ) -> Result<(bool, ZkPassProof), ZkPassError>;
+    ) -> Result<(String, ZkPassProof), ZkPassError>;
 
     /// # **Description**
     /// <span style="font-size: 1.2em; color: #996515;"> ***Returns the version information about the query engine.*** </span>
