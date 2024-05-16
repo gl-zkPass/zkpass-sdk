@@ -1,0 +1,8 @@
+{
+  "enclave_name": "zkpass_host",
+  "cpu_count": 6,
+  "memory_mib": 24000,
+  "eif_path": "/home/deployer/zkpass/zkpass_host.eif",
+  "enclave_cid": 16,
+  "debug_mode": true
+}
