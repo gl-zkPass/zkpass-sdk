@@ -1,0 +1,36 @@
+[
+  {
+    "assign": {
+      "result_status": {
+        "and": [
+          {
+            "==": [{ "dvar": "bcaDocID" }, "DOC897923CP"]
+          },
+          {
+            "~==": [{ "dvar": "personalInfo.firstName" }, "Dewi"]
+          },
+          {
+            "~==": [{ "dvar": "personalInfo.lastName" }, "Putri"]
+          },
+          {
+            "~==": [
+              { "dvar": "personalInfo.driverLicenseNumber" },
+              "DL123456789"
+            ]
+          },
+          {
+            ">=": [{ "dvar": "financialInfo.creditRatings.pefindo" }, 650]
+          },
+          {
+            ">=": [
+              { "dvar": "financialInfo.accounts.savings.balance" },
+              30000000
+            ]
+          }
+        ]
+      }
+    }
+  },
+  { "output": { "name": { "dvar": "personalInfo.firstName" } } },
+  { "output": { "result": { "lvar": "result_status" } } }
+]
