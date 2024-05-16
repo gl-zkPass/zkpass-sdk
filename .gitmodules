@@ -1,0 +1,3 @@
+[submodule "rust/third_party/zkPass"]
+	path = rust/third_party/zkPass
+	url = https://github.com/GDP-ADMIN/zkPass.git
