@@ -35,6 +35,15 @@ To run all unit tests, at the zkPass repo root dir run the following:
 
 ## Git Subtree
 
+**Adding a Subtree**
+<pre>
+  # Navigate to your main repository directory
+  cd zkpass-sdk
+    
+  # Add the zkpass-client directory from the remote repository as a subtree
+  git subtree add --prefix=rust/third_party/zkPass/directory_name https://github.com/GDP-ADMIN/zkPass.git development --squash
+</pre>
+
 **Updating a Subtree**
 <pre>
   # Navigate to your main repository directory
