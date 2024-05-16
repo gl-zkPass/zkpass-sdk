@@ -1,0 +1,74 @@
+steps:  
+  - id: build zkpass
+    name: gcr.io/cloud-builders/docker
+    entrypoint: /bin/bash
+    args:
+      - '-c'
+      - |
+        git config --global --add safe.directory /workspace
+        chown -R 1000:1000 .
+        docker compose -f docker-compose-gcb.yml run --rm zkpass
+  
+  - id: test and build
+    name: gcr.io/cloud-builders/docker
+    entrypoint: /bin/bash
+    args:
+      - '-c'
+      - |
+        chown -R root:root .
+        docker compose -f build/docker-compose-gcb.yml run --rm ${_MODULE}
+    env:
+      - "WORKDIR=${_MODULE}"
+    waitFor: ["build zkpass"]
+
+  # - id: push package.json to repo
+  #   name: 'asia.gcr.io/glair01/gl-base/github'
+  #   dir: zkpass-client-wrappers/${_MODULE}
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       git config --global user.name infra-gl
+  #       git config --global user.email infra-gl@gdplabs.id
+  #       git remote set-url origin https://infra-gl:$${GH_TOKEN}@github.com/${REPO_FULL_NAME}.git
+  #       git pull origin ${BRANCH_NAME}
+  #       git checkout ${BRANCH_NAME}
+  #       git add package.json package-lock.json
+  #       git commit -m "update version"
+  #       git push origin ${BRANCH_NAME}
+  #   secretEnv:
+  #     - 'GH_TOKEN'
+  
+  - id: set npmrc based on env
+    name: bash:alpine3.18
+    dir: zkpass-client-wrappers/${_MODULE}
+    args:
+      - mv
+      - .npmrc.${_ENV}
+      - .npmrc
+  
+  - id: authenticate to registry
+    name: gcr.io/cloud-builders/npm
+    args: ['run', 'artifactregistry-login']
+    dir: zkpass-client-wrappers/${_MODULE}
+
+  - id: publish sdk
+    name: 'node:18.13.0'
+    entrypoint: 'npm'
+    args: ['publish']
+    dir: zkpass-client-wrappers/${_MODULE}
+
+# availableSecrets:
+#   secretManager:
+#   - versionName: projects/$PROJECT_ID/secrets/INFRA_GL_GITHUB_TOKEN/versions/latest
+#     env: 'GH_TOKEN'
+
+options:
+  machineType: E2_HIGHCPU_32
+  env:
+    - 'DOCKER_BUILDKIT=1'
+    - 'COMPOSE_DOCKER_CLI_BUILD=1'
+
+timeout: 30m
+
+tags: ["swiss"]
