@@ -1,0 +1,30 @@
+steps: 
+  - id: Build Image
+    name: gcr.io/cloud-builders/docker
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGISTRY_URL}/${_PROJECT}:nightly'
+      - '--cache-from'
+      - '${_REGISTRY_URL}/${_PROJECT}:nightly'
+      - '--build-arg' 
+      - 'BUILDKIT_INLINE_CACHE=1'
+      - '-f'
+      - 'Dockerfile.ci'
+      - '.'
+  
+  - id: Push Container Image
+    name: gcr.io/cloud-builders/docker
+    args: 
+      - 'push'
+      - '${_REGISTRY_URL}/${_PROJECT}:nightly'
+
+timeout: 60m
+substitutions:
+  _PROJECT: risc-0
+  _REGISTRY_URL: asia.gcr.io/gdp-labs/gl-base
+
+options:
+  machineType: E2_HIGHCPU_32
+
+tags: ["swiss"]
