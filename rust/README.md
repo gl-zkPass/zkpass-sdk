@@ -33,7 +33,7 @@ To run all unit tests, at the zkPass repo root dir run the following:
   cargo test --release  
 </pre>
 
-## Submodules
+## Git Submodules
 
 **Add a Submodule**
 <pre>
@@ -56,5 +56,12 @@ To run all unit tests, at the zkPass repo root dir run the following:
   rm -rf .git/modules/third_party/zkPass
   rm -rf third_party/zkPass
 </pre>
+
+**[Sparse Checkout](https://git-scm.com/docs/git-sparse-checkout)**
+  - Sparse Checkout: This is configured in such a way that Git will only populate the working directory with the specified paths. Internally, Git still knows about the entire repository, but only the specified paths are visible and accessible in your working directory.
+  - Initial Setup: When you initially clone a repository or add a submodule, Git checks out all files. Sparse checkout modifies this behavior so that only certain files are checked out.
+  - Note : THIS COMMAND IS EXPERIMENTAL. ITS BEHAVIOR, AND THE BEHAVIOR OF OTHER COMMANDS IN THE PRESENCE OF SPARSE-CHECKOUTS, WILL LIKELY CHANGE IN THE FUTURE.
+
+  
 
 
