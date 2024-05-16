@@ -1,0 +1,12 @@
+[package]
+name = "zkpass-query-tool"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+json = "0.12"
+r0-zkpass-query = { path = "../risc0/host" }
+sp1-zkpass-query = { path = "../sp1/script" }
+#zkpass-core = { path = "../../zkpass-core" }
+serde = "1.0"
+serde_json = "1.0.97"

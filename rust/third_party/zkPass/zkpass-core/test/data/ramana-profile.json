@@ -1,0 +1,42 @@
+{
+  "bcaDocID": "DOC897923CP",
+  "bcaDocName": "BCA Customer Profile",
+  "customerID": "BCA123756108",
+  "personalInfo": {
+    "firstName": "Ramana",
+    "_firstName_zkpass_public_": true,
+    "lastName": "Maharshi",
+    "dateOfBirth": "04/12/2003",
+    "driverLicenseNumber": "DL77108108"
+  },
+  "financialInfo": {
+    "averageMonthlyBalance": 200000000,
+    "creditRatings": {
+      "pefindo": 710,
+      "CreditKarma": 755,
+      "_CreditKarma_zkpass_public_": true,
+      "EquiInfo": 695
+    },
+    "accounts": {
+      "checking": {
+        "accountNumber": "CHK1238569",
+        "balance": 89000000
+      },
+      "savings": {
+        "accountNumber": "SAV1231770",
+        "balance": 380000000
+      }
+    }
+  },
+  "contactInfo": {
+    "email": "Ramana.Maharshi@karma.org",
+    "_email_zkpass_public_": true,
+    "phone": "+62-856-685-0108",
+    "address": {
+      "street": "1000 Komodo Street",
+      "city": "Jakarta",
+      "zip": 12880,
+      "_zip_zkpass_public_": true
+    }
+  }
+}

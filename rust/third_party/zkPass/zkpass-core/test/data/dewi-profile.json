@@ -1,0 +1,42 @@
+{
+  "bcaDocID": "DOC897923CP",
+  "bcaDocName": "BCA Customer Profile",
+  "customerID": "BCA123756108",
+  "personalInfo": {
+    "firstName": "Dewi",
+    "_firstName_zkpass_public_": true,
+    "lastName": "Putri",
+    "dateOfBirth": "01-01-1980",
+    "driverLicenseNumber": "DL123456789"
+  },
+  "financialInfo": {
+    "averageMonthlyBalance": 200000000,
+    "creditRatings": {
+      "pefindo": 720,
+      "CreditKarma": 725,
+      "_CreditKarma_zkpass_public_": true,
+      "equiInfo": 730
+    },
+    "accounts": {
+      "checking": {
+        "accountNumber": "CHK1234567",
+        "balance": 50000000
+      },
+      "savings": {
+        "accountNumber": "SAV1234567",
+        "balance": 150000000
+      }
+    }
+  },
+  "contactInfo": {
+    "email": "dewi.putri@yahoo.com",
+    "_email_zkpass_public_": true,
+    "phone": "+62-855-123-4567",
+    "address": {
+      "street": "2000 Dharma Street",
+      "city": "Bandung",
+      "zip": 51840,
+      "_zip_zkpass_public_": true
+    }
+  }
+}
