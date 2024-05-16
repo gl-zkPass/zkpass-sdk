@@ -33,6 +33,39 @@ To run all unit tests, at the zkPass repo root dir run the following:
   cargo test --release  
 </pre>
 
+## Git Subtree
+
+**Updating a Subtree**
+<pre>
+  # Navigate to your main repository directory
+  cd zkpass-sdk
+
+  # Pull the latest changes for the zkpass-client directory from the remote repository
+  git subtree pull --prefix=rust/third_party/zkPass/zkpass-client https://github.com/GDP-ADMIN/zkPass.git development --squash
+
+  # Pull the latest changes for other specific directories as needed
+  git subtree pull --prefix=rust/third_party/zkPass/zkpass-demo/src https://github.com/GDP-ADMIN/zkPass.git development --squash
+  git subtree pull --prefix=rust/third_party/zkPass/zkpass-demo/tests https://github.com/GDP-ADMIN/zkPass.git development --squash
+  git subtree pull --prefix=rust/third_party/zkPass/zkpass-demo/Cargo.toml https://github.com/GDP-ADMIN/zkPass.git development --squash
+  git subtree pull --prefix=rust/third_party/zkPass/zkpass-core https://github.com/GDP-ADMIN/zkPass.git development --squash
+  git subtree pull --prefix=rust/third_party/zkPass/zkpass-query/types https://github.com/GDP-ADMIN/zkPass.git development --squash
+</pre>
+
+**Removing a Subtree**
+<pre>
+  # Navigate to your main repository directory
+  cd zkpass-sdk
+
+  # Remove the zkpass-client directory
+  rm -rf rust/third_party/zkPass/zkpass-client
+
+  # Repeat for other directories as needed
+  rm -rf rust/third_party/zkPass/zkpass-demo/src
+  rm -rf rust/third_party/zkPass/zkpass-demo/tests
+  rm -rf rust/third_party/zkPass/zkpass-demo/Cargo.toml
+  rm -rf rust/third_party/zkPass/zkpass-core
+  rm -rf rust/third_party/zkPass/zkpass-query/types
+</pre>
 
 
 
