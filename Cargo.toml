@@ -1,0 +1,45 @@
+[workspace]
+resolver = "2"
+members = [
+    "zkpass-core",
+    "zkpass-svc-common",
+
+    "zkpass-query/types",
+    "zkpass-query/core",
+    "zkpass-query/risc0/methods",
+    "zkpass-query/risc0/host",
+    "zkpass-query/valida",
+    "zkpass-query/sp1/script",
+    "zkpass-query/tool",
+
+    "zkpass-host",
+
+    "zkpass-ws",
+
+    "zkpass-client",
+
+    "zkpass-demo",
+
+    "zkpass-md5-checksum"
+]
+
+################################################################################
+#
+#               R0-specific settings for zkpass-query/* crates
+#
+
+# Always optimize; building and running the guest takes much longer without optimization.
+[profile.dev]
+opt-level = 3
+
+[profile.dev.build-override]
+opt-level = 3
+
+[profile.release]
+debug = 1
+lto = true
+
+[profile.release.build-override]
+opt-level = 3
+
+################################################################################
