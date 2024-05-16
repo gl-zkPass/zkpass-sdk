@@ -1,0 +1,28 @@
+steps:
+  - id: Decrypt env
+    name: gcr.io/cloud-builders/gcloud
+    dir: keygen
+    args:
+      - kms
+      - decrypt
+      - --ciphertext-file=${_ENV}-zkpass.env.enc
+      - --plaintext-file=.env
+      - --location=global
+      - --keyring=cloudbuild
+      - --key=zkpass
+
+  - id: Run Generator
+    name: gcr.io/cloud-builders/docker
+    args:
+      - compose
+      - -f
+      - build/docker-compose-gcb.yml
+      - run
+      - --rm
+      - ${_MODULE}
+    env:
+      - 'WORKDIR=${_MODULE}'
+
+timeout: 15m
+
+tags: ["swiss"]
