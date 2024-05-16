@@ -1,0 +1,9 @@
+steps:
+- id: Shell Lint
+  name: 'koalaman/shellcheck-alpine:stable'
+  entrypoint: '/bin/ash'
+  args: ['-c', 'shellcheck --severity=style **/*.sh']
+
+timeout: 10m
+
+tags: ["swiss"]
