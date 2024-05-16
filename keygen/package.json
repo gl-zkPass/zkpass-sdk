@@ -1,0 +1,17 @@
+{
+  "scripts": {
+    "start": "ts-node index.ts",
+    "test": "ts-node generator.test.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-kms": "^3.507.0",
+    "@aws-sdk/client-s3": "^3.515.0",
+    "dotenv": "^16.4.1",
+    "jose": "^5.2.2"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}

@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Define the Role model
+model Role {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  users     User[]   // Define the relation to users
+}
+
+// Define the User model
+model User {
+  id              Int        @id @default(autoincrement())
+  email           String     @unique
+  status          Int        // You can use an enum for status (active, inactive, etc.)
+  name            String     // You can use an enum for status (active, inactive, etc.)
+  createdAt       DateTime   @default(now())
+  lastModifiedAt  DateTime   @updatedAt
+  createdBy       String     @default("")
+  lastModifiedBy  String     @default("")
+  role            Role       @relation(fields: [roleId], references: [id])
+  roleId          Int        // Foreign key to Role model
+}
+
+model UserApi {
+  id              Int        @id @default(autoincrement())
+  email           String     @unique
+  name            String     
+  status          Int        // You can use an enum for status (active, inactive, etc.)
+  createdAt       DateTime   @default(now())
+  lastModifiedAt  DateTime   @updatedAt
+  createdBy       String
+  lastModifiedBy  String
+  apiKeys         ApiKey[]   // Define the relation to api_keys
+}
+
+// Define the ApiKey model
+model ApiKey {
+  id              Int        @id @default(autoincrement())
+  key             String     @unique
+  secretKey       String
+  name            String     
+  createdAt       DateTime   @default(now())
+  lastModifiedAt  DateTime   @updatedAt
+  lastModifiedBy  String
+  createdBy       String
+  status          Int        // Enum for status (active, inactive, etc.)
+  user            UserApi    @relation(fields: [userId], references: [id])
+  userId          Int        // Foreign key to User model
+}
