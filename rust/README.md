@@ -33,7 +33,28 @@ To run all unit tests, at the zkPass repo root dir run the following:
   cargo test --release  
 </pre>
 
+## Submodules
 
+**Add a Submodule**
+<pre>
+  git submodule add https://github.com/GDP-ADMIN/zkPass.git third_party/zkPass
+  git submodule init
+  git submodule update
+</pre>
 
+**Update a Submodule**
+<pre>
+  cd third_party/zkPass
+  git fetch
+  git pull origin master
+</pre>
+
+**Remove a Submodule**
+<pre>
+  git submodule deinit -f third_party/zkPass
+  git rm -f third_party/zkPass
+  rm -rf .git/modules/third_party/zkPass
+  rm -rf third_party/zkPass
+</pre>
 
 
