@@ -1,0 +1,38 @@
+version: '3.6'
+services:
+  zkpass:
+    image: asia.gcr.io/gdp-labs/gl-base/risc-0:nightly
+    user: builder
+    working_dir: /home/builder/zkPass
+    command: /bin/bash -c "build/build.sh && build/cargo-release.sh"
+    volumes:
+      - '../:/home/builder/zkPass'
+    environment:
+      - ENV=${ENV}
+  zkpass-client-react-native:
+    image: node:20.11.0
+    working_dir: /tmp/builder/zkpass-client-wrappers/${WORKDIR}
+    command: /bin/bash build.sh
+    volumes:
+      - '../:/tmp/builder'
+  zkpass-client-ts:
+    image: node:20.11.0
+    working_dir: /tmp/builder/zkpass-client-wrappers/${WORKDIR}
+    command: /bin/bash build.sh
+    volumes:
+      - '../:/tmp/builder'
+  zkpass-control-panel:
+    image: node:20.11.0
+    working_dir: /tmp/builder/${WORKDIR}
+    command: /bin/bash build.sh
+    volumes:
+      - '../:/tmp/builder'
+    environment:
+      - SHORT_SHA=${SHORT_SHA}
+      - ENV=${ENV}
+  keygen:
+    image: node:20.11.0
+    working_dir: /tmp/builder/${WORKDIR}
+    command: /bin/bash generate.sh
+    volumes:
+      - '../:/tmp/builder'

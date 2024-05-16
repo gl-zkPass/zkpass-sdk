@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "serayuzgur.crates",
+    "jinxdash.prettier-rust",
+    "dustypomerleau.rust-syntax",
+    "rust-lang.rust-analyzer",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "psioniq.psi-header"
+  ]
+}

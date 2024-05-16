@@ -1,0 +1,53 @@
+[
+  {
+    "assign": {
+      "result_status": {
+        "and": [
+          {
+            "==": [{ "dvar": "bcaDocID" }, "DOC897923CP"]
+          },
+          {
+            "~==": [{ "dvar": "personalInfo.firstName" }, "Ramana"]
+          },
+          {
+            "~==": [{ "dvar": "personalInfo.lastName" }, "Maharshi"]
+          },
+          {
+            "~==": [
+              { "dvar": "personalInfo.driverLicenseNumber" },
+              "DL77108108"
+            ]
+          },
+          {
+            ">=": [{ "dvar": "financialInfo.creditRatings.pefindo" }, 650]
+          },
+          {
+            ">=": [
+              { "dvar": "financialInfo.accounts.savings.balance" },
+              55000000
+            ]
+          }
+        ]
+      }
+    }
+  },
+
+  { "output": { "result": { "lvar": "result_status" } } },
+
+  {
+    "if": {
+      "condition": { "lvar": "result_status" },
+
+      "then": [
+        { "output": { "email": { "dvar": "contactInfo.email" } } },
+        {
+          "output": {
+            "credit": { "dvar": "financialInfo.creditRatings.CreditKarma" }
+          }
+        }
+      ],
+
+      "else": [{ "output": { "name": { "dvar": "personalInfo.firstName" } } }]
+    }
+  }
+]
