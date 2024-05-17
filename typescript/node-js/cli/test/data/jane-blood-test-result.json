@@ -9,6 +9,7 @@
   },
   "subject": {
     "firstName": "Jane",
+    "_firstName_zkpass_public_": true,
     "lastName": "Doe",
     "dateOfBirth": "1985-12-12",
     "bloodType": "A+",
@@ -25,6 +26,7 @@
     },
     "contact": {
       "email": "jane.doe@gmail.com",
+      "_email_zkpass_public_": true,
       "phone": "650-555-1234"
     },
     "address": {

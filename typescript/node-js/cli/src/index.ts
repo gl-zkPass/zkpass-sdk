@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: November 27th 2023
  * -----
- * Last Modified: February 29th 2024
+ * Last Modified: April 16th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -67,7 +67,8 @@ async function main() {
     //
     const queryResult = await myVerifier.verifyZkPassProof(zkPassProofToken);
 
-    console.log(`the query result is ${queryResult.result}`);
+    console.log(`the query result is ${queryResult.output.result}`);
+    console.log(queryResult.output);
   } else {
     console.log("required arguments: <data-file> <rules-file>");
   }
