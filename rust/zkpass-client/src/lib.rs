@@ -5,8 +5,7 @@
  *   Antony Halim (antony.halim@gdplabs.id)
  * Created at: September 26th 2023
  * -----
- * Last Modified: March 7th 2024
- * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
+ * Last Modified: April 29th 2024
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -52,6 +51,7 @@ pub mod core {
         decrypt_jwe_token,
         Jwk,
     };
+    pub use zkpass_query_types::{ Val, Entry, OutputReader };
 
     ///
     /// <span style="font-size: 1.1em; color: #996515;"> ***Contains the result of a zkPass query.*** </span>
@@ -73,10 +73,7 @@ mod import {
     const GET_QUERY_METHOD_VERSION_INTERNAL_FN: &str = "get_query_method_version_internal";
     const GET_QUERY_ENGINE_VERSION_INTERNAL_FN: &str = "get_query_engine_version_internal";
 
-    pub(crate) fn verify_zkproof(
-        zkvm: &str,
-        receipt: &str
-    ) -> Result<ProofMethodOutput, ZkPassError> {
+    pub(crate) fn verify_zkproof(zkvm: &str, receipt: &str) -> Result<String, ZkPassError> {
         let dll = format!("lib{}_{}", zkvm, ZKPASS_QUERY_DLL);
         let function = format!("{}_{}", zkvm, VERIFY_ZKPROOF_INTERNAL_FN);
 
@@ -87,7 +84,7 @@ mod import {
                 .map_err(|_| ZkPassError::MissingZkPassQueryLibrary)?;
 
             let func: libloading::Symbol<
-                unsafe extern "C" fn(&str) -> Result<ProofMethodOutput, ZkPassQueryEngineError>
+                unsafe extern "C" fn(&str) -> Result<String, ZkPassQueryEngineError>
             > = lib.get(function.as_bytes()).map_err(|_| ZkPassError::FunctionRetrievalError)?;
 
             info!("<< verify_zkproof");

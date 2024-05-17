@@ -1,6 +1,6 @@
 [package]
 name = "zkpass-demo"
-version = "0.2.0-beta.2"
+version = "1.0.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -20,3 +20,4 @@ tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 zkpass-core = { path = "../zkpass-core" }
 serde_json = "1.0.114"
 clap = "3.0.0"
+serial_test = "3.0.0"

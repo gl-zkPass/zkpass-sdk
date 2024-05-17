@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `zkpass-client/src/zkpass_client.rs`."><title>zkpass_client.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="zkpass_client" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0 (cc66ad468 2023-10-03)" data-channel="1.73.0" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../zkpass_client/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `zkpass-client/src/zkpass_client.rs`."><title>zkpass_client.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-b1a3e7f8283b8434.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="zkpass_client" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (7ffc697ce 2024-01-24)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../zkpass_client/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -204,19 +206,260 @@
 <a href="#204" id="204">204</a>
 <a href="#205" id="205">205</a>
 <a href="#206" id="206">206</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>async_trait::async_trait;
-<span class="kw">use </span>serde_json::{json, Value};
-<span class="kw">use </span>zkpass_core::interface::{sign_data_to_jws_token, verify_jws_token, encrypt_data_to_jwe_token, decrypt_jwe_token};
-<span class="kw">use </span><span class="kw">crate</span>::core::{<span class="kw-2">*</span>};
-<span class="kw">use </span><span class="kw">crate</span>::interface::{<span class="kw-2">*</span>};
-<span class="comment">//use zkpass_core::interface::verify_jws_token;
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+<a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a>
+<a href="#232" id="232">232</a>
+<a href="#233" id="233">233</a>
+<a href="#234" id="234">234</a>
+<a href="#235" id="235">235</a>
+<a href="#236" id="236">236</a>
+<a href="#237" id="237">237</a>
+<a href="#238" id="238">238</a>
+<a href="#239" id="239">239</a>
+<a href="#240" id="240">240</a>
+<a href="#241" id="241">241</a>
+<a href="#242" id="242">242</a>
+<a href="#243" id="243">243</a>
+<a href="#244" id="244">244</a>
+<a href="#245" id="245">245</a>
+<a href="#246" id="246">246</a>
+<a href="#247" id="247">247</a>
+<a href="#248" id="248">248</a>
+<a href="#249" id="249">249</a>
+<a href="#250" id="250">250</a>
+<a href="#251" id="251">251</a>
+<a href="#252" id="252">252</a>
+<a href="#253" id="253">253</a>
+<a href="#254" id="254">254</a>
+<a href="#255" id="255">255</a>
+<a href="#256" id="256">256</a>
+<a href="#257" id="257">257</a>
+<a href="#258" id="258">258</a>
+<a href="#259" id="259">259</a>
+<a href="#260" id="260">260</a>
+<a href="#261" id="261">261</a>
+<a href="#262" id="262">262</a>
+<a href="#263" id="263">263</a>
+<a href="#264" id="264">264</a>
+<a href="#265" id="265">265</a>
+<a href="#266" id="266">266</a>
+<a href="#267" id="267">267</a>
+<a href="#268" id="268">268</a>
+<a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
+<a href="#337" id="337">337</a>
+<a href="#338" id="338">338</a>
+<a href="#339" id="339">339</a>
+<a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+</pre></div><pre class="rust"><code><span class="comment">/*
+ * zkpass_client.rs
+ * File contains the implementation of zkpass client
+ *
+ * Authors:
+ *   Antony Halim (antony.halim@gdplabs.id)
+ *   GDPWinnerPranata (winner.pranata@gdplabs.id)
+ *   Zulchaidir (zulchaidir@gdplabs.id)
+ *   WilliamhGDP (william.h.hendrawan@gdplabs.id)
+ *   JaniceLaksana (janice.laksana@gdplabs.id)
+ * Created at: September 21st 2023
+ * -----
+ * Last Modified: May 8th 2024
+ * Modified By: Zulchaidir (zulchaidir@gdplabs.id)
+ * -----
+ * Reviewers:
+ *   GDPWinnerPranata (winner.pranata@gdplabs.id)
+ *   Zulchaidir (zulchaidir@gdplabs.id)
+ *   WilliamhGDP (william.h.hendrawan@gdplabs.id)
+ *   Khandar William (khandar.william@gdplabs.id)
+ *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * ---
+ * References:
+ *   NONE
+ * ---
+ * Copyright (c) 2024 PT Darta Media Indonesia. All rights reserved.
+ */
 
-</span><span class="kw">impl </span>ZkPassUtility <span class="kw">for </span>ZkPassClient {
+</span><span class="kw">use </span>std::time::Duration;
+
+<span class="kw">use </span>tracing::info;
+<span class="kw">use </span>async_trait::async_trait;
+<span class="kw">use </span>serde_json::{ json, Value };
+<span class="kw">use </span>zkpass_core::interface::{
+    sign_data_to_jws_token,
+    verify_jws_token,
+    encrypt_data_to_jwe_token,
+    decrypt_jwe_token,
+};
+<span class="kw">use </span><span class="kw">crate</span>::core::{ * };
+<span class="kw">use </span><span class="kw">crate</span>::helpers::inject_client_version_header;
+<span class="kw">use </span><span class="kw">crate</span>::interface::{ * };
+<span class="kw">use </span>base64::{ engine::general_purpose, Engine };
+
+<span class="kw">const </span>JWKS_PATH: <span class="kw-2">&amp;</span>str = <span class="string">".well-known/jwks.json"</span>;
+<span class="kw">const </span>GENERATE_PROOF_PATH: <span class="kw-2">&amp;</span>str = <span class="string">"v1/proof"</span>;
+
+<span class="kw">const </span>KID_SERVICE_ENCRYPTION_PUB_KEY: <span class="kw-2">&amp;</span>str = <span class="string">"ServiceEncryptionPubK"</span>;
+<span class="kw">const </span>KID_SERVICE_SIGNING_PUB_KEY: <span class="kw-2">&amp;</span>str = <span class="string">"ServiceSigningPubK"</span>;
+<span class="kw">const </span>DEFAULT_TIMEOUT: u64 = <span class="number">60</span>;
+
+<span class="kw">impl </span>ZkPassClient {
+    <span class="kw">pub fn </span>new(
+        zkpass_service_url: <span class="kw-2">&amp;</span>str,
+        zkpass_api_key: <span class="prelude-ty">Option</span>&lt;ZkPassApiKey&gt;,
+        zkvm: <span class="kw-2">&amp;</span>str
+    ) -&gt; ZkPassClient {
+        ZkPassClient {
+            zkpass_service_url: String::from(zkpass_service_url),
+            zkpass_api_key,
+            zkvm: String::from(zkvm),
+        }
+    }
+
+    <span class="kw">pub fn </span>get_api_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;String, ZkPassError&gt; {
+        <span class="kw">let </span>zkpass_api_key = <span class="kw">match </span><span class="self">self</span>.zkpass_api_key.clone() {
+            <span class="prelude-val">Some</span>(zkpass_api_key) =&gt; zkpass_api_key,
+            <span class="prelude-val">None </span>=&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::MissingApiKey);
+            }
+        };
+        <span class="prelude-val">Ok</span>(zkpass_api_key.get_api_token())
+    }
+
+    <span class="kw">pub async fn </span>fetch_public_keys(<span class="kw-2">&amp;</span><span class="self">self</span>, kid: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;Jwk, ZkPassError&gt; {
+        <span class="kw">let </span>client = reqwest::Client::new();
+        <span class="macro">info!</span>(<span class="string">"Fetching public keys from {}"</span>, <span class="macro">format!</span>(<span class="string">"{}/{}"</span>, <span class="self">self</span>.zkpass_service_url, JWKS_PATH));
+        <span class="kw">let </span>response = client
+            .get(<span class="macro">format!</span>(<span class="string">"{}/{}"</span>, <span class="self">self</span>.zkpass_service_url, JWKS_PATH))
+            .send().<span class="kw">await
+            </span>.map_err(|err| ZkPassError::CustomError(err.to_string()))<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>keys_json = response
+            .text().<span class="kw">await
+            </span>.map_err(|err| ZkPassError::CustomError(err.to_string()))<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>keys: Vec&lt;Jwk&gt; = serde_json
+            ::from_str(<span class="kw-2">&amp;</span>keys_json)
+            .map_err(|<span class="kw">_</span>| ZkPassError::MissingRootDataElementError)<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>pub_key = keys.iter().find(|key| key.kid == kid);
+
+        <span class="kw">match </span>pub_key {
+            <span class="prelude-val">Some</span>(key) =&gt; <span class="prelude-val">Ok</span>(key.clone()),
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(ZkPassError::CustomError(<span class="macro">format!</span>(<span class="string">"No public key with kid {} found"</span>, kid))),
+        }
+    }
+}
+
+<span class="kw">impl </span>ZkPassApiKey {
+    <span class="kw">pub fn </span>get_api_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
+        <span class="kw">let </span>formatted_api_key = <span class="macro">format!</span>(<span class="string">"{}:{}"</span>, <span class="self">self</span>.api_key, <span class="self">self</span>.secret_api_key);
+        general_purpose::STANDARD.encode(formatted_api_key)
+    }
+}
+
+<span class="kw">impl </span>ZkPassUtility <span class="kw">for </span>ZkPassClient {
     <span class="kw">fn </span>sign_data_to_jws_token(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         signing_key: <span class="kw-2">&amp;</span>str,
         data: Value,
-        verifying_key_jwks: <span class="prelude-ty">Option</span>&lt;KeysetEndpoint&gt;,
+        verifying_key_jwks: <span class="prelude-ty">Option</span>&lt;KeysetEndpoint&gt;
     ) -&gt; <span class="prelude-ty">Result</span>&lt;String, ZkPassError&gt; {
         sign_data_to_jws_token(signing_key, data, verifying_key_jwks)
     }
@@ -232,7 +475,7 @@
     <span class="kw">fn </span>decrypt_jwe_token(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         key: <span class="kw-2">&amp;</span>str,
-        jwe_token: <span class="kw-2">&amp;</span>str,
+        jwe_token: <span class="kw-2">&amp;</span>str
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(String, String), ZkPassError&gt; {
         decrypt_jwe_token(key, jwe_token)
     }
@@ -240,135 +483,169 @@
 
 <span class="attr">#[async_trait]
 </span><span class="kw">impl </span>ZkPassProofGenerator <span class="kw">for </span>ZkPassClient {
-    <span class="kw">async fn </span>generate_zkpass_proof(
+    <span class="attr">#[tracing::instrument(skip(_user_data_token, _dvr_token))]
+    </span><span class="kw">async fn </span>generate_zkpass_proof(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        _zkpass_service_url: <span class="kw-2">&amp;</span>str,
         _user_data_token: <span class="kw-2">&amp;</span>str,
-        _dvr_token: <span class="kw-2">&amp;</span>str,
+        _dvr_token: <span class="kw-2">&amp;</span>str
     ) -&gt; <span class="prelude-ty">Result</span>&lt;String, ZkPassError&gt; {
-        <span class="kw">const </span>ENCRYPTION_PUB: <span class="kw-2">&amp;</span>str = <span class="string">r&quot;-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU
-IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==
------END PUBLIC KEY-----&quot;</span>;
+        <span class="macro">info!</span>(<span class="string">"&gt;&gt; generate_zkpass_proof"</span>);
 
-        <span class="kw">let </span>user_data_enc = <span class="self">self
-            </span>.encrypt_data_to_jwe_token(
-                ENCRYPTION_PUB,
-                Value::String(String::from(_user_data_token)),
-            )<span class="question-mark">?</span>;
-        <span class="kw">let </span>dvr_enc = <span class="self">self
-            </span>.encrypt_data_to_jwe_token(ENCRYPTION_PUB, Value::String(String::from(_dvr_token)))<span class="question-mark">?</span>;
-
-        <span class="kw">let </span>data = <span class="macro">json!</span>({
-            <span class="string">&quot;user_data_token&quot;</span>: <span class="kw-2">&amp;</span>user_data_enc,
-            <span class="string">&quot;dvr_token&quot;</span>: <span class="kw-2">&amp;</span>dvr_enc
-        });
-
-        <span class="kw">let </span>client = reqwest::Client::new();
-        <span class="kw">let </span>response = <span class="kw">match </span>client.post(_zkpass_service_url).json(<span class="kw-2">&amp;</span>data).send().<span class="kw">await </span>{
-            <span class="prelude-val">Ok</span>(response) =&gt; response,
-            <span class="prelude-val">Err</span>(e) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::CustomError(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, e))),
+        <span class="kw">let </span>encryption_pub: String = <span class="kw">match
+            </span><span class="self">self</span>.fetch_public_keys(KID_SERVICE_ENCRYPTION_PUB_KEY).<span class="kw">await
+        </span>{
+            <span class="prelude-val">Ok</span>(pub_key) =&gt; {
+                <span class="macro">format!</span>(
+                    <span class="string">r"-----BEGIN PUBLIC KEY-----
+                    {}
+                    {}
+                    -----END PUBLIC KEY-----"</span>,
+                    pub_key.x.to_string(),
+                    pub_key.y.to_string()
+                )
+            }
+            <span class="prelude-val">Err</span>(err) =&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(err);
+            }
         };
 
-        <span class="kw">if </span>response.status().is_success() {
-            <span class="kw">let </span><span class="kw-2">mut </span>response_body = <span class="kw">match </span>response.text().<span class="kw">await </span>{
-                <span class="prelude-val">Ok</span>(body) =&gt; body,
-                <span class="prelude-val">Err</span>(e) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::CustomError(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, e))),
-            };
-            <span class="comment">// extract the proof under the root &quot;proof&quot; element
-            </span><span class="kw">let </span>proof: Value = serde_json::from_str(<span class="kw-2">&amp;</span>response_body).unwrap();
-            response_body = proof[<span class="string">&quot;proof&quot;</span>].as_str().unwrap().to_string();
+        <span class="kw">let </span>user_data_enc = <span class="self">self</span>.encrypt_data_to_jwe_token(
+            encryption_pub.as_str(),
+            Value::String(String::from(_user_data_token))
+        )<span class="question-mark">?</span>;
+        <span class="kw">let </span>dvr_enc = <span class="self">self</span>.encrypt_data_to_jwe_token(
+            encryption_pub.as_str(),
+            Value::String(String::from(_dvr_token))
+        )<span class="question-mark">?</span>;
 
-            <span class="prelude-val">Ok</span>(response_body)
+        <span class="kw">let </span>data =
+            <span class="macro">json!</span>({
+            <span class="string">"user_data_token"</span>: <span class="kw-2">&amp;</span>user_data_enc,
+            <span class="string">"dvr_token"</span>: <span class="kw-2">&amp;</span>dvr_enc
+        });
+
+        <span class="kw">let </span>timeout = Duration::from_secs(DEFAULT_TIMEOUT);
+        <span class="kw">let </span>api_key_token = <span class="macro">format!</span>(<span class="string">"Basic {}"</span>, <span class="self">self</span>.get_api_token()<span class="question-mark">?</span>);
+        <span class="kw">let </span>request = reqwest::Client
+            ::new()
+            .post(<span class="macro">format!</span>(<span class="string">"{}/{}"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.zkpass_service_url, GENERATE_PROOF_PATH))
+            .timeout(timeout)
+            .header(<span class="string">"Authorization"</span>, api_key_token);
+        <span class="kw">let </span>request = inject_client_version_header(request);
+        <span class="kw">let </span>response = <span class="kw">match </span>request.json(<span class="kw-2">&amp;</span>data).send().<span class="kw">await </span>{
+            <span class="prelude-val">Ok</span>(response) =&gt; response,
+            <span class="prelude-val">Err</span>(e) =&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::CustomError(e.to_string()));
+            }
+        };
+
+        <span class="macro">info!</span>(<span class="string">"&lt;&lt; generate_zkpass_proof"</span>);
+        <span class="kw">let </span>is_response_success = response.status().is_success();
+        <span class="kw">let </span>response_body = <span class="kw">match </span>response.text().<span class="kw">await </span>{
+            <span class="prelude-val">Ok</span>(body) =&gt; body,
+            <span class="prelude-val">Err</span>(e) =&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ZkPassError::CustomError(e.to_string()));
+            }
+        };
+
+        <span class="kw">if </span>is_response_success {
+            <span class="kw">let </span>response_body: Value = serde_json::from_str(<span class="kw-2">&amp;</span>response_body).unwrap();
+            <span class="comment">// extract the proof under the root "proof" element
+            </span><span class="kw">let </span>proof = response_body[<span class="string">"proof"</span>].as_str().unwrap().to_string();
+            <span class="prelude-val">Ok</span>(proof)
         } <span class="kw">else </span>{
-            <span class="prelude-val">Err</span>(ZkPassError::CustomError(<span class="macro">format!</span>(
-                <span class="string">&quot;Request failed with status code: {}&quot;</span>,
-                response.status(),
-            )))
+            <span class="prelude-val">Err</span>(ZkPassError::CustomError(<span class="macro">format!</span>(<span class="string">"Request failed: {}"</span>, response_body.to_string())))
         }
     }
 }
 
-<span class="kw">impl </span>ZkPassProofVerifier <span class="kw">for </span>ZkPassClient {
-    <span class="kw">fn </span>verify_zkpass_proof_internal(
+<span class="attr">#[async_trait]
+</span><span class="kw">impl </span>ZkPassProofVerifier <span class="kw">for </span>ZkPassClient {
+    <span class="attr">#[tracing::instrument(skip(zkpass_proof_token))]
+    </span><span class="kw">async fn </span>verify_zkpass_proof_internal(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        zkpass_proof_token:                 <span class="kw-2">&amp;</span>str
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(bool, ZkPassProof), ZkPassError&gt; {
-        <span class="kw">const </span>ZKPASS_DSA_PUBKEY_X: <span class="kw-2">&amp;</span>str = <span class="string">&quot;MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU&quot;</span>;
-        <span class="kw">const </span>ZKPASS_DSA_PUBKEY_Y: <span class="kw-2">&amp;</span>str =<span class="string">&quot;IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==&quot;</span>;
+        zkpass_proof_token: <span class="kw-2">&amp;</span>str
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(String, ZkPassProof), ZkPassError&gt; {
+        <span class="macro">info!</span>(<span class="string">"&gt;&gt; verify_zkpass_proof_internal"</span>);
+
+        <span class="kw">let </span>zkpass_dsa_pubkey_x: String;
+        <span class="kw">let </span>zkpass_dsa_pubkey_y: String;
+
+        <span class="kw">match </span><span class="self">self</span>.fetch_public_keys(KID_SERVICE_SIGNING_PUB_KEY).<span class="kw">await </span>{
+            <span class="prelude-val">Ok</span>(pub_key) =&gt; {
+                zkpass_dsa_pubkey_x = pub_key.x.to_string();
+                zkpass_dsa_pubkey_y = pub_key.y.to_string();
+            }
+            <span class="prelude-val">Err</span>(err) =&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(err);
+            }
+        }
 
         <span class="kw">let </span>zkpass_proof_verifying_key = PublicKey {
-            x: String::from(ZKPASS_DSA_PUBKEY_X),
-            y: String::from(ZKPASS_DSA_PUBKEY_Y)
+            x: String::from(zkpass_dsa_pubkey_x),
+            y: String::from(zkpass_dsa_pubkey_y),
         };
 
         <span class="kw">let </span>(zkpass_proof, _header) = verify_jws_token(
             zkpass_proof_verifying_key.to_pem().as_str(),
-            zkpass_proof_token)<span class="question-mark">?</span>;
+            zkpass_proof_token
+        )<span class="question-mark">?</span>;
         <span class="kw">let </span>zkpass_proof: ZkPassProof = serde_json::from_value(zkpass_proof).unwrap();
         <span class="comment">//
         //  zkp verification
         //
-        </span><span class="kw">let </span>output = <span class="kw">crate</span>::import::verify_zkproof(<span class="kw-2">&amp;</span>zkpass_proof.zkproof);
+        </span><span class="kw">let </span>output = <span class="kw">crate</span>::import::verify_zkproof(<span class="kw-2">&amp;</span><span class="self">self</span>.zkvm, <span class="kw-2">&amp;</span>zkpass_proof.zkproof)<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>((output.result, zkpass_proof))
+        <span class="macro">info!</span>(<span class="string">"&lt;&lt; verify_zkpass_proof_internal"</span>);
+        <span class="prelude-val">Ok</span>((output, zkpass_proof))
     }
 
-    <span class="kw">fn </span>get_query_engine_version_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (String, String) {
-        (<span class="kw">crate</span>::import::get_query_engine_version(), <span class="kw">crate</span>::import::get_query_method_version())
+    <span class="kw">fn </span>get_query_engine_version_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(String, String), ZkPassError&gt; {
+        <span class="kw">let </span>engine_version = <span class="kw">crate</span>::import::get_query_engine_version(<span class="kw-2">&amp;</span><span class="self">self</span>.zkvm)<span class="question-mark">?</span>;
+        <span class="kw">let </span>method_version = <span class="kw">crate</span>::import::get_query_method_version(<span class="kw-2">&amp;</span><span class="self">self</span>.zkvm)<span class="question-mark">?</span>;
+
+        <span class="prelude-val">Ok</span>((engine_version, method_version))
     }
 }
 
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use </span>httpmock::{Method::POST, MockServer};
+    <span class="kw">use </span>httpmock::{ Method::{ GET, POST }, MockServer };
     <span class="kw">use </span>serde_json::json;
 
-    <span class="kw">const </span>RECIPIENT_PRIVKEY: <span class="kw-2">&amp;</span>str = <span class="string">r&quot;-----BEGIN PRIVATE KEY-----
-    MIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQgmCciFlxKpprQRqlLFnnh
-    9eiKAditGlfOssFKjLZ0tF+hRANCAARTiTnflkU7RIJdSBNe6/KAGmOFwHRPZVYw
-    le25LC6VqsKfh0vKFLnI+zz2LHbluvJGhbBvqHQwSPHWxmWivTEn
-    -----END PRIVATE KEY-----&quot;</span>;
-
-    <span class="kw">const </span>RECIPIENT_PUBKEY: <span class="kw-2">&amp;</span>str = <span class="string">r&quot;-----BEGIN PUBLIC KEY-----
+    <span class="kw">const </span>RECIPIENT_PUBKEY: <span class="kw-2">&amp;</span>str =
+        <span class="string">r"-----BEGIN PUBLIC KEY-----
     MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEU4k535ZFO0SCXUgTXuvygBpjhcB0T2VW
     MJXtuSwularCn4dLyhS5yPs89ix25bryRoWwb6h0MEjx1sZlor0xJw==
-    -----END PUBLIC KEY-----&quot;</span>;
+    -----END PUBLIC KEY-----"</span>;
 
-    <span class="kw">const </span>SENDER_PRIVKEY: <span class="kw-2">&amp;</span>str = <span class="string">r&quot;-----BEGIN PRIVATE KEY-----
+    <span class="kw">const </span>SENDER_PRIVKEY: <span class="kw-2">&amp;</span>str =
+        <span class="string">r"-----BEGIN PRIVATE KEY-----
     MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgLxxbcd7aVcNEdE/C
     EGPwLzM6lkLuDYzhd3FqALuuHCahRANCAASnpYmXAC2V39TiEOaa64x1kJW0x5Qh
     PfGQN1TAs6+xVUD6KJLB9pfgeoqVE8MYb4XpYaOfHKz1Pka017ee97A4
-    -----END PRIVATE KEY-----&quot;</span>;
-
-    <span class="kw">const </span>SENDER_PUBKEY: <span class="kw-2">&amp;</span>str = <span class="string">r&quot;-----BEGIN PUBLIC KEY-----
-    MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU
-    IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==
-    -----END PUBLIC KEY-----&quot;</span>;
+    -----END PRIVATE KEY-----"</span>;
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_tokenize_data() {
         <span class="kw">let </span>data = <span class="macro">json!</span>(
-            {<span class="string">&quot;name&quot;</span>:<span class="string">&quot;John&quot;</span>, <span class="string">&quot;age&quot;</span>:<span class="number">30</span>}
+            {<span class="string">"name"</span>:<span class="string">"John"</span>, <span class="string">"age"</span>:<span class="number">30</span>}
         );
-        <span class="kw">let </span>data2 = data.clone();
-        <span class="macro">println!</span>(<span class="string">&quot;data={:#?}&quot;</span>, data);
-        <span class="kw">let </span>zkpass_client = ZkPassClient;
+        <span class="macro">info!</span>(<span class="string">"data={:#?}"</span>, data);
+        <span class="kw">let </span>zkpass_client = ZkPassClient::new(<span class="string">"https://hostname.com"</span>, <span class="prelude-val">None</span>, <span class="string">"r0"</span>);
 
-        <span class="kw">let </span>kid = String::from(<span class="string">&quot;mykey&quot;</span>);
-        <span class="kw">let </span>jku = String::from(<span class="string">&quot;https://hostname.com/jwks&quot;</span>);
+        <span class="kw">let </span>kid = String::from(<span class="string">"mykey"</span>);
+        <span class="kw">let </span>jku = String::from(<span class="string">"https://hostname.com/jwks"</span>);
         <span class="kw">let </span>ep = KeysetEndpoint { kid, jku };
         <span class="kw">let </span>jws_token = zkpass_client
             .sign_data_to_jws_token(SENDER_PRIVKEY, data, <span class="prelude-val">Some</span>(ep))
             .unwrap();
 
-        <span class="kw">let </span>jwe_token = zkpass_client
-            .encrypt_data_to_jwe_token(RECIPIENT_PUBKEY, <span class="macro">json!</span>(jws_token))
-            .unwrap();
+        zkpass_client.encrypt_data_to_jwe_token(RECIPIENT_PUBKEY, <span class="macro">json!</span>(jws_token)).unwrap();
 
         <span class="comment">//let ver_token = zkpass_client.verify_data_nested_token(SENDER_PUBKEY, RECIPIENT_PRIVKEY, jwe_token.as_str()).unwrap();
-        //println!(&quot;ver_token.payload={:#?}&quot;, ver_token.payload);
+        //info!("ver_token.payload={:#?}", ver_token.payload);
         //assert!(data2 == ver_token.payload);
     </span>}
 
@@ -376,22 +653,31 @@ IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==
     </span><span class="kw">async fn </span>test_generate_proof() {
         <span class="comment">// endpoint mocking
         </span><span class="kw">let </span>server = MockServer::start();
-        <span class="kw">let </span>endpoint = server.mock(|when, then| {
-            when.method(POST).path(<span class="string">&quot;/generate-proof&quot;</span>);
-            then.status(<span class="number">200</span>).body(<span class="string">&quot;{\&quot;proof\&quot;:\&quot;kjsdafkjasdfkdlaf\&quot;}&quot;</span>);
+        server.mock(|when, then| {
+            when.method(POST).path(<span class="macro">format!</span>(<span class="string">"/{}"</span>, GENERATE_PROOF_PATH));
+            then.status(<span class="number">200</span>).body(<span class="string">"{\"proof\":\"kjsdafkjasdfkdlaf\"}"</span>);
+        });
+        server.mock(|when, then| {
+            when.method(GET).path(<span class="string">"/.well-known/jwks.json"</span>);
+            then.status(<span class="number">200</span>).body(
+                <span class="string">"[{\"kty\": \"EC\",\"crv\": \"P-256\",\"x\": \"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU\",\"y\": \"IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==\",\"kid\": \"ServiceEncryptionPubK\",\"jwt\": \"\"}]"
+            </span>);
         });
 
-        <span class="kw">let </span>user_data_token = <span class="string">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=&quot;</span>;
-        <span class="kw">let </span>dvr_token = <span class="string">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=&quot;</span>;
+        <span class="kw">let </span>user_data_token = <span class="string">"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_="</span>;
+        <span class="kw">let </span>dvr_token = <span class="string">"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_="</span>;
 
-        <span class="kw">let </span>zkpass_client = ZkPassClient {};
-        <span class="kw">let </span>result = zkpass_client
-            .generate_zkpass_proof(<span class="kw-2">&amp;</span>server.url(<span class="string">&quot;/generate-proof&quot;</span>), user_data_token, dvr_token)
-            .<span class="kw">await</span>.unwrap();
-        <span class="macro">println!</span>(<span class="string">&quot;Result: {:?}&quot;</span>, result);
+        <span class="kw">let </span>zkpass_api_key = ZkPassApiKey {
+            api_key: String::from(<span class="string">"my-api-key"</span>),
+            secret_api_key: String::from(<span class="string">"my-secret-api-key"</span>),
+        };
+        <span class="kw">let </span>zkpass_service_url = server.url(<span class="string">""</span>);
+        <span class="kw">let </span>zkpass_client = ZkPassClient::new(<span class="kw-2">&amp;</span>zkpass_service_url, <span class="prelude-val">Some</span>(zkpass_api_key), <span class="string">"r0"</span>);
+        <span class="kw">let </span>result = zkpass_client.generate_zkpass_proof(user_data_token, dvr_token).<span class="kw">await</span>.unwrap();
+        <span class="macro">info!</span>(<span class="string">"result: {:?}"</span>, result);
     }
 
-    <span class="comment">/* 
+    <span class="comment">/*
     struct DummyResolver;
     #[async_trait]
     impl KeysetEndpointResolver for DummyResolver {
@@ -399,9 +685,9 @@ IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==
             let future = async {
                 PublicKey {
                     x: String::from(
-                        &quot;MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU&quot;,
+                        "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU",
                     ),
-                    y: String::from(&quot;IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==&quot;),
+                    y: String::from("IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA=="),
                 }
             };
 
