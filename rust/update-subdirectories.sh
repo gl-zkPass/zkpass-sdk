@@ -13,7 +13,7 @@ fi
 # Variables
 REPO_ZKPASS_URL="$REPO_ZKPASS_URL"
 TEMP_REPO_ZKPASS_DIR="$SCRIPT_DIR/tmp/zkpass"
-TARGET_BASE_DIR="$SCRIPT_DIR/rust"
+TARGET_BASE_DIR="$SCRIPT_DIR"
 IFS=',' read -r -a DIRS_TO_COPY <<< "$DIRS_TO_COPY"  # Convert comma-separated string to array
 
 # Clone zkpass repo to a temporary directory
