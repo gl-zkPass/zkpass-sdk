@@ -33,6 +33,16 @@ To run all unit tests, at the zkPass repo root dir run the following:
   cargo test --release  
 </pre>
 
+## Subdirectories
+To update zkPass subdirectories modules needed :
+1. Copy the .env.example file to a .env file:
+  <pre>
+    cp .env.example .env
+  </pre>
+2. Run update-subdirectories.sh
+  <pre>
+    ./update-subdirectories.sh
+  </pre>
 
 
 
