@@ -11,7 +11,8 @@ else
 fi
 
 # Variables
-REPO_ZKPASS_URL="$REPO_ZKPASS_URL"
+# REPO_ZKPASS_URL="<put zkPass repo URL here>"
+REPO_ZKPASS_URL="https://github.com/GDP-ADMIN/zkPass.git"
 TEMP_REPO_ZKPASS_DIR="$SCRIPT_DIR/tmp/zkpass"
 TARGET_BASE_DIR="$SCRIPT_DIR"
 IFS=',' read -r -a DIRS_TO_COPY <<< "$DIRS_TO_COPY"  # Convert comma-separated string to array

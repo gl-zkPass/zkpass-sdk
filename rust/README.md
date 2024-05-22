@@ -39,6 +39,10 @@ To update the zkPass subdirectory modules:
   <pre>
     cp .env.example .env
   </pre>
+2. Fill in the REPO_ZKPASS_URL value in the update-subdirectories.sh line 14
+  <pre>
+    REPO_ZKPASS_URL="<put zkPass repo URL here>"
+  </pre>
 2. Run update-subdirectories.sh
   <pre>
     ./update-subdirectories.sh
