@@ -1,6 +1,6 @@
 [package]
 name = "zkpass-demo"
-version = "0.2.0-beta.2"
+version = "1.0.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -15,6 +15,7 @@ zkpass-client = { path = "../zkpass-client" }
 tokio = { version = "1.32.0", features = ["full"] }
 lazy_static = "1.4.0"
 uuid = { version = "1.2.2", features = ["v4"] }
+dotenv = "0.15.0"
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 zkpass-core = { path = "../zkpass-core" }

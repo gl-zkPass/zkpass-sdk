@@ -11,10 +11,7 @@
 
 #[cfg(test)]
 mod e2e_tests {
-    use std::{
-        env,
-        process::{Command, Stdio},
-    };
+    use std::{ env, process::{ Command, Stdio } };
 
     fn get_initial_command() -> String {
         let path = env::current_dir().unwrap();
@@ -37,7 +34,8 @@ mod e2e_tests {
         let dvr_path = "test/data/bca-finance-ramana-dvr.json";
         let zkpass_demo_command = format!(
             "./target/release/zkpass-demo r0 {} {}",
-            user_data_path, dvr_path
+            user_data_path,
+            dvr_path
         );
         let output = Command::new("sh")
             .arg("-c")
@@ -63,7 +61,8 @@ mod e2e_tests {
         let dvr_path = "test/data/bca-finance-ramana-dvr.json";
         let zkpass_demo_command = format!(
             "./target/release/zkpass-demo r0 {} {}",
-            user_data_path, dvr_path
+            user_data_path,
+            dvr_path
         );
         let output = Command::new("sh")
             .arg("-c")

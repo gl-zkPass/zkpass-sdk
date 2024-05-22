@@ -34,7 +34,7 @@ To run all unit tests, at the zkPass repo root dir run the following:
 </pre>
 
 ## Subdirectories
-To update zkPass subdirectories modules needed :
+To update the zkPass subdirectory modules:
 1. Copy the .env.example file to a .env file:
   <pre>
     cp .env.example .env

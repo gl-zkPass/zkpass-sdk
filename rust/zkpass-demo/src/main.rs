@@ -1,15 +1,16 @@
-mod constants;
 mod data_holder;
 mod data_issuer;
 mod proof_verifier;
+mod sample_keys;
 mod test;
 
-use clap::{App, Arg};
-use data_holder::DataHolder;
+use clap::{ Arg, App };
 use std::fs;
+use std::path::PathBuf;
 use tokio::runtime::Runtime;
-use tracing::{instrument, level_filters::LevelFilter};
-use tracing_subscriber::{self, EnvFilter};
+use data_holder::DataHolder;
+use tracing_subscriber::{ self, EnvFilter };
+use tracing::{ instrument, level_filters::LevelFilter };
 
 fn initialize_tracing() {
     /* This code will be used in the near future
@@ -24,10 +25,7 @@ fn initialize_tracing() {
         .or_else(|_| EnvFilter::try_new("INFO"))
         .unwrap();
 
-    tracing_subscriber::fmt::fmt()
-        .with_env_filter(filter)
-        .with_max_level(LevelFilter::INFO)
-        .init();
+    tracing_subscriber::fmt::fmt().with_env_filter(filter).with_max_level(LevelFilter::INFO).init();
 }
 
 #[instrument]
@@ -45,27 +43,26 @@ fn path_exists(path: &str) -> bool {
 
 fn main() {
     initialize_tracing();
+    let env_path = PathBuf::from("./zkpass-demo/.env");
+    dotenv::from_path(env_path.as_path()).ok();
 
     let matches = App::new("zkpass-demo")
         .version("0.1.0")
         .about("A CLI app for submitting a DVR query to the zkPass service")
         .arg(
-            Arg::with_name("zkvm-type")
-                .help("The zkVM type: 'r0'")
-                .required(true)
-                .index(1),
+            Arg::with_name("zkvm-type").help("The zkVM type: 'sp1' or 'r0'").required(true).index(1)
         )
         .arg(
             Arg::with_name("user-data-file")
                 .help("Path to the user data JSON file")
                 .required(true)
-                .index(2),
+                .index(2)
         )
         .arg(
             Arg::with_name("dvr-query-file")
                 .help("Path to the DVR query JSON file")
                 .required(true)
-                .index(3),
+                .index(3)
         )
         .get_matches();
 
@@ -73,9 +70,9 @@ fn main() {
     let user_data_path = matches.value_of("user-data-file").unwrap();
     let dvr_file_path = matches.value_of("dvr-query-file").unwrap();
 
-    // Check if zkvm_type is "r0"
-    if zkvm_type != "r0" {
-        eprintln!("Error: 'zkvm-type' must be 'r0'");
+    // Check if zkvm_type is either "sp1" or "r0"
+    if zkvm_type != "sp1" && zkvm_type != "r0" {
+        eprintln!("Error: 'zkvm-type' must be 'sp1' or 'r0'");
         std::process::exit(1);
     }
 

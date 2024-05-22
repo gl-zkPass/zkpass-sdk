@@ -1,9 +1,13 @@
 #[cfg(test)]
 mod tests {
     use hex;
-    use sha2::{Digest, Sha256};
+    use sha2::{ Digest, Sha256 };
     use zkpass_client::core::{
-        DataVerificationRequest, PublicKey, PublicKeyOption, ZkPassError, ZkPassProof,
+        DataVerificationRequest,
+        PublicKey,
+        PublicKeyOption,
+        ZkPassError,
+        ZkPassProof,
     };
 
     #[test]
