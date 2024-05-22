@@ -5,6 +5,7 @@ use zkpass_client::interface::{ ZkPassClient, ZkPassProofGenerator, ZkPassApiKey
 use crate::data_issuer::DataIssuer;
 use crate::proof_verifier::ProofVerifier;
 use zkpass_client::core::OutputReader;
+use zkpass_client::interface::{ ZkPassApiKey, ZkPassClient, ZkPassProofGenerator };
 
 pub struct DataHolder;
 
@@ -75,6 +76,5 @@ impl DataHolder {
 
         let val = output_reader.find_bool("result").unwrap();
         println!("the query result is {}", val);
-
     }
 }

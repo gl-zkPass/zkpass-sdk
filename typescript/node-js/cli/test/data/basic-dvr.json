@@ -1,3 +1,11 @@
-{
-  "==": ["Hello", "World"]
-}
+[
+  {
+    "assign": {
+      "hello_world":
+        {
+          "==": [{ "dvar": "Hello" }, "World"]
+        }
+    }
+  },
+  { "output": { "result": { "lvar": "hello_world" } } }
+]

@@ -4,6 +4,7 @@
   "customerID": "BCA123756108",
   "personalInfo": {
     "firstName": "Dewi",
+    "_firstName_zkpass_public_": true,
     "lastName": "Putri",
     "dateOfBirth": "1980-01-01",
     "driverLicenseNumber": "DL123456789"
@@ -35,6 +36,7 @@
   ],
   "contactInfo": {
     "email": "dewi.putri@yahoo.com",
+    "_email_zkpass_public_": true,
     "phone": "+62-855-123-4567"
   },
   "flags": {

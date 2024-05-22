@@ -1,3 +1,4 @@
+use crate::constants::{ self, VERIFIER_PRIVKEY };
 use lazy_static::lazy_static;
 use serde_json::{ json, Value };
 use std::collections::HashMap;
@@ -7,7 +8,11 @@ use std::time::Instant;
 use tracing::trace;
 use uuid::Uuid;
 use zkpass_client::core::{
-    DataVerificationRequest, KeysetEndpoint, PublicKey, PublicKeyOption, ZkPassError
+    DataVerificationRequest,
+    KeysetEndpoint,
+    PublicKey,
+    PublicKeyOption,
+    ZkPassError,
 };
 use zkpass_client::interface::{
     ZkPassClient,

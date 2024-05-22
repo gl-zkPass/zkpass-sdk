@@ -4,15 +4,17 @@
   "customerID": "BCA123756108",
   "personalInfo": {
     "firstName": "Dewi",
+    "_firstName_zkpass_public_": true,
     "lastName": "Putri",
-    "dateOfBirth": "1980-01-01",
+    "dateOfBirth": "01-01-1980",
     "driverLicenseNumber": "DL123456789"
   },
   "financialInfo": {
     "averageMonthlyBalance": 200000000,
     "creditRatings": {
       "pefindo": 720,
-      "creditKarma": 725,
+      "CreditKarma": 725,
+      "_CreditKarma_zkpass_public_": true,
       "equiInfo": 730
     },
     "accounts": {
@@ -26,20 +28,15 @@
       }
     }
   },
-  "loanHistory": [
-    {
-      "loanType": "auto",
-      "loanAmount": 200000000,
-      "loanStatus": "closed"
-    }
-  ],
   "contactInfo": {
     "email": "dewi.putri@yahoo.com",
-    "phone": "+62-855-123-4567"
-  },
-  "flags": {
-    "isOverdraftProtected": true,
-    "isVIP": false,
-    "fraudAlerts": false
+    "_email_zkpass_public_": true,
+    "phone": "+62-855-123-4567",
+    "address": {
+      "street": "2000 Dharma Street",
+      "city": "Bandung",
+      "zip": 51840,
+      "_zip_zkpass_public_": true
+    }
   }
 }

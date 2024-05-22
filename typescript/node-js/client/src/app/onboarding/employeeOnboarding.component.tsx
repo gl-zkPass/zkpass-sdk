@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: February 29th 2024
+ * Last Modified: April 16th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -186,7 +186,9 @@ export default function EmployeeOnboarding({
       interface ProofResult {
         status: number;
         data: {
-          result: boolean;
+          output: {
+            result: boolean;
+          }
         };
       }
       const validateProofBody: ProofResult = await validateProof.json();
@@ -194,7 +196,7 @@ export default function EmployeeOnboarding({
 
       if (validateProofBody.status == 200) {
         console.log("== validate proof body 200");
-        setProofResult(validateProofBody.data.result);
+        setProofResult(validateProofBody.data.output.result);
       } else {
         console.log("== validate proof body not 200");
         setProofResult(false);

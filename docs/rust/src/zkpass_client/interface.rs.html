@@ -440,7 +440,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         zkpass_proof_token: <span class="kw-2">&amp;</span>str,
         validator: <span class="kw-2">&amp;</span>Box&lt;<span class="kw">dyn </span>ZkPassProofMetadataValidator&gt;
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(bool, ZkPassProof), ZkPassError&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(String, ZkPassProof), ZkPassError&gt; {
         <span class="comment">//
         //  zkp verification
         //
@@ -505,7 +505,7 @@
     </span><span class="kw">async fn </span>verify_zkpass_proof_internal(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         zkpass_proof_token: <span class="kw-2">&amp;</span>str
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(bool, ZkPassProof), ZkPassError&gt;;
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(String, ZkPassProof), ZkPassError&gt;;
 
     <span class="doccomment">/// # **Description**
     /// &lt;span style="font-size: 1.2em; color: #996515;"&gt; ***Returns the version information about the query engine.*** &lt;/span&gt;

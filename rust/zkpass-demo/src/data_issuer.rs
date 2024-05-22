@@ -1,10 +1,12 @@
+use serde_json::{ json, Value };
+use std::io::prelude::*;
 use tracing::info;
 use std::io::prelude::*;
 use serde_json::{ json, Value };
 use zkpass_client::core::KeysetEndpoint;
 use zkpass_client::interface::{ ZkPassClient, ZkPassUtility };
 
-use crate::sample_keys::ISSUER_PRIVKEY;
+use crate::constants::ISSUER_PRIVKEY;
 
 //
 //  Simulating the REST call to the Data Issuer
