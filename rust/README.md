@@ -38,10 +38,7 @@ To update the zkPass subdirectory modules:
 1. Update the update-subdirectories.sh script:
   a. Fill in the ```REPO_ZKPASS_URL``` value in line 4.
   b. Fill in the ```DIRS_TO_COPY``` value in line 8.
-     For example : 
-     ```
-     DIRS_TO_COPY=("zkpass-dir-A" "zkpass-dir-B/src" etc.)
-     ```
+     For example : **DIRS_TO_COPY**=```("zkpass-dir-A" "zkpass-dir-B/src" etc.)```
   <pre>
     REPO_ZKPASS_URL="<put zkPass repo URL here>"
     .
