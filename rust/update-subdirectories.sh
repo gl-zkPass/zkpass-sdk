@@ -1,21 +1,11 @@
 #!/bin/bash
 
-# Load environment variables from .env file
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-ENV_FILE="$SCRIPT_DIR/.env"
-if [ -f "$ENV_FILE" ]; then
-  source "$ENV_FILE"
-else
-  echo "Error: .env file not found!"
-  exit 1
-fi
-
 # Variables
-# REPO_ZKPASS_URL="<put zkPass repo URL here>"
-REPO_ZKPASS_URL="https://github.com/GDP-ADMIN/zkPass.git"
+REPO_ZKPASS_URL="<put zkPass repo URL here>"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 TEMP_REPO_ZKPASS_DIR="$SCRIPT_DIR/tmp/zkpass"
 TARGET_BASE_DIR="$SCRIPT_DIR"
-IFS=',' read -r -a DIRS_TO_COPY <<< "$DIRS_TO_COPY"  # Convert comma-separated string to array
+DIRS_TO_COPY="<put the directories and files to copy>"
 
 # Clone zkpass repo to a temporary directory
 if git clone "$REPO_ZKPASS_URL" "$TEMP_REPO_ZKPASS_DIR"; then

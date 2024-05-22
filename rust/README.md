@@ -35,15 +35,21 @@ To run all unit tests, at the zkPass repo root dir run the following:
 
 ## Subdirectories
 To update the zkPass subdirectory modules:
-1. Copy the .env.example file to a .env file:
-  <pre>
-    cp .env.example .env
-  </pre>
-2. Fill in the REPO_ZKPASS_URL value in the update-subdirectories.sh line 14
+1. Update the update-subdirectories.sh script:
+  a. Fill in the ```REPO_ZKPASS_URL``` value in line 4.
+  b. Fill in the ```DIRS_TO_COPY``` value in line 8.
+     For example : 
+     ```
+     DIRS_TO_COPY=("zkpass-dir-A" "zkpass-dir-B/src" etc.)
+     ```
   <pre>
     REPO_ZKPASS_URL="<put zkPass repo URL here>"
+    .
+    .
+    .
+    DIRS_TO_COPY="<put the directories and files to copy>"
   </pre>
-2. Run update-subdirectories.sh
+2. Run the update-subdirectories.sh script:
   <pre>
     ./update-subdirectories.sh
   </pre>
