@@ -2,13 +2,14 @@
 
 # Variables
 REPO_ZKPASS_URL="<put zkPass repo URL here>"
+REPO_ZKPASS_BRANCH="<put branch name here>"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 TEMP_REPO_ZKPASS_DIR="$SCRIPT_DIR/tmp/zkpass"
 TARGET_BASE_DIR="$SCRIPT_DIR"
-DIRS_TO_COPY="<put the directories and files to copy>"
+DIRS_TO_COPY=("zkpass-client" "zkpass-demo/src" "zkpass-demo/tests" "zkpass-demo/Cargo.toml" "zkpass-core" "zkpass-query/types")  # The directories and files to copy
 
 # Clone zkpass repo to a temporary directory
-if git clone "$REPO_ZKPASS_URL" "$TEMP_REPO_ZKPASS_DIR"; then
+if git clone --branch "$REPO_ZKPASS_BRANCH" "$REPO_ZKPASS_URL" "$TEMP_REPO_ZKPASS_DIR"; then
   echo "Repository cloned successfully."
 else
   echo "Failed to clone the repository."
