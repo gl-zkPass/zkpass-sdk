@@ -6,8 +6,8 @@
  *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * Created at: November 7th 2023
  * -----
- * Last Modified: March 13th 2024
- * Modified By: handrianalandi (handrian.alandi@gdplabs.id)
+ * Last Modified: May 31st 2024
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
  *   JaniceLaksana (janice.laksana@gdplabs.id)
@@ -78,8 +78,13 @@ const HomePage = () => {
   }, []);
 
   const handleCopyPress = () => {
-    const dataToCopy = pageState === PageState.DVR ? dvr : userData;
-    Clipboard.setString(JSON.stringify(dataToCopy, null, 2));
+    if (pageState == PageState.DVR) {
+      Clipboard.setString(JSON.stringify(dvr, null, 2));
+    } else if (pageState == PageState.UserData) {
+      Clipboard.setString(JSON.stringify(userData, null, 2));
+    } else if (pageState == PageState.ShowTokenProof) {
+      Clipboard.setString(truncateToken(proofToken));
+    }
   };
 
   const goNext = () => {
@@ -110,7 +115,7 @@ const HomePage = () => {
 
   const truncateToken = (token: string) => {
     const TOKEN_LIMIT = 1000;
-    return token.substring(0, TOKEN_LIMIT) + '...';
+    return token.substring(0, TOKEN_LIMIT) + ' ...';
   };
 
   const downloadProofAsFile = async () => {
@@ -226,7 +231,7 @@ const HomePage = () => {
               <Text style={styles.dvrInformationHeaderText}>
                 {pageState == PageState.DVR && 'Data Verification Request'}
                 {pageState == PageState.UserData && 'User Data'}
-                {pageState == PageState.ShowTokenProof && 'Token Proof'}
+                {pageState == PageState.ShowTokenProof && 'Token Proof (truncated)'}
               </Text>
 
               {pageState == PageState.ShowTokenProof && (

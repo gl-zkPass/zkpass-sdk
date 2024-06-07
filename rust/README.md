@@ -1,4 +1,13 @@
-# zkPass SDK
+<h1 align="middle">zkPass SDK - Rust Demo</h1>
+
+<p>
+  <p>
+    For complete information on everything you need to do before using this program, including installation and usage instructions, please refer to the Gitbook documentation.
+  </p>
+  <a href="https://docs.ssi.id/zkpass/v/zkpass-developers-guide/sdk-tutorial/quick-start/rust-linux" target="_blank">
+      <img src="https://img.shields.io/badge/GitBook-read-blue?style=for-the-badge&logo=gitbook&logoColor=white" />
+  </a>
+</p>
 
 ## SDK Components
 
