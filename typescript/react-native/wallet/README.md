@@ -1,3 +1,7 @@
+> **⚠️ Deprecated SDK Notice**
+> 
+> This SDK is no longer maintained and is considered deprecated.
+
 <h1 align="middle">Wallet Demo</h1>
 
 <p>
