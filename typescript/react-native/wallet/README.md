@@ -1,3 +1,7 @@
+> **⚠️ Deprecated SDK Notice**
+> 
+> This SDK is no longer maintained and is considered deprecated.
+
 ## Prerequisites
 
 - [Node.js 18.0](https://nodejs.org/en) or later.
