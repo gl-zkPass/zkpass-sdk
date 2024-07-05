@@ -1,6 +1,6 @@
 > **⚠️ Deprecated SDK Notice**
 > 
-> This SDK is no longer maintained and is considered deprecated.
+> This SDK is no longer maintained and is considered deprecated as of (July 5th 2024)
 
 <h1 align="middle">Wallet Demo</h1>
 
