@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 19th 2023
  * -----
- * Last Modified: March 8th 2024
- * Modified By: handrianalandi (handrian.alandi@gdplabs.id)
+ * Last Modified: July 27th 2024
+ * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -30,8 +30,12 @@ export type DvrData = {
   dvr_title: string;
   dvr_id: string;
   query: string;
-  user_data_url: string;
-  user_data_verifying_key: PublicKeyOption;
+  user_data_requests: {
+    [key: string]: {
+      user_data_url: string;
+      user_data_verifying_key: PublicKeyOption;
+    };
+  };
   dvr_verifying_key: PublicKeyOption;
   zkvm: string;
 };
@@ -40,9 +44,9 @@ export abstract class Verifier {
   zkPassClient: ZkPassClient;
   dvr: DataVerificationRequest | null;
   constructor() {
-    this.zkPassClient = new ZkPassClient({ 
+    this.zkPassClient = new ZkPassClient({
       zkPassServiceUrl: ZKPASS_SERVICE_URL,
-      zkVm: ZKPASS_ZKVM
+      zkVm: ZKPASS_ZKVM,
     });
     this.dvr = null;
   }
@@ -77,5 +81,5 @@ export abstract class Verifier {
     return this.dvr;
   }
 
-  abstract getDvrToken(dvrFile: string): Promise<string>
+  abstract getDvrToken(dvrFile: string): Promise<string>;
 }

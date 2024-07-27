@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 21st 2023
  * -----
- * Last Modified: February 29th 2024
+ * Last Modified: July 27th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -24,7 +24,7 @@ import {
   PublicKeyWrapped,
   KeysetEndpointWrapped,
   VerifyZkPassProofResult,
-  ZkPassProofMetadataValidator
+  ZkPassProofMetadataValidator,
 } from "@didpass/zkpass-client-ts";
 import { dvrTable } from "./utils/dvrTable";
 import { readFileSync } from "fs";
@@ -105,14 +105,18 @@ export class MyVerifier extends Verifier {
       dvr_title: DVR_TITLE,
       dvr_id: uuidv4(),
       query: JSON.stringify(queryObj),
-      user_data_url: USER_DATA_URL,
-      user_data_verifying_key: {
-        KeysetEndpoint: issuerPubkey,
+      user_data_requests: {
+        "": {
+          user_data_url: USER_DATA_URL,
+          user_data_verifying_key: {
+            KeysetEndpoint: issuerPubkey,
+          },
+        },
       },
       dvr_verifying_key: {
         KeysetEndpoint: verifierPubkey,
       },
-      zkvm: ZKPASS_ZKVM
+      zkvm: ZKPASS_ZKVM,
     };
 
     //
