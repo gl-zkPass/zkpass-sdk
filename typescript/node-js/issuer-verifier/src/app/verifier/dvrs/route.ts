@@ -6,7 +6,7 @@
  *   Zulchaidir (zulchaidir@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: April 16th 2024
+ * Last Modified: July 27th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -134,14 +134,18 @@ async function _generateSignedDVR(user: User) {
     query_engine_ver: queryEngineVersion,
     query_method_ver: queryMethodVersion,
     query: dvrQuery,
-    user_data_url: USER_DATA_URL,
-    user_data_verifying_key: {
-      KeysetEndpoint: issuerVerifyingKeyJKWS,
+    user_data_requests: {
+      "": {
+        user_data_url: USER_DATA_URL,
+        user_data_verifying_key: {
+          KeysetEndpoint: issuerVerifyingKeyJKWS,
+        },
+      },
     },
     dvr_verifying_key: {
       KeysetEndpoint: verifierVerifyingKeyJKWS,
     },
-    zkvm: ZKPASS_ZKVM
+    zkvm: ZKPASS_ZKVM,
   });
 
   /**
@@ -168,46 +172,43 @@ function _generateBloodTestQuery(user: User): string {
   const query = [
     {
       assign: {
-        lab_id: {"==": [{ dvar: "lab.ID" }, "QH801874"]}
-      }
+        lab_id: { "==": [{ dvar: "lab.ID" }, "QH801874"] },
+      },
     },
     {
       assign: {
         test_id: {
-          "==": [{ dvar: "testID" }, "SCREEN-7083-12345"]
-        }
-      }
+          "==": [{ dvar: "testID" }, "SCREEN-7083-12345"],
+        },
+      },
     },
     {
       assign: {
         subject_first_name: {
-          "~==": [{ dvar: "subject.firstName" }, user.firstName]
-        }
-      }
+          "~==": [{ dvar: "subject.firstName" }, user.firstName],
+        },
+      },
     },
     {
       assign: {
         subject_last_name: {
-          "~==": [{ dvar: "subject.lastName" }, user.lastName]
-        }
-      }
+          "~==": [{ dvar: "subject.lastName" }, user.lastName],
+        },
+      },
     },
     {
       assign: {
         subject_date_of_birth: {
-          "==": [
-            { dvar: "subject.dateOfBirth" },
-            user.dateOfBirth,
-          ]
-        }
-      }
+          "==": [{ dvar: "subject.dateOfBirth" }, user.dateOfBirth],
+        },
+      },
     },
     {
       assign: {
         measuredPanelsNgML_cocaine: {
-          "<=": [{ dvar: "measuredPanelsNgML.cocaine" }, 10]
-        }
-      }
+          "<=": [{ dvar: "measuredPanelsNgML.cocaine" }, 10],
+        },
+      },
     },
     {
       assign: {
