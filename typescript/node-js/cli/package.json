@@ -13,7 +13,7 @@
     "demo-jane": "npm run build && node build/index.js ./test/data/jane-blood-test-result.json ./test/data/employee-onboarding-dvr.json"
   },
   "dependencies": {
-    "@didpass/zkpass-client-ts": "file:../../../didpass-zkpass-client-ts-1.1.0.tgz",
+    "@didpass/zkpass-client-ts": "^1.1.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
