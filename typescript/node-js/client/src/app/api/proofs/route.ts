@@ -6,7 +6,7 @@
  *   Zulchaidir (zulchaidir@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: February 29th 2024
+ * Last Modified: July 27th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -20,7 +20,12 @@
 
 import { NextResponse } from "next/server";
 import { ZkPassApiKey, ZkPassClient } from "@didpass/zkpass-client-ts";
-import { API_KEY, API_SECRET, ZKPASS_SERVICE_URL, ZKPASS_ZKVM } from "@/utils/constants";
+import {
+  API_KEY,
+  API_SECRET,
+  ZKPASS_SERVICE_URL,
+  ZKPASS_ZKVM,
+} from "@/utils/constants";
 
 export async function POST(req: Request) {
   try {
@@ -42,7 +47,10 @@ export async function POST(req: Request) {
      * Step 2: Call the zkPassClient.generateZkPassProof
      *         to get the zkPassProofToken.
      */
-    const proof = await zkPassClient.generateZkPassProof(blood_test, dvr);
+    const proof = await zkPassClient.generateZkPassProof(
+      { "": blood_test },
+      dvr
+    );
     console.log({ proof });
     return Response.json({ status: 200, data: proof });
   } catch (error) {

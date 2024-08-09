@@ -5,7 +5,7 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 19th 2023
  * -----
- * Last Modified: February 29th 2024
+ * Last Modified: July 27th 2024
  * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
  * -----
  * Reviewers:
@@ -34,7 +34,7 @@ export abstract class Holder {
     const zkPassClient = new ZkPassClient({
       zkPassServiceUrl: zkPassServiceUrl,
       zkPassApiKey: apiKey,
-      zkVm: zkPassZkvm
+      zkVm: zkPassZkvm,
     });
 
     //
@@ -42,7 +42,7 @@ export abstract class Holder {
     //         to get the zkPassProofToken.
     //
     const zkPassProofToken = await zkPassClient.generateZkPassProof(
-      userDataToken,
+      { "": userDataToken },
       dvrToken
     );
 
@@ -55,5 +55,5 @@ export abstract class Holder {
     zkPassServiceUrl: string,
     apiKey: ZkPassApiKey,
     zkPassZkvm: string
-  ): Promise<string> 
+  ): Promise<string>;
 }
