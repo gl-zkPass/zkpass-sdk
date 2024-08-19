@@ -2886,6 +2886,7 @@ dependencies = [
  "josekit",
  "lazy_static",
  "maplit",
+ "reqwest",
  "serde",
  "serde_json",
  "sha2",
