@@ -1,6 +1,6 @@
 /*
  * interface.rs
- * This file is for all interfaces
+ * zkPass public interfaces, structs, and enums
  *
  * Authors:
  *   Antony Halim (antony.halim@gdplabs.id)
@@ -10,7 +10,7 @@
  *   JaniceLaksana (janice.laksana@gdplabs.id)
  * Created at: September 21st 2024
  * -----
- * Last Modified: March 4th 2024
+ * Last Modified: August 19th 2024
  * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
  * -----
  * Reviewers:
@@ -27,18 +27,13 @@
  */
 use async_trait::async_trait;
 use hex;
-use josekit::{
-    jwe::{ JweHeader, ECDH_ES },
-    jws::{ JwsHeader, ES256 },
-    jwt::{ self, JwtPayload },
-    JoseError,
-};
-use jsonwebtoken::{ decode, DecodingKey, Header, Validation };
-use serde::{ Deserialize, Serialize };
-use serde_json::{ json, Value };
-use sha2::{ Digest, Sha256 };
-use std::time::{ SystemTime, UNIX_EPOCH };
+use josekit::{jws::ES256, jwt, JoseError};
+use serde::{Deserialize, Serialize};
+use serde_json::Value;
+use sha2::{Digest, Sha256};
+use std::collections::HashMap;
 use thiserror::Error;
+
 ///
 /// <span style="font-size: 1.1em; color: #996515;"> ***Defines various errors that come from the zkPass Service.*** </span>
 ///
@@ -47,10 +42,14 @@ pub enum ZkPassError {
     #[error("Missing Root Data Element")]
     MissingRootDataElementError,
 
+    #[error("Missing {0} Element")]
+    MissingElementError(String),
+
     #[error("Not Implemented")]
     NotImplementedError,
 
-    #[error(transparent)] JoseError(#[from] JoseError),
+    #[error(transparent)]
+    JoseError(#[from] JoseError),
 
     #[error("Mismatched User Data Verifying Key")]
     MismatchedUserDataVerifyingKey,
@@ -76,7 +75,8 @@ pub enum ZkPassError {
     #[error("Missing Public Key")]
     MissingPublicKey,
 
-    #[error("{0}")] CustomError(String),
+    #[error("{0}")]
+    CustomError(String),
 
     #[error("Invalid Public Key")]
     InvalidPublicKey,
@@ -93,7 +93,8 @@ pub enum ZkPassError {
     #[error("Invalid ZKVM name")]
     InvalidZkVm,
 
-    #[error("{0}")] QueryEngineError(String),
+    #[error("{0}")]
+    QueryEngineError(String),
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
@@ -166,7 +167,7 @@ pub struct ZkPassProof {
     pub dvr_digest: String,
 
     /// The public key actually used by the zkPass Service to verify the signature of the user data
-    pub user_data_verifying_key: PublicKey,
+    pub user_data_verifying_keys: HashMap<String, PublicKey>,
 
     /// The public key actually used by the zkPass Service to verify the signature of the DVR
     pub dvr_verifying_key: PublicKey,
@@ -175,12 +176,28 @@ pub struct ZkPassProof {
     pub time_stamp: u64,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+pub struct UserDataRequest {
+    /// The url to retrieve the user data referenced by the query.
+    ///
+    /// This field is optional. If this is None is present then the recipient
+    /// of the DVR, which typically is the Data Holder, is supposed to know
+    /// where to get the user data needed by the query of this DVR.
+    pub user_data_url: Option<String>,
+
+    /// The public key information used to verify the signature of the user data.
+    ///
+    /// This field is set by Proof Verifier to inform the
+    /// zkPass Service the public key it needs to use when verifying
+    /// the signature of the user data.
+    pub user_data_verifying_key: PublicKeyOption,
+}
+
 ///
 /// <span style="font-size: 1.1em; color: #996515;"> ***Represents a request that contains information needed to verify user data.*** </span>
 ///
 ///  This struct is typically created by the Proof Verifier client, and the DVR
 ///  represents a request to verify certain attributes or properties of a user data.
-///
 ///
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct DataVerificationRequest {
@@ -202,19 +219,13 @@ pub struct DataVerificationRequest {
     /// The zkPass Query script, which is encoded in JSON string format
     pub query: String,
 
-    /// The url to retrieve the user data referenced by the query.
+    /// We allow more than one user data specification in a single DVR.
     ///
-    /// This field is optional. If this is None is present then the recipient
-    /// of the DVR, which typically is the Data Holder, is supposed to know
-    /// where to get the user data needed by the query of this DVR.
-    pub user_data_url: Option<String>,
-
-    /// The public key information used to verify the signature of the user data.
-    ///
-    /// This field is set by Proof Verifier to inform the
-    /// zkPass Service the public key it needs to use when verifying
-    /// the signature of the user data.
-    pub user_data_verifying_key: PublicKeyOption,
+    /// The key in this HashMap is the tag of the user data.
+    /// This tag will be used in the `dvar` path.
+    /// This tag is allowed to be empty (by putting empty string "") if there's only one user data.
+    /// Tag can only contains alphanumeric characters and underscore.
+    pub user_data_requests: HashMap<String, UserDataRequest>,
 
     /// The public key information used to verify the signature of this dvr.
     ///
@@ -226,24 +237,47 @@ pub struct DataVerificationRequest {
     pub dvr_verifying_key: Option<PublicKeyOption>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
-struct WrappedDataVerificationRequest {
-    pub data: DataVerificationRequest,
-}
-
 impl DataVerificationRequest {
+    // `user_data_requests` is a hashmap and doesn't have a guarantee of the order of the items.
+    // So every time there are two DataVerificationRequest with the same content, the digest could be different if the order of the items is different.
+    // Solution: sort the hashmap by key before hashing.
     pub fn get_sha256_digest(&self) -> String {
+        let mut sorted_user_data_requests: Vec<(_, _)> = self.user_data_requests.iter().collect();
+        sorted_user_data_requests.sort_by(|a, b| a.0.cmp(b.0));
+
+        #[derive(Serialize)]
+        struct DvrForHash<'a> {
+            zkvm: &'a str,
+            dvr_title: &'a str,
+            dvr_id: &'a str,
+            query_engine_ver: &'a str,
+            query_method_ver: &'a str,
+            query: &'a str,
+            user_data_requests: Vec<(&'a String, &'a UserDataRequest)>,
+            dvr_verifying_key: &'a Option<PublicKeyOption>,
+        }
+        let dvr_for_hash = DvrForHash {
+            zkvm: &self.zkvm,
+            dvr_title: &self.dvr_title,
+            dvr_id: &self.dvr_id,
+            query_engine_ver: &self.query_engine_ver,
+            query_method_ver: &self.query_method_ver,
+            query: &self.query,
+            user_data_requests: sorted_user_data_requests,
+            dvr_verifying_key: &self.dvr_verifying_key,
+        };
+
         let mut hasher = Sha256::new();
-        hasher.update(serde_json::to_string(self).unwrap());
+        hasher.update(serde_json::to_string(&dvr_for_hash).unwrap());
         hex::encode(hasher.finalize())
     }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct VerifiedNestedTokenData {
+pub struct VerifiedNestedTokenUserData {
     pub outer_header: String,
-    pub inner_header: String,
-    pub payload: Value,
+    pub inner_headers: HashMap<String, String>,
+    pub payloads: HashMap<String, Value>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -252,6 +286,16 @@ pub struct VerifiedNestedTokenDvr {
     pub inner_header: String,
     pub dvr: DataVerificationRequest,
     pub dvr_verifying_key: PublicKey,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Jwk {
+    pub kty: String,
+    pub crv: String,
+    pub kid: String,
+    pub x: String,
+    pub y: String,
+    pub jwt: Option<String>,
 }
 
 ///
@@ -275,299 +319,25 @@ pub trait KeysetEndpointResolver {
     async fn get_key(&self, jku: &str, kid: &str) -> PublicKey;
 }
 
-/// <span style="font-size: 1.2em; color: #996515;"> ***Gets the number of seconds that has elapsed since the Unix Epoch time.*** </span>
-///
-/// # **Parameters**
-///
-/// | Return Value                                                   | Description                               |
-/// |----------------------------------------------------------------|-------------------------------------------|
-/// |<span style="color: green;"> **`u64`** </span> | The elapsed time since the Unix Epoch time (January 1, 1970) expressed in seconds|
-pub fn get_current_timestamp() -> u64 {
-    let now = SystemTime::now();
-    let duration_since_epoch = now.duration_since(UNIX_EPOCH).expect("Time went backwards");
-    duration_since_epoch.as_secs()
-}
-
-pub fn encrypt_data_to_jwe_token(key: &str, data: Value) -> Result<String, ZkPassError> {
-    //
-    // the static keypair, owned by the recipient
-    // the sender uses ephemeral key internally so it does not need to maintain any static keypair.
-    //
-
-    let mut header = JweHeader::new();
-    header.set_token_type("JWT");
-    header.set_content_encryption("A256GCM");
-
-    let mut payload = JwtPayload::new();
-    let user_data: Option<Value> = Some(data);
-    payload.set_claim("data", user_data).map_err(|e| ZkPassError::JoseError(e))?;
-
-    // Encrypting JWT
-    let encrypter = ECDH_ES.encrypter_from_pem(&key).map_err(|e| ZkPassError::JoseError(e))?;
-    let jwe_token = jwt
-        ::encode_with_encrypter(&payload, &header, &encrypter)
-        .map_err(|e| ZkPassError::JoseError(e))?;
-
-    Ok(jwe_token)
-}
-
-pub fn decrypt_jwe_token(key: &str, jwe_token: &str) -> Result<(String, String), ZkPassError> {
-    let decrypter = ECDH_ES.decrypter_from_pem(&key).map_err(|e| ZkPassError::JoseError(e))?;
-    let (payload, header) = jwt
-        ::decode_with_decrypter(&jwe_token, &decrypter)
-        .map_err(|e| ZkPassError::JoseError(e))?;
-
-    if let Some(data) = payload.claim("data") {
-        Ok((data.to_string(), header.to_string()))
-    } else {
-        Err(ZkPassError::MissingRootDataElementError)
-    }
-}
-
-pub fn sign_data_to_jws_token(
-    signing_key: &str,
-    data: Value,
-    verifying_key_jwks: Option<KeysetEndpoint>
-) -> Result<String, ZkPassError> {
-    //
-    // set the header
-    //
-    let mut header = JwsHeader::new();
-    header.set_token_type("JWT");
-    match verifying_key_jwks {
-        Some(jwks) => {
-            header.set_jwk_set_url(jwks.jku);
-            header.set_key_id(jwks.kid);
-        }
-        None => {}
-    }
-
-    let mut payload = JwtPayload::new();
-    let user_data: Option<Value> = Some(data);
-    payload.set_claim("data", user_data).map_err(|e| ZkPassError::JoseError(e))?;
-
-    // Signing JWT
-    let signer = ES256.signer_from_pem(&signing_key).map_err(|e| ZkPassError::JoseError(e))?;
-    let jws_token = jwt
-        ::encode_with_signer(&payload, &header, &signer)
-        .map_err(|e| ZkPassError::JoseError(e))?;
-
-    Ok(jws_token)
-}
-
-pub fn verify_jws_token(key: &str, jws_token: &str) -> Result<(Value, String), ZkPassError> {
-    let verifier = ES256.verifier_from_pem(&key).map_err(|e| ZkPassError::JoseError(e))?;
-    let (payload, header) = jwt
-        ::decode_with_verifier(&jws_token, &verifier)
-        .map_err(|e| ZkPassError::JoseError(e))?;
-
-    if let Some(data) = payload.claim("data") {
-        Ok((data.clone(), header.to_string()))
-    } else {
-        Err(ZkPassError::MissingRootDataElementError)
-    }
-}
-
+// Used by zkpass-ws, doesn't have to be in zkpass-core
 pub fn verify_key_token(key: &str, jws_token: &str) -> Result<(String, PublicKey), ZkPassError> {
-    let verifier = ES256.verifier_from_pem(&key).map_err(|e| ZkPassError::JoseError(e))?;
-    let (payload, _header) = jwt
-        ::decode_with_verifier(&jws_token, &verifier)
+    let verifier = ES256
+        .verifier_from_pem(&key)
         .map_err(|e| ZkPassError::JoseError(e))?;
+    let (payload, _header) =
+        jwt::decode_with_verifier(&jws_token, &verifier).map_err(|e| ZkPassError::JoseError(e))?;
 
     if let Some(private_key) = payload.claim("privateKey") {
         if let Some(public_key) = payload.claim("publicKey") {
-            let private_key: String = serde_json
-                ::from_value(private_key.clone())
+            let private_key: String = serde_json::from_value(private_key.clone())
                 .map_err(|err| ZkPassError::CustomError(err.to_string()))?;
-            let public_key: PublicKey = serde_json
-                ::from_value(public_key.clone())
+            let public_key: PublicKey = serde_json::from_value(public_key.clone())
                 .map_err(|err| ZkPassError::CustomError(err.to_string()))?;
             Ok((private_key, public_key))
         } else {
-            Err(ZkPassError::MissingRootDataElementError)
+            Err(ZkPassError::MissingElementError("publicKey".to_string()))
         }
     } else {
-        Err(ZkPassError::MissingRootDataElementError)
+        Err(ZkPassError::MissingElementError("privateKey".to_string()))
     }
-}
-
-pub fn tokenize_data(
-    signing_key: &str,
-    encrypting_key: &str,
-    data: Value
-) -> Result<String, ZkPassError> {
-    let kid = "mykey";
-    let jku = "https://hostname.com/jwks";
-    let ep = KeysetEndpoint {
-        kid: String::from(kid),
-        jku: String::from(jku),
-    };
-    let jws_token = sign_data_to_jws_token(signing_key, data, Some(ep))?;
-    let data = json!(jws_token);
-    let jwe_token = encrypt_data_to_jwe_token(encrypting_key, data)?;
-
-    Ok(jwe_token)
-}
-
-pub fn verify_data_nested_token(
-    verifying_key: &str,
-    decrypting_key: &str,
-    jwe_token: &str
-) -> Result<VerifiedNestedTokenData, ZkPassError> {
-    // step 1: decrypt the outer token to get the inner token
-    let (jws_token, outer_header) = decrypt_jwe_token(decrypting_key, jwe_token)?;
-
-    // remove the surrounding quotes because jws_token was a string literal
-    let jws_token = &jws_token[1..jws_token.len() - 1];
-
-    // step 2: verify the sig of the inner token, and pull the data payload
-    let (payload, inner_header) = verify_jws_token(verifying_key, jws_token)?;
-    //println!("header={}", header);
-
-    /*
-    // strip the "\\" (data might contains "\\" because it was a string literal in json)
-    data = data.replace("\\", "");
-    // strip the surrounding "
-    let data = &data[1..data.len()-1];
-    */
-    Ok(VerifiedNestedTokenData {
-        outer_header,
-        inner_header,
-        payload,
-    })
-}
-
-fn get_keyset_endpoint_params(header: Header) -> Result<KeysetEndpoint, ZkPassError> {
-    let header_val: Value = json!(header);
-
-    let header_jku = (match header_val.get("jku") {
-        Some(result) => Ok(result),
-        None => Err(ZkPassError::MissingKeysetEndpoint),
-    })?;
-    let header_kid = (match header_val.get("kid") {
-        Some(result) => Ok(result),
-        None => Err(ZkPassError::MissingKeysetEndpoint),
-    })?;
-    let jku: String = serde_json
-        ::from_str(&header_jku.to_string())
-        .map_err(|_| ZkPassError::MissingKeysetEndpoint)?;
-    let kid: String = serde_json
-        ::from_str(&header_kid.to_string())
-        .map_err(|_| ZkPassError::MissingKeysetEndpoint)?;
-
-    let ep = KeysetEndpoint { jku, kid };
-    Ok(ep)
-}
-
-fn get_public_key(
-    payload: &DataVerificationRequest,
-    is_user_data: bool
-) -> Result<PublicKeyOption, ZkPassError> {
-    let dvr = payload.clone();
-    if is_user_data {
-        match dvr.user_data_verifying_key {
-            PublicKeyOption::KeysetEndpoint(keyset) => Ok(PublicKeyOption::KeysetEndpoint(keyset)),
-            PublicKeyOption::PublicKey(publick_key) => Ok(PublicKeyOption::PublicKey(publick_key)),
-        }
-    } else {
-        match dvr.dvr_verifying_key {
-            Some(dvr_key) =>
-                match dvr_key {
-                    PublicKeyOption::KeysetEndpoint(keyset) => {
-                        Ok(PublicKeyOption::KeysetEndpoint(keyset))
-                    }
-                    PublicKeyOption::PublicKey(publick_key) => {
-                        Ok(PublicKeyOption::PublicKey(publick_key))
-                    }
-                }
-            None => Err(ZkPassError::MissingPublicKey),
-        }
-    }
-}
-
-fn decode_unsecured(jwt: &str) -> Result<(DataVerificationRequest, Header), ZkPassError> {
-    let decoding_key = DecodingKey::from_secret(&[]);
-    let mut validation = Validation::default();
-    validation.insecure_disable_signature_validation();
-    validation.set_required_spec_claims(&["data"]);
-
-    Ok(
-        (match decode::<WrappedDataVerificationRequest>(jwt, &decoding_key, &validation) {
-            Ok(dvr_wrapped) => Ok((dvr_wrapped.claims.data, dvr_wrapped.header)),
-            Err(_err) => Err(ZkPassError::MissingRootDataElementError),
-        })?
-    )
-}
-
-pub fn get_public_key_options(
-    jwt: &str,
-    is_user_data: bool
-) -> Result<Option<PublicKeyOption>, ZkPassError> {
-    let (payload, header) = decode_unsecured(jwt)?;
-    if is_user_data {
-        let public_key_option = get_public_key(&payload, is_user_data)?;
-        return Ok(Some(public_key_option));
-    } else {
-        let public_key_option = match get_keyset_endpoint_params(header) {
-            Ok(result) => Some(PublicKeyOption::KeysetEndpoint(result)),
-            Err(_) => {
-                // println!("There is no keyset in DVR header");
-                let public_key_option = get_public_key(&payload, is_user_data)?;
-                Some(public_key_option)
-            }
-        };
-        return Ok(public_key_option);
-    }
-}
-
-pub async fn verify_dvr_nested_token(
-    // resolver:               &Box<dyn KeysetEndpointResolver>,
-    verify_dvr_publickey: PublicKey,
-    decrypting_key: &str,
-    jwe_token: &str
-) -> Result<VerifiedNestedTokenDvr, ZkPassError> {
-    // step 1:
-    // decrypt the outer token to get the inner token
-    let (jws_token, outer_header) = decrypt_jwe_token(decrypting_key, jwe_token)?;
-    // remove the surrounding quotes because jws_token was a string literal
-    let jws_token = &jws_token[1..jws_token.len() - 1];
-
-    // step 2:
-    // get the keyset endpoint jku and kid params from the inner header
-    // let ep = get_keyset_endpoint_params(jws_token)?;
-    // println!("#### jku={}", ep.jku);
-    // println!("#### kid={}", ep.kid);
-
-    // step 3:
-    // resolve the keyset endpoint to get the verifying_key
-    let dvr_verifying_key = verify_dvr_publickey; // resolver.get_key(ep.jku.as_str(), ep.kid.as_str()).await;
-
-    // step 4:
-    // verify the sig of the inner token, and pull the "dvr" payload
-    let (payload, inner_header) = verify_jws_token(&dvr_verifying_key.to_pem(), jws_token)?;
-
-    let ver_token = VerifiedNestedTokenData {
-        outer_header,
-        inner_header,
-        payload,
-    };
-
-    let dvr: DataVerificationRequest = serde_json::from_value(ver_token.payload).unwrap();
-
-    Ok(VerifiedNestedTokenDvr {
-        inner_header: ver_token.inner_header,
-        outer_header: ver_token.outer_header,
-        dvr,
-        dvr_verifying_key,
-    })
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Jwk {
-    pub kty: String,
-    pub crv: String,
-    pub kid: String,
-    pub x: String,
-    pub y: String,
-    pub jwt: Option<String>,
 }
