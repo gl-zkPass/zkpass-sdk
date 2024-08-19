@@ -25,7 +25,7 @@ mod e2e_tests {
         if path_str.contains("zkpass-demo") {
             initial_command.push_str("cd ../ && ");
         }
-        initial_command.push_str("export LD_LIBRARY_PATH=./target/release:$LD_LIBRARY_PATH");
+        initial_command.push_str("export LD_LIBRARY_PATH=./lib:$LD_LIBRARY_PATH");
         return initial_command.to_string();
     }
 
