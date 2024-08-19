@@ -2,14 +2,12 @@
 #![no_main]
 sp1_zkvm::entrypoint!(main);
 
-use zkpass_query::expression::{ProofMethodInput, ProofMethodOutput};
+use zkpass_query::engine::{ ProofMethodInput, ZkPassQuery };
 
 pub fn main() {
     let input: ProofMethodInput = sp1_zkvm::io::read::<ProofMethodInput>();
 
-    let result: bool = input.expr.eval(&input.map).unwrap();
-
-    let output = ProofMethodOutput{ result: result};
+    let output = ZkPassQuery::execute(&input);
 
     sp1_zkvm::io::write(&output);
 }
