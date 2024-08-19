@@ -1,9 +1,9 @@
 // constants.rs
 use zkpass_client::core::PublicKey;
 
-pub const API_KEY: &str = "e7fd7ec9-33b2-4f33-a383-c2f1d151a7c2";
-pub const SECRET_API_KEY: &str = "6a79ffa2-5fe8-4764-8edf-0ebc5dbcccf9";
-pub const ZKPASS_URL: &str = "https://staging-zkpass.ssi.id";
+pub const API_KEY: &str = "5ecb2229-ddee-460e-b598-a0001c10fff1";
+pub const SECRET_API_KEY: &str = "074a53a8-a252-45de-a9d5-0961a6362df6";
+pub const ZKPASS_URL: &str = "https://playground-zkpass.ssi.id";
 
 // sample key, don't use this key in production
 pub const ISSUER_PRIVKEY: &str = r"-----BEGIN PRIVATE KEY-----
