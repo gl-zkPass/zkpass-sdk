@@ -1,7 +1,0 @@
-**/node_modules/*
-public
-patches
-index.js
-babel.config.js
-metro.config.js
-shim.js
