@@ -1,11 +1,11 @@
-use tracing::info;
-use std::time::Instant;
-//use serde_json::Value;
 use crate::constants;
 use crate::data_issuer::DataIssuer;
 use crate::proof_verifier::ProofVerifier;
+use std::time::Instant;
+use tracing::info;
 use zkpass_client::core::OutputReader;
-use zkpass_client::interface::{ ZkPassApiKey, ZkPassClient, ZkPassProofGenerator };
+use zkpass_client::helpers::wrap_single_user_data_input;
+use zkpass_client::interface::{ZkPassApiKey, ZkPassClient, ZkPassProofGenerator};
 
 pub struct DataHolder;
 
@@ -16,6 +16,7 @@ impl DataHolder {
         //
         let data_issuer = DataIssuer;
         let user_data_token = data_issuer.get_user_data_token(zkvm, data_file);
+        let user_data_tokens = wrap_single_user_data_input(user_data_token);
 
         //
         //  Get the dvr from the verifier
@@ -48,7 +49,8 @@ impl DataHolder {
         //         to get the zkpass_proof_token.
         //
         let zkpass_proof_token = zkpass_client
-            .generate_zkpass_proof(&user_data_token, &dvr_token).await
+            .generate_zkpass_proof(&user_data_tokens, &dvr_token)
+            .await
             .unwrap();
 
         let duration = start.elapsed();
@@ -58,10 +60,9 @@ impl DataHolder {
         //  Step 3: Send the zkpass_proof_token to the Proof Verifier
         //          to get the proof verified and retrieve the query result.
         //
-        let query_result = proof_verifier.verify_zkpass_proof(
-            zkvm,
-            zkpass_proof_token.as_str()
-        ).await;
+        let query_result = proof_verifier
+            .verify_zkpass_proof(zkvm, zkpass_proof_token.as_str())
+            .await;
 
         println!("json-result={}", OutputReader::pretty_print(&query_result));
         let output_reader = OutputReader::from_json(&query_result).unwrap();

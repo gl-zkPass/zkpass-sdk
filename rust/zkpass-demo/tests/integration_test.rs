@@ -11,8 +11,10 @@
 
 #[cfg(test)]
 mod e2e_tests {
-    use std::{ env, process::{ Command, Stdio } };
-    use serial_test::serial;
+    use std::{
+        env,
+        process::{Command, Stdio},
+    };
 
     fn get_initial_command() -> String {
         let path = env::current_dir().unwrap();
@@ -23,12 +25,11 @@ mod e2e_tests {
         if path_str.contains("zkpass-demo") {
             initial_command.push_str("cd ../ && ");
         }
-        initial_command.push_str("export LD_LIBRARY_PATH=./lib:$LD_LIBRARY_PATH");
+        initial_command.push_str("export LD_LIBRARY_PATH=./target/release:$LD_LIBRARY_PATH");
         return initial_command.to_string();
     }
 
     #[test]
-    #[serial]
     fn e2e_test_demo_true() {
         let initial_command = get_initial_command();
 
@@ -36,8 +37,7 @@ mod e2e_tests {
         let dvr_path = "test/data/bca-finance-ramana-dvr.json";
         let zkpass_demo_command = format!(
             "./target/release/zkpass-demo r0 {} {}",
-            user_data_path,
-            dvr_path
+            user_data_path, dvr_path
         );
         let output = Command::new("sh")
             .arg("-c")
@@ -56,16 +56,14 @@ mod e2e_tests {
     }
 
     #[test]
-    #[serial]
     fn e2e_test_demo_false() {
         let initial_command = get_initial_command();
 
-        let user_data_path = "test/data/dewi-profile-wrong.json";
-        let dvr_path = "test/data/bca-insurance-dewi-dvr.json";
+        let user_data_path = "test/data/dewi-profile.json";
+        let dvr_path = "test/data/bca-finance-ramana-dvr.json";
         let zkpass_demo_command = format!(
             "./target/release/zkpass-demo r0 {} {}",
-            user_data_path,
-            dvr_path
+            user_data_path, dvr_path
         );
         let output = Command::new("sh")
             .arg("-c")
