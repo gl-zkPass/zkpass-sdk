@@ -7,15 +7,16 @@ edition = "2021"
 
 [dependencies]
 async-trait = "0.1.73"
+base64 = "0.21.5"
 futures = "0.3.28"
 httpmock = "0.6.8"
 josekit = "0.8.3"
 libloading = "0.8.1"
+maplit = "1.0.2"
 reqwest = { version = "0.11.20", features = ["blocking", "json"] }
 serde = "1.0.188"
 serde_json = "1.0.107"
 tokio = { version = "1.32.0", features = ["full"] }
 tracing = "0.1.40"
-zkpass-query-types= { path = "../zkpass-query/types" }
+zkpass-query-types = { path = "../zkpass-query/types" }
 zkpass-core = { path = "../zkpass-core" }
-base64 = "0.21.5"
