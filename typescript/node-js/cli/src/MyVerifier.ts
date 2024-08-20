@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 21st 2023
  * -----
- * Last Modified: July 27th 2024
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Last Modified: August 20th 2024
+ * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -39,6 +39,7 @@ import {
   VERIFIER_PRIVKEY,
   ZKPASS_ZKVM,
 } from "./utils/constants";
+import { UserDataRequests } from "@didpass/zkpass-client-ts/lib/src/classes/userDataRequest";
 
 class MyMetadataValidator implements ZkPassProofMetadataValidator {
   constructor() {}
@@ -88,7 +89,7 @@ export class MyVerifier extends Verifier {
     super();
   }
 
-  async getDvrToken(dvrFile: string): Promise<string> {
+  async getDvrToken(dvrFile: string, dataTags: string[]): Promise<string> {
     const DVR_TITLE: string = "My DVR";
     const USER_DATA_URL: string = "https://hostname/api/user_data/";
     const ENCODING = "utf-8";
@@ -100,19 +101,21 @@ export class MyVerifier extends Verifier {
     const verifierPubkey = { jku: VERIFIER_JKU, kid: VERIFIER_KID };
 
     const queryObj = JSON.parse(query);
+    const userDataRequests: UserDataRequests = {};
+    dataTags.forEach((tag) => {
+      userDataRequests[tag] = {
+        user_data_url: USER_DATA_URL,
+        user_data_verifying_key: {
+          KeysetEndpoint: issuerPubkey,
+        },
+      };
+    });
 
     const dvrData: DvrData = {
       dvr_title: DVR_TITLE,
       dvr_id: uuidv4(),
       query: JSON.stringify(queryObj),
-      user_data_requests: {
-        "": {
-          user_data_url: USER_DATA_URL,
-          user_data_verifying_key: {
-            KeysetEndpoint: issuerPubkey,
-          },
-        },
-      },
+      user_data_requests: userDataRequests,
       dvr_verifying_key: {
         KeysetEndpoint: verifierPubkey,
       },

@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created Date: December 21st 2023
  * -----
- * Last Modified: January 3rd 2024
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Last Modified: August 20th 2024
+ * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -23,27 +23,38 @@ import fs from "fs";
 import { Issuer } from "./libs/Issuer";
 import { ISSUER_JKU, ISSUER_KID, ISSUER_PRIVKEY } from "./utils/constants";
 import { KeysetEndpoint } from "@didpass/zkpass-client-ts";
+import { UserDataTag } from "./utils/helper";
 
 export class MyIssuer extends Issuer {
-  public async getUserDataToken(dataFile: string): Promise<string> {
-    const ENCODING = "utf-8";
-    const data: string = fs.readFileSync(dataFile, ENCODING);
-    console.log(`data=${data}`);
+  public async getUserDataToken(
+    dataFiles: string[],
+    dataTags: string[]
+  ): Promise<UserDataTag> {
+    const dataToken: UserDataTag = {};
+    for (let index = 0; index < dataFiles.length; index++) {
+      const dataFile = dataFiles[index];
 
-    const dataObj: any = JSON.parse(data);
+      const ENCODING = "utf-8";
+      const data: string = fs.readFileSync(dataFile, ENCODING);
+      console.log(`data ${dataTags[index]}=${data}`);
 
-    const issuerPubkey: KeysetEndpoint = { jku: ISSUER_JKU, kid: ISSUER_KID };
+      const dataObj: any = JSON.parse(data);
 
-    //
-    // Step 1: Sign the user data
-    //         using the issuer's private key
-    //
-    const dataToken = await this.signUserData(
-      ISSUER_PRIVKEY,
-      dataObj,
-      issuerPubkey
-    );
+      const issuerPubkey: KeysetEndpoint = { jku: ISSUER_JKU, kid: ISSUER_KID };
 
+      //
+      // Step 1: Sign the user data
+      //         using the issuer's private key
+      //
+      const token = await this.signUserData(
+        ISSUER_PRIVKEY,
+        dataObj,
+        issuerPubkey
+      );
+      if (dataFiles.length === 1) return { "": token };
+
+      dataToken[dataTags[index]] = token;
+    }
     return dataToken;
   }
 }
