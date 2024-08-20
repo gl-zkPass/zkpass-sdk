@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: April 16th 2024
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Last Modified: August 20th 2024
+ * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -30,7 +30,7 @@ import {
   StepLabel,
   Stepper,
 } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -42,6 +42,7 @@ export default function EmployeeOnboarding({
 }: {
   user: string | undefined;
 }) {
+  const param = useSearchParams();
   const router = useRouter();
   const steps = [
     "Request Employee Onboarding Questionnaires",
@@ -52,37 +53,48 @@ export default function EmployeeOnboarding({
   const [requestedDvr, setRequestedDvr] = React.useState(false);
   const [requestedBloodTest, setRequestedBloodTest] = React.useState(false);
   const [dvr, setDvr] = React.useState("");
+  const [activeUserData, setActiveUserData] = React.useState<
+    "Blood Test" | "KYC"
+  >("Blood Test");
   const [bloodTest, setBloodTest] = React.useState("");
+  const [kycResult, setKycResult] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = React.useState("");
   const [formatedDvr, setFormatedDvr] = React.useState("<div></div>");
   const [formatedBloodTest, setFormatedBloodTest] =
     React.useState("<div></div>");
+  const [formatedKycResult, setFormatedKycResult] =
+    React.useState("<div></div>");
   const [confirmDvr, setConfirmDvr] = React.useState(false);
-  const [confirmBloodTest, setConfirmBloodTest] = React.useState(false);
+  const [confirmUserData, setConfirmUserData] = React.useState(false);
   const [loadingMessage, setLoadingMessage] = React.useState("Loading...");
   const [proofResult, setProofResult] = React.useState(false);
   const [loadedProof, setLoadedProof] = React.useState(false);
+  const isUsingMultipleUserData = param.get("user-data") === "multiple";
 
   if (!user) {
     router.push("/");
   }
 
   useEffect(() => {
-    console.log({ dvr, bloodTest });
-  }, [dvr, bloodTest]);
-
-  useEffect(() => {
     if (!requestedDvr || !requestedBloodTest) {
       setIsLoading(true);
       const dvrUrl = `${VERIFIER_URL}/dvrs`;
       const bloodTestUrl = `${ISSUER_URL}/blood_tests`;
+      const kycResultUrl = `${ISSUER_URL}/kyc`;
+      const fetchingDvrBody = isUsingMultipleUserData
+        ? { name: user, multiple: true }
+        : { name: user };
       const fetchingDvr = fetch(dvrUrl, {
+        method: "POST",
+        body: JSON.stringify(fetchingDvrBody),
+      });
+      const fetchingBloodTest = fetch(bloodTestUrl, {
         method: "POST",
         body: JSON.stringify({ name: user }),
       });
-      const fetchingBloodTest = fetch(bloodTestUrl, {
+      const fetchingKycResult = fetch(kycResultUrl, {
         method: "POST",
         body: JSON.stringify({ name: user }),
       });
@@ -92,21 +104,25 @@ export default function EmployeeOnboarding({
         data?: string;
       }
 
-      Promise.all([fetchingDvr, fetchingBloodTest])
+      Promise.all([fetchingDvr, fetchingBloodTest, fetchingKycResult])
         .then((responses) =>
           Promise.all(responses.map((response) => response.json()))
         )
-        .then(([dvrResult, bloodTestResult]) => {
+        .then(([dvrResult, bloodTestResult, kycResult]) => {
           let dvrFetchResponse = dvrResult as FetchResponse;
           let bloodTestFetchResponse = bloodTestResult as FetchResponse;
+          let kycResultResponse = kycResult as FetchResponse;
           if (
             dvrFetchResponse.status == 200 &&
-            bloodTestFetchResponse.status == 200
+            bloodTestFetchResponse.status == 200 &&
+            kycResultResponse.status == 200
           ) {
             setDvr(dvrResult.data as string);
             _getDvrPayload(dvrResult.data as string);
             setBloodTest(bloodTestResult.data as string);
             _getBloodTestPayload(bloodTestResult.data as string);
+            setKycResult(kycResult.data as string);
+            _getKycPayload(kycResult.data as string);
             setIsLoading(false);
             setRequestedDvr(true);
             setRequestedBloodTest(true);
@@ -154,6 +170,17 @@ export default function EmployeeOnboarding({
     setFormatedBloodTest(formatedBloodTest);
   };
 
+  const _getKycPayload = async (kycJwt: string) => {
+    if (kycJwt.length === 0) {
+      return;
+    }
+    const payload = jwt.decode(kycJwt, { complete: true })?.payload;
+    console.log({ KycJwtPayload: payload });
+
+    const formatedKycResult = JSON.stringify(payload, null, 2);
+    setFormatedKycResult(formatedKycResult);
+  };
+
   const _formatUsername = (input: string): string => {
     if (input.length === 0) {
       return input;
@@ -161,8 +188,19 @@ export default function EmployeeOnboarding({
     return input.charAt(0).toUpperCase() + input.slice(1);
   };
 
+  const _viewUserData = () => {
+    switch (activeUserData) {
+      case "Blood Test":
+        return formatedBloodTest;
+      case "KYC":
+        return formatedKycResult;
+      default:
+        return "";
+    }
+  };
+
   const _handleGenerateProof = async () => {
-    setConfirmBloodTest(true);
+    setConfirmUserData(true);
     setIsLoading(true);
     setLoadingMessage("Generating Proof...");
     const url = `${MYNAMASTE_URL}/api/proofs`;
@@ -171,9 +209,12 @@ export default function EmployeeOnboarding({
       message?: string;
       data?: string;
     }
+    const body = isUsingMultipleUserData
+      ? { dvr, blood_test: bloodTest, kyc: kycResult }
+      : { dvr, blood_test: bloodTest };
     const proof = await fetch(url, {
       method: "POST",
-      body: JSON.stringify({ dvr, blood_test: bloodTest }),
+      body: JSON.stringify(body),
     });
     const proofBody: ProofResponse = await proof.json();
     console.log({ proof: proofBody.data });
@@ -188,7 +229,7 @@ export default function EmployeeOnboarding({
         data: {
           output: {
             result: boolean;
-          }
+          };
         };
       }
       const validateProofBody: ProofResult = await validateProof.json();
@@ -253,7 +294,8 @@ export default function EmployeeOnboarding({
                 sx={{ color: "rgb(74 222 128)" }}
                 fontSize="large"
               />
-              The blood test succeeded onboarding requirements.
+              The blood test {isUsingMultipleUserData ? "and kyc" : ""}{" "}
+              succeeded onboarding requirements.
             </Paper>
           ) : loadedProof && !proofResult ? (
             <Paper
@@ -261,7 +303,8 @@ export default function EmployeeOnboarding({
               className="flex flex-row items-center gap-2 p-4 bg-red-200"
             >
               <CancelIcon sx={{ color: "rgb(248 113 113)" }} fontSize="large" />
-              The blood test failed onboarding requirements.
+              The blood test {isUsingMultipleUserData ? "and/or kyc" : ""}{" "}
+              failed onboarding requirements.
             </Paper>
           ) : (
             <></>
@@ -278,12 +321,12 @@ export default function EmployeeOnboarding({
             <></>
           )}
 
-          {!confirmBloodTest && requestedDvr && requestedBloodTest ? (
+          {!confirmUserData && requestedDvr && requestedBloodTest ? (
             <Paper
               elevation={2}
               className="p-6 flex items-center flex-col gap-4 bg-gray-200"
             >
-              {!confirmBloodTest && !confirmDvr ? (
+              {!confirmUserData && !confirmDvr ? (
                 <>
                   <div className="text-base">
                     Please review the Employee Onboarding questionnaires
@@ -305,16 +348,42 @@ export default function EmployeeOnboarding({
                 <></>
               )}
 
-              {confirmDvr && !confirmBloodTest ? (
+              {confirmDvr && !confirmUserData ? (
                 <>
                   <div className="text-base">
-                    Please review the Blood Test Result
+                    Please review the {activeUserData} Result
                   </div>
                   <Paper elevation={1} className="max-h-96 overflow-scroll p-5">
                     <pre
-                      dangerouslySetInnerHTML={{ __html: formatedBloodTest }}
+                      dangerouslySetInnerHTML={{ __html: _viewUserData() }}
                     />
                   </Paper>
+                  {isUsingMultipleUserData && (
+                    <div className="flex w-full gap-4">
+                      <Button
+                        variant={
+                          activeUserData == "Blood Test"
+                            ? "outlined"
+                            : "contained"
+                        }
+                        color="info"
+                        className="grow"
+                        onClick={() => setActiveUserData("Blood Test")}
+                      >
+                        View Blood_Test Data
+                      </Button>
+                      <Button
+                        variant={
+                          activeUserData == "KYC" ? "outlined" : "contained"
+                        }
+                        color="info"
+                        className="grow"
+                        onClick={() => setActiveUserData("KYC")}
+                      >
+                        View KYC Data
+                      </Button>
+                    </div>
+                  )}
                   <Button variant="outlined" onClick={_handleGenerateProof}>
                     Confirm and Generate Proof
                   </Button>

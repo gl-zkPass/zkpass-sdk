@@ -2,15 +2,14 @@
  * route.ts
  *
  * Authors:
- *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
- *   Zulchaidir (zulchaidir@gdplabs.id)
- * Created Date: October 31st 2023
+ *   William H Hendrawan (william.h.hendrawan@gdplabs.id)
+ * Created Date: August 20th 2024
  * -----
  * Last Modified: August 20th 2024
  * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
  * -----
  * Reviewers:
- *   Zulchaidir (zulchaidir@gdplabs.id)
+ *   NONE
  * ---
  * References:
  *   NONE
@@ -21,67 +20,62 @@
 import fs from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
-import { signDataToJwsToken } from "@/utils/signing";
 import {
-  BLOOD_TEST_ISSUER_JWKS_KID,
-  BLOOD_TEST_ISSUER_JWKS_URL,
-  BLOOD_TEST_ISSUER_PRIVATE_KEY_PEM,
+  KYC_ISSUER_JWKS_URL,
+  KYC_ISSUER_JWKS_KID,
+  KYC_ISSUER_PRIVATE_KEY_PEM,
 } from "@/utils/constants";
+import { signDataToJwsToken } from "@/utils/signing";
 
 const ASSET_PATH = "public/issuer/";
-const BLOOD_TEST_FILE = "blood-tests.json";
+const KYC_RESULT_FILE = "kyc-result.json";
 
-interface BloodTest {
-  testId: string;
-  lab: {
-    ID: string;
-  };
+interface KycResult {
+  kycId: string;
+  kycType: string;
   subject: {
     firstName: string;
     lastName: string;
     dateOfBirth: string;
   };
-  measuredPanelsNgML: {
-    cocaine: string;
-  };
   [key: string]: any;
 }
 
 export async function POST(req: Request) {
-  console.log("*** POST issuer/blood_tests ***");
+  console.log("*** POST issuer/kyc ***");
 
   const { name } = await req.json();
   const userName = name;
 
-  const usersFilePath = path.join(process.cwd(), ASSET_PATH, BLOOD_TEST_FILE);
+  const usersFilePath = path.join(process.cwd(), ASSET_PATH, KYC_RESULT_FILE);
   const usersFileContents = fs.readFileSync(usersFilePath, "utf8");
-  const bloodTests: { [key: string]: BloodTest } =
+  const kycResults: { [key: string]: KycResult } =
     JSON.parse(usersFileContents);
 
-  if (!bloodTests[userName]) {
+  if (!kycResults[userName]) {
     return Response.json({
       status: 400,
-      message: `Blood test for ${userName} is not found`,
+      message: `Kyc Result for ${userName} is not found`,
     });
   }
 
-  const bloodTest = bloodTests[userName];
+  const kycResult = kycResults[userName];
 
   const signingKey = {
     jwks: {
-      jku: BLOOD_TEST_ISSUER_JWKS_URL,
-      kid: BLOOD_TEST_ISSUER_JWKS_KID,
+      jku: KYC_ISSUER_JWKS_URL,
+      kid: KYC_ISSUER_JWKS_KID,
     },
-    privateKey: BLOOD_TEST_ISSUER_PRIVATE_KEY_PEM,
+    privateKey: KYC_ISSUER_PRIVATE_KEY_PEM,
   };
-  const jwt = await signDataToJwsToken(bloodTest, signingKey);
+  const jwt = await signDataToJwsToken(kycResult, signingKey);
 
-  console.log("=== blood_test jwt sent ===");
+  console.log("=== kyc jwt sent ===");
   return _setHeader(NextResponse.json({ status: 200, data: jwt }));
 }
 
 export async function GET() {
-  return NextResponse.json({ data: "get api blood_tests" });
+  return NextResponse.json({ data: "get api kyc" });
 }
 
 export async function OPTIONS() {

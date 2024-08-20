@@ -6,8 +6,8 @@
  *   Zulchaidir (zulchaidir@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: July 27th 2024
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Last Modified: August 20th 2024
+ * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -31,8 +31,10 @@ export async function POST(req: Request) {
   try {
     const API_KEY_OBJ = new ZkPassApiKey(API_KEY ?? "", API_SECRET ?? "");
 
-    const { dvr, blood_test } = await req.json();
-    console.log({ dvr, blood_test });
+    // The Kyc value will be null / undefined if we only use single user data
+    const { dvr, blood_test, kyc } = await req.json();
+    console.log({ dvr, blood_test, kyc });
+    const userDataTokens = generateUserDataTokens(blood_test, kyc);
 
     /**
      * Step 1: Instantiate the ZkPassClient object.
@@ -47,10 +49,7 @@ export async function POST(req: Request) {
      * Step 2: Call the zkPassClient.generateZkPassProof
      *         to get the zkPassProofToken.
      */
-    const proof = await zkPassClient.generateZkPassProof(
-      { "": blood_test },
-      dvr
-    );
+    const proof = await zkPassClient.generateZkPassProof(userDataTokens, dvr);
     console.log({ proof });
     return Response.json({ status: 200, data: proof });
   } catch (error) {
@@ -69,4 +68,15 @@ export async function OPTIONS() {
     "Content-Type, Authorization"
   );
   return response;
+}
+
+function generateUserDataTokens(blood_test: any, kyc: any) {
+  const userDataTokens: { [tag: string]: string } = {};
+  if (kyc) {
+    userDataTokens["blood_test"] = blood_test;
+    userDataTokens["kyc"] = kyc;
+  } else {
+    userDataTokens[""] = blood_test;
+  }
+  return userDataTokens;
 }

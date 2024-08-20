@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created at: October 31st 2023
  * -----
- * Last Modified: November 28th 2023
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Last Modified: August 20th 2024
+ * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
  * -----
  * Reviewers:
  *   Zulchaidir (zulchaidir@gdplabs.id)
@@ -38,8 +38,11 @@ export default function UsersWelcome({ user }: { user: string | undefined }) {
           elevation={3}
           className='w-2/5 p-7 flex flex-col items-center gap-5'>
           <div>Welcome {user}!</div>
-          <Button href='/onboarding' variant='outlined'>
-            Start Employee Onboarding
+          <Button href='/onboarding?user-data=single' variant='outlined'>
+            Start Employee Onboarding {"(Single User Data)"}
+          </Button>
+          <Button href='/onboarding?user-data=multiple' variant='outlined'>
+            Start Employee Onboarding {"(Multiple User Data)"}
           </Button>
         </Paper>
       </div>

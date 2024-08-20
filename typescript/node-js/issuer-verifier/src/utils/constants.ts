@@ -5,8 +5,8 @@
  *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
  * Created at: December 15th 2023
  * -----
- * Last Modified: May 17th 2024
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
+ * Last Modified: August 20th 2024
+ * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
  * -----
  * Reviewers:
  *   NONE
@@ -29,15 +29,23 @@ export const VERIFIER_JWKS_URL =
 export const VERIFIER_JWKS_KID = "k-1";
 
 // Issuer
-export const ISSUER_PRIVATE_KEY_PEM =
+const ISSUER_PRIVATE_KEY_PEM =
   "-----BEGIN PRIVATE KEY-----\n" +
   "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg3J/wAlzSD8ZyAU8f\n" +
   "bPkuCY/BSlq2Y2S5hym8sRccpZehRANCAATt/RChVSxxwH3IzAcBHuhWT8v5mRfx\n" +
   "moLVnRdNqPcExwyeqH5XN0dlffIYprf66E0CEpZbJ8H+v7cTys9Ie1dd\n" +
   "-----END PRIVATE KEY-----\n";
-export const ISSUER_JWKS_URL =
+const ISSUER_JWKS_URL =
   "https://raw.githubusercontent.com/gl-zkPass/zkpass-sdk/main/docs/zkpass/sample-jwks/issuer-key.json";
-export const ISSUER_JWKS_KID = "k-1";
+const ISSUER_JWKS_KID = "k-1";
+
+export const BLOOD_TEST_ISSUER_PRIVATE_KEY_PEM = ISSUER_PRIVATE_KEY_PEM;
+export const BLOOD_TEST_ISSUER_JWKS_URL = ISSUER_JWKS_URL;
+export const BLOOD_TEST_ISSUER_JWKS_KID = ISSUER_JWKS_KID;
+
+export const KYC_ISSUER_PRIVATE_KEY_PEM = ISSUER_PRIVATE_KEY_PEM;
+export const KYC_ISSUER_JWKS_URL = ISSUER_JWKS_URL;
+export const KYC_ISSUER_JWKS_KID = ISSUER_JWKS_KID;
 
 export const API_KEY = "5ecb2229-ddee-460e-b598-a0001c10fff1";
 export const API_SECRET = "074a53a8-a252-45de-a9d5-0961a6362df6";
