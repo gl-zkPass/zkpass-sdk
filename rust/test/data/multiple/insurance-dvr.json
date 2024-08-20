@@ -1,0 +1,43 @@
+[
+  {
+    "assign": {
+      "result_status": {
+        "and": [
+          { "==": [{ "dvar": "bank.bankId" }, "B1234"] },
+          { "~==": [{ "dvar": "bank.bankId" }, { "dvar": "health.bankId" }] },
+          {
+            "~==": [
+              { "dvar": "bank.personalInfo.firstName" },
+              { "dvar": "health.personalInfo.firstName" }
+            ]
+          },
+          {
+            "~==": [
+              { "dvar": "bank.personalInfo.lastName" },
+              { "dvar": "health.personalInfo.lastName" }
+            ]
+          },
+          {
+            "~==": [
+              { "dvar": "bank.personalInfo.driverLicenseNumber" },
+              { "dvar": "health.personalInfo.driverLicenseNumber" }
+            ]
+          },
+          { "~==": [{ "dvar": "health.hospitalId" }, "HOS00001"] },
+          { "==": [{ "dvar": "health.recentHealthRecords.isCronic" }, false] },
+          {
+            ">=": [{ "dvar": "bank.financialInfo.creditRatings.pefindo" }, 650]
+          },
+          {
+            ">=": [
+              { "dvar": "bank.financialInfo.accounts.savings.balance" },
+              30000000
+            ]
+          }
+        ]
+      }
+    }
+  },
+  { "output": { "name": { "dvar": "bank.personalInfo.firstName" } } },
+  { "output": { "result": { "lvar": "result_status" } } }
+]

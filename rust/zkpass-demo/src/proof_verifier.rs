@@ -83,7 +83,12 @@ impl ProofVerifier {
     //
     //  Simulating the Proof Verifier's get_dvr_token REST API
     //
-    pub fn get_dvr_token(&self, zkvm: &str, dvr_file: &str) -> String {
+    pub fn get_dvr_token(
+        &self,
+        zkvm: &str,
+        dvr_file: &str,
+        user_data_tags: Vec<&String>,
+    ) -> String {
         let mut query_content = std::fs::File::open(dvr_file).expect("Cannot find the dvr file");
         let mut query = String::new();
         query_content
@@ -98,6 +103,7 @@ impl ProofVerifier {
         let _ep = KeysetEndpoint { jku, kid };
 
         let query: Value = serde_json::from_str(&query).unwrap();
+        let user_data_requests = self.get_user_data_requests(user_data_tags);
 
         //
         //  Proof Verifier's integration points with the zkpass-client SDK library
@@ -125,10 +131,7 @@ impl ProofVerifier {
             query_engine_ver: query_engine_version_info.0,
             query_method_ver: query_engine_version_info.1,
             query: serde_json::to_string(&query).unwrap(),
-            user_data_requests: wrap_single_user_data_input(UserDataRequest {
-                user_data_url: Some(String::from("https://hostname/api/user_data/")),
-                user_data_verifying_key: PublicKeyOption::PublicKey(issuer_pubkey()),
-            }),
+            user_data_requests: user_data_requests,
             dvr_verifying_key: Some(PublicKeyOption::PublicKey(verifier_pubkey())),
         };
 
@@ -181,5 +184,27 @@ impl ProofVerifier {
         println!("#### verification completed [time={:?}]", duration);
 
         result
+    }
+
+    fn get_user_data_requests(
+        &self,
+        user_data_tags: Vec<&String>,
+    ) -> HashMap<String, UserDataRequest> {
+        if user_data_tags.len() == 1 {
+            return wrap_single_user_data_input(UserDataRequest {
+                user_data_url: Some(String::from("https://hostname/api/user_data/")),
+                user_data_verifying_key: PublicKeyOption::PublicKey(issuer_pubkey()),
+            });
+        }
+        let mut user_data_requests: HashMap<String, UserDataRequest> = HashMap::new();
+        for tag in user_data_tags {
+            let user_data_request = UserDataRequest {
+                user_data_url: Some(String::from("https://hostname/api/user_data/")),
+                user_data_verifying_key: PublicKeyOption::PublicKey(issuer_pubkey()),
+            };
+            user_data_requests.insert(tag.clone(), user_data_request);
+        }
+
+        user_data_requests
     }
 }

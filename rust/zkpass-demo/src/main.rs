@@ -31,11 +31,11 @@ fn initialize_tracing() {
 }
 
 #[instrument]
-fn run_data_holder(zkvm: &str, data_file: &str, dvr_file: &str) {
+fn run_data_holder(zkvm: &str, data_files: Vec<&str>, dvr_file: &str) {
     let data_holder = DataHolder;
     let rt = Runtime::new().unwrap();
 
-    rt.block_on(data_holder.start(zkvm, data_file, dvr_file));
+    rt.block_on(data_holder.start(zkvm, data_files, dvr_file));
 }
 
 // Helper function to check if a file path exists
@@ -59,18 +59,23 @@ fn main() {
             Arg::with_name("user-data-file")
                 .help("Path to the user data JSON file")
                 .required(true)
-                .index(2),
+                .multiple_values(true)
+                .long("user-data-file")
+                .short('U')
+                .takes_value(true),
         )
         .arg(
             Arg::with_name("dvr-query-file")
                 .help("Path to the DVR query JSON file")
                 .required(true)
-                .index(3),
+                .long("dvr-file")
+                .short('D')
+                .takes_value(true),
         )
         .get_matches();
 
     let zkvm_type = matches.value_of("zkvm-type").unwrap();
-    let user_data_path = matches.value_of("user-data-file").unwrap();
+    let user_data_paths: Vec<&str> = matches.values_of("user-data-file").unwrap().collect();
     let dvr_file_path = matches.value_of("dvr-query-file").unwrap();
 
     // Check if zkvm_type is "r0"
@@ -80,10 +85,23 @@ fn main() {
     }
 
     // Check if the file paths point to existing JSON files
-    if !path_exists(user_data_path) || !path_exists(dvr_file_path) {
-        eprintln!("Error: One or both file paths do not exist or are not accessible");
+    for user_data_path in &user_data_paths {
+        if !path_exists(user_data_path) {
+            eprintln!(
+                "Error: User data file path '{}' does not exist or is not accessible",
+                user_data_path
+            );
+            std::process::exit(1);
+        }
+    }
+
+    if !path_exists(dvr_file_path) {
+        eprintln!(
+            "Error: DVR query file path '{}' does not exist or is not accessible",
+            dvr_file_path
+        );
         std::process::exit(1);
     }
 
-    run_data_holder(zkvm_type, user_data_path, dvr_file_path);
+    run_data_holder(zkvm_type, user_data_paths, dvr_file_path);
 }
