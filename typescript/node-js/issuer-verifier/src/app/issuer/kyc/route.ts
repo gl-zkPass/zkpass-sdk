@@ -1,16 +1,6 @@
 /*
  * route.ts
  *
- * Authors:
- *   William H Hendrawan (william.h.hendrawan@gdplabs.id)
- * Created Date: August 20th 2024
- * -----
- * Last Modified: August 20th 2024
- * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
- * -----
- * Reviewers:
- *   NONE
- * ---
  * References:
  *   NONE
  * ---

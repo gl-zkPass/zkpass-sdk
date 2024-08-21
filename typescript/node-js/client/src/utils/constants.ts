@@ -1,16 +1,6 @@
 /*
  * constants.ts
  *
- * Authors:
- *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
- * Created at: December 15th 2023
- * -----
- * Last Modified: May 17th 2024
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
- * -----
- * Reviewers:
- *   NONE
- * ---
  * References:
  *   NONE
  * ---

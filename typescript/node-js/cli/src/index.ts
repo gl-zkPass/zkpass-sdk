@@ -1,18 +1,6 @@
 /*
  * index.ts
  *
- * Authors:
- *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
- * Created Date: November 27th 2023
- * -----
- * Last Modified: August 20th 2024
- * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
- * -----
- * Reviewers:
- *   Zulchaidir (zulchaidir@gdplabs.id)
- *   Nugraha Tejapermana (nugraha.tejapermana@gdplabs.id)
- *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
- * ---
  * References:
  *   NONE
  * ---

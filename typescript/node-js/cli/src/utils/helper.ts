@@ -1,16 +1,6 @@
 /*
  * helper.ts
  *
- * Authors:
- *   William H Hendrawan (william.h.hendrawan@gdplabs.id)
- * Created Date: August 19th 2024
- * -----
- * Last Modified: August 20th 2024
- * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
- * -----
- * Reviewers:
- *
- * ---
  * References:
  *   NONE
  * ---
