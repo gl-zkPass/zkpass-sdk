@@ -2,16 +2,6 @@
  * user_data_helpers.rs
  * Helpers for operations related to User Data token
  *
- * Authors:
- *   Khandar William (khandar.william@gdplabs.id)
- * Created at: June 27th 2024
- * -----
- * Last Modified: July 1st 2024
- * Modified By: Khandar William (khandar.william@gdplabs.id)
- * -----
- * Reviewers:
- *
- * ---
  * References:
  *   https://docs.ssi.id/zkpass/v/zkpass-developers-guide/introduction/key-concepts/user-data
  * ---

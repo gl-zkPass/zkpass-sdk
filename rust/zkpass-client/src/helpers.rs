@@ -2,16 +2,6 @@
  * helper.rs
  * Provide several helper functions for zkpass-client
  *
- * Authors:
- *   Khandar William (khandar.william@gdplabs.id)
- * Created at: February 29th 2024
- * -----
- * Last Modified: August 19th 2024
- * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
- * -----
- * Reviewers:
- *
- * ---
  * References:
  *   NONE
  * ---

@@ -2,24 +2,6 @@
  * interface.rs
  * zkPass public interfaces, structs, and enums
  *
- * Authors:
- *   Antony Halim (antony.halim@gdplabs.id)
- *   GDPWinnerPranata (winner.pranata@gdplabs.id)
- *   WilliamhGDP (william.h.hendrawan@gdplabs.id)
- *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
- *   JaniceLaksana (janice.laksana@gdplabs.id)
- * Created at: September 21st 2024
- * -----
- * Last Modified: August 19th 2024
- * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
- * -----
- * Reviewers:
- *   GDPWinnerPranata (winner.pranata@gdplabs.id)
- *   Zulchaidir (zulchaidir@gdplabs.id)
- *   WilliamhGDP (william.h.hendrawan@gdplabs.id)
- *   Khandar William (khandar.william@gdplabs.id)
- *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
- * ---
  * References:
  *   NONE
  * ---
