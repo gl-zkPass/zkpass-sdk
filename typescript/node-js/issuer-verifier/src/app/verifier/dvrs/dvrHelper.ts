@@ -1,6 +1,5 @@
 /*
  * dvrHelper.ts
- * DEFAULT DESCRIPTION. EDIT OR DELETE THIS.
  *
  * References:
  *   NONE

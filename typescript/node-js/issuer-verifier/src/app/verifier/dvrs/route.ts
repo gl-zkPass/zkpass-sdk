@@ -1,17 +1,6 @@
 /*
  * route.ts
  *
- * Authors:
- *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
- *   Zulchaidir (zulchaidir@gdplabs.id)
- * Created at: October 31st 2023
- * -----
- * Last Modified: August 20th 2024
- * Modified By: William H Hendrawan (william.h.hendrawan@gdplabs.id)
- * -----
- * Reviewers:
- *   Zulchaidir (zulchaidir@gdplabs.id)
- * ---
  * References:
  *   NONE
  * ---
