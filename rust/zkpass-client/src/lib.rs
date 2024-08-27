@@ -1,15 +1,6 @@
 /*
  * lib.rs
  *
- * Authors:
- *   Antony Halim (antony.halim@gdplabs.id)
- * Created at: September 26th 2023
- * -----
- * Last Modified: August 19th 2024
- * -----
- * Reviewers:
- *   Zulchaidir (zulchaidir@gdplabs.id)
- * ---
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
 
