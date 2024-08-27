@@ -23,15 +23,24 @@ export default function UsersWelcome({ user }: { user: string | undefined }) {
   return (
     <>
       <HeaderBar user={user} />
-      <div className='flex flex-col justify-start items-center h-screen pt-40'>
+      <div className="flex flex-col justify-start items-center h-screen pt-40">
         <Paper
           elevation={3}
-          className='w-2/5 p-7 flex flex-col items-center gap-5'>
+          className="w-2/5 p-7 flex flex-col items-center gap-5"
+        >
           <div>Welcome {user}!</div>
-          <Button href='/onboarding?user-data=single' variant='outlined'>
+          <Button
+            className="text-center"
+            href="/onboarding?user-data=single"
+            variant="outlined"
+          >
             Start Employee Onboarding {"(Single User Data)"}
           </Button>
-          <Button href='/onboarding?user-data=multiple' variant='outlined'>
+          <Button
+            className="text-center"
+            href="/onboarding?user-data=multiple"
+            variant="outlined"
+          >
             Start Employee Onboarding {"(Multiple User Data)"}
           </Button>
         </Paper>
