@@ -276,26 +276,17 @@ export default function EmployeeOnboarding({
             })}
           </Stepper>
           {loadedProof && proofResult ? (
-            <div>
-              <Paper
-                elevation={2}
-                className="flex flex-row items-center gap-2 p-4 bg-green-200"
-              >
-                <CheckCircleOutlineIcon
-                  sx={{ color: "rgb(74 222 128)" }}
-                  fontSize="large"
-                />
-                The blood test {isUsingMultipleUserData ? "and kyc" : ""}{" "}
-                succeeded onboarding requirements.
-              </Paper>
-              <Button
-                className="text-center block mt-5"
-                href="/users"
-                variant="text"
-              >
-                Back to home
-              </Button>
-            </div>
+            <Paper
+              elevation={2}
+              className="flex flex-row items-center gap-2 p-4 bg-green-200"
+            >
+              <CheckCircleOutlineIcon
+                sx={{ color: "rgb(74 222 128)" }}
+                fontSize="large"
+              />
+              The blood test {isUsingMultipleUserData ? "and kyc" : ""}{" "}
+              succeeded onboarding requirements.
+            </Paper>
           ) : loadedProof && !proofResult ? (
             <Paper
               elevation={2}
@@ -307,6 +298,11 @@ export default function EmployeeOnboarding({
             </Paper>
           ) : (
             <></>
+          )}
+          {loadedProof && (
+            <Button className="text-center block" href="/users" variant="text">
+              Back to home
+            </Button>
           )}
 
           {isLoading ? (
