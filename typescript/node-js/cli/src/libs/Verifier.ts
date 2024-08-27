@@ -1,18 +1,6 @@
 /*
  * Verifier.ts
  *
- * Authors:
- *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
- * Created Date: December 19th 2023
- * -----
- * Last Modified: July 27th 2024
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
- * -----
- * Reviewers:
- *   Zulchaidir (zulchaidir@gdplabs.id)
- *   Nugraha Tejapermana (nugraha.tejapermana@gdplabs.id)
- *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
- * ---
  * References:
  *   NONE
  * ---
@@ -25,17 +13,13 @@ import {
   PublicKeyOption,
 } from "@didpass/zkpass-client-ts";
 import { ZKPASS_SERVICE_URL, ZKPASS_ZKVM } from "../utils/constants";
+import { UserDataRequests } from "@didpass/zkpass-client-ts/lib/src/classes/userDataRequest";
 
 export type DvrData = {
   dvr_title: string;
   dvr_id: string;
   query: string;
-  user_data_requests: {
-    [key: string]: {
-      user_data_url: string;
-      user_data_verifying_key: PublicKeyOption;
-    };
-  };
+  user_data_requests: UserDataRequests;
   dvr_verifying_key: PublicKeyOption;
   zkvm: string;
 };
@@ -81,5 +65,5 @@ export abstract class Verifier {
     return this.dvr;
   }
 
-  abstract getDvrToken(dvrFile: string): Promise<string>;
+  abstract getDvrToken(dvrFile: string, dataTags: string[]): Promise<string>;
 }

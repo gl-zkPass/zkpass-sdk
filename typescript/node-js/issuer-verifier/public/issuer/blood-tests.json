@@ -13,6 +13,10 @@
       "lastName": "Doe",
       "dateOfBirth": "1985-12-12",
       "bloodType": "A+",
+      "kyc": {
+        "kycId": "ZK0001",
+        "kycType": "ZKPASSID"
+      },
       "DNAInfo": {
         "markers": {
           "APOE": ["E3", "E3"],
@@ -23,16 +27,6 @@
           "paternal": "R1b1",
           "maternal": "H1a1"
         }
-      },
-      "contact": {
-        "email": "john.doe@gmail.com",
-        "phone": "650-555-1234"
-      },
-      "address": {
-        "street": "789 Oak Street",
-        "city": "San Jose",
-        "state": "CA",
-        "zip": "95134"
       }
     },
     "measuredPanelsNgML": {
@@ -56,6 +50,10 @@
       "lastName": "Mae",
       "dateOfBirth": "1989-2-1",
       "bloodType": "A+",
+      "kyc": {
+        "kycId": "ZK0002",
+        "kycType": "ZKPASSID"
+      },
       "DNAInfo": {
         "markers": {
           "APOE": ["E3", "E3"],
@@ -66,16 +64,6 @@
           "paternal": "R1b1",
           "maternal": "H1a1"
         }
-      },
-      "contact": {
-        "email": "jake.mae@gmail.com",
-        "phone": "650-555-1234"
-      },
-      "address": {
-        "street": "789 Oak Street",
-        "city": "San Jose",
-        "state": "CA",
-        "zip": "95134"
       }
     },
     "measuredPanelsNgML": {
@@ -99,6 +87,10 @@
       "lastName": "Dee",
       "dateOfBirth": "1990-1-1",
       "bloodType": "A+",
+      "kyc": {
+        "kycId": "ZK0003",
+        "kycType": "ZKPASSID"
+      },
       "DNAInfo": {
         "markers": {
           "APOE": ["E3", "E3"],
@@ -109,16 +101,6 @@
           "paternal": "R1b1",
           "maternal": "H1a1"
         }
-      },
-      "contact": {
-        "email": "jane.dee@gmail.com",
-        "phone": "650-555-1234"
-      },
-      "address": {
-        "street": "789 Oak Street",
-        "city": "San Jose",
-        "state": "CA",
-        "zip": "95134"
       }
     },
     "measuredPanelsNgML": {
@@ -142,6 +124,10 @@
       "lastName": "Yoder",
       "dateOfBirth": "1980-2-10",
       "bloodType": "A+",
+      "kyc": {
+        "kycId": "ZK0004",
+        "kycType": "ZKPASSID"
+      },
       "DNAInfo": {
         "markers": {
           "APOE": ["E3", "E3"],
@@ -152,16 +138,6 @@
           "paternal": "R1b1",
           "maternal": "H1a1"
         }
-      },
-      "contact": {
-        "email": "rob.yoder@gmail.com",
-        "phone": "650-555-1234"
-      },
-      "address": {
-        "street": "789 Oak Street",
-        "city": "San Jose",
-        "state": "CA",
-        "zip": "95134"
       }
     },
     "measuredPanelsNgML": {
@@ -185,6 +161,10 @@
       "lastName": "Morton",
       "dateOfBirth": "1988-5-20",
       "bloodType": "A+",
+      "kyc": {
+        "kycId": "ZK0002",
+        "kycType": "ZKPASSID"
+      },
       "DNAInfo": {
         "markers": {
           "APOE": ["E3", "E3"],
@@ -195,16 +175,6 @@
           "paternal": "R1b1",
           "maternal": "H1a1"
         }
-      },
-      "contact": {
-        "email": "rob.yoder@gmail.com",
-        "phone": "650-555-1234"
-      },
-      "address": {
-        "street": "789 Oak Street",
-        "city": "San Jose",
-        "state": "CA",
-        "zip": "95134"
       }
     },
     "measuredPanelsNgML": {

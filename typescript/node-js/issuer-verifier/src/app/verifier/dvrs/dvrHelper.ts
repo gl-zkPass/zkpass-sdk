@@ -1,18 +1,6 @@
 /*
  * dvrHelper.ts
- * DEFAULT DESCRIPTION. EDIT OR DELETE THIS.
  *
- * Authors:
- *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
- *   Zulchaidir (zulchaidir@gdplabs.id)
- * Created at: November 2nd 2023
- * -----
- * Last Modified: February 29th 2024
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
- * -----
- * Reviewers:
- *   Zulchaidir (zulchaidir@gdplabs.id)
- * ---
  * References:
  *   NONE
  * ---
