@@ -1,28 +1,28 @@
 use crate::constants;
 use crate::data_issuer::DataIssuer;
 use crate::proof_verifier::ProofVerifier;
+use std::collections::HashMap;
 use std::time::Instant;
 use tracing::info;
 use zkpass_client::core::OutputReader;
-use zkpass_client::helpers::wrap_single_user_data_input;
 use zkpass_client::interface::{ZkPassApiKey, ZkPassClient, ZkPassProofGenerator};
 
 pub struct DataHolder;
 
 impl DataHolder {
-    pub async fn start(&self, zkvm: &str, data_file: &str, dvr_file: &str) {
+    pub async fn start(&self, zkvm: &str, data_files: HashMap<String, String>, dvr_file: &str) {
         //
         //  Get the user data from the data issuer
         //
         let data_issuer = DataIssuer;
-        let user_data_token = data_issuer.get_user_data_token(zkvm, data_file);
-        let user_data_tokens = wrap_single_user_data_input(user_data_token);
+        let user_data_tokens = data_issuer.get_user_data_tokens(zkvm, data_files);
+        let user_data_tags: Vec<&String> = user_data_tokens.keys().collect();
 
         //
         //  Get the dvr from the verifier
         //
         let proof_verifier = ProofVerifier;
-        let dvr_token = proof_verifier.get_dvr_token(zkvm, dvr_file);
+        let dvr_token = proof_verifier.get_dvr_token(zkvm, dvr_file, user_data_tags);
 
         let zkpass_service_url = constants::ZKPASS_URL; // Use the ZKPASS_URL constant from the constants module
         info!("service_url={}", zkpass_service_url);

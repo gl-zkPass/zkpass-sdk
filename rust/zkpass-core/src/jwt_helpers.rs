@@ -2,16 +2,6 @@
  * jwt_helpers.rs
  * Helpers for JWT, JWS, JWE operations that are not specific to User Data or DVR token
  *
- * Authors:
- *   Khandar William (khandar.william@gdplabs.id)
- * Created at: June 26th 2024
- * -----
- * Last Modified: July 1st 2024
- * Modified By: Khandar William (khandar.william@gdplabs.id)
- * -----
- * Reviewers:
- *
- * ---
  * References:
  *   - [RFC 7519: JWT](https://datatracker.ietf.org/doc/html/rfc7519)
  *   - [RFC 7516: JWE](https://datatracker.ietf.org/doc/html/rfc7516)

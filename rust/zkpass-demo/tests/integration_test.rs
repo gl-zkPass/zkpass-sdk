@@ -36,7 +36,7 @@ mod e2e_tests {
         let user_data_path = "test/data/ramana-profile.json";
         let dvr_path = "test/data/bca-finance-ramana-dvr.json";
         let zkpass_demo_command = format!(
-            "./target/release/zkpass-demo r0 {} {}",
+            "./target/release/zkpass-demo r0 -U {} -D {}",
             user_data_path, dvr_path
         );
         let output = Command::new("sh")
@@ -62,7 +62,7 @@ mod e2e_tests {
         let user_data_path = "test/data/dewi-profile.json";
         let dvr_path = "test/data/bca-finance-ramana-dvr.json";
         let zkpass_demo_command = format!(
-            "./target/release/zkpass-demo r0 {} {}",
+            "./target/release/zkpass-demo r0 -U {} -D {}",
             user_data_path, dvr_path
         );
         let output = Command::new("sh")
