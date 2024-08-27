@@ -1,6 +1,7 @@
 use crate::constants;
 use crate::data_issuer::DataIssuer;
 use crate::proof_verifier::ProofVerifier;
+use std::collections::HashMap;
 use std::time::Instant;
 use tracing::info;
 use zkpass_client::core::OutputReader;
@@ -9,12 +10,12 @@ use zkpass_client::interface::{ZkPassApiKey, ZkPassClient, ZkPassProofGenerator}
 pub struct DataHolder;
 
 impl DataHolder {
-    pub async fn start(&self, zkvm: &str, data_file: Vec<&str>, dvr_file: &str) {
+    pub async fn start(&self, zkvm: &str, data_files: HashMap<String, String>, dvr_file: &str) {
         //
         //  Get the user data from the data issuer
         //
         let data_issuer = DataIssuer;
-        let user_data_tokens = data_issuer.get_user_data_token(zkvm, data_file);
+        let user_data_tokens = data_issuer.get_user_data_tokens(zkvm, data_files);
         let user_data_tags: Vec<&String> = user_data_tokens.keys().collect();
 
         //

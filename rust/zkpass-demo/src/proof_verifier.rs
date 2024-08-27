@@ -10,7 +10,6 @@ use uuid::Uuid;
 use zkpass_client::core::{
     DataVerificationRequest, KeysetEndpoint, PublicKey, PublicKeyOption, ZkPassError,
 };
-use zkpass_client::helpers::wrap_single_user_data_input;
 use zkpass_client::interface::{
     ZkPassClient, ZkPassProofMetadataValidator, ZkPassProofVerifier, ZkPassUtility,
 };
@@ -190,12 +189,6 @@ impl ProofVerifier {
         &self,
         user_data_tags: Vec<&String>,
     ) -> HashMap<String, UserDataRequest> {
-        if user_data_tags.len() == 1 {
-            return wrap_single_user_data_input(UserDataRequest {
-                user_data_url: Some(String::from("https://hostname/api/user_data/")),
-                user_data_verifying_key: PublicKeyOption::PublicKey(issuer_pubkey()),
-            });
-        }
         let mut user_data_requests: HashMap<String, UserDataRequest> = HashMap::new();
         for tag in user_data_tags {
             let user_data_request = UserDataRequest {
