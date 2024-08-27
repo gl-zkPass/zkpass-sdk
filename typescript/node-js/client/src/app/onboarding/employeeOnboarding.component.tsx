@@ -300,8 +300,12 @@ export default function EmployeeOnboarding({
             <></>
           )}
           {loadedProof && (
-            <Button className="text-center block" href="/users" variant="text">
-              Back to home
+            <Button
+              className="text-center block"
+              href="/users"
+              variant="outlined"
+            >
+              Back to Home
             </Button>
           )}
 
