@@ -55,6 +55,22 @@ Follow these steps to test demo:
 1. In rust directory
 2. Build zkPass with `cargo build --release`
 3. Add environment with command `export LD_LIBRARY_PATH=./lib`
-4. Run the demo with `./target/release/zkpass-demo r0 -U test/data/dewi-profile-wrong.json -D test/data/bca-insurance-dewi-dvr.json`
+4. Run the demo with this format
 
-Or you can simply run the script with `./test.sh`
+   ```
+   ./target/release/zkpass-demo r0 [--user-data-file / -U] [tag:]<test data 1> [tag:]<test data 2> [--dvr-file / - D] <dvr file>
+   ```
+
+   example (single user data):
+
+   ```
+   ./target/release/zkpass-demo r0 -U test/data/dewi-profile-wrong.json -D test/data/bca-insurance-dewi-dvr.json
+   ```
+
+   example (multiple user data):
+
+   ```
+   ./target/release/zkpass-demo sp1 -U ./test/data/multiple/bank.json ./test/data/multiple/health.json  -D ./test/data/multiple/insurance-dvr.json
+   ```
+
+   Or you can simply run the script with `./test.sh`
