@@ -1,6 +1,6 @@
 //
 // Implementation of the zkPass query engine using the RiscZero zkvm
-// 
+//
 pub mod exports;
 pub mod ts_exports;
 pub mod zkpass_core {
@@ -10,9 +10,10 @@ mod zkvm_adapter;
 mod test;
 
 pub use crate::zkvm_adapter::create_zkpass_query_engine;
-pub use zkpass_query::expression::{
+pub use zkpass_query::engine::{
+    Val,
+    OutputReader,
     ZkPassQueryEngine,
-    ProofMethodOutput,
     ProofMethodInput,
     ZkPassQueryEngineError
 };

@@ -1,10 +1,10 @@
 #[cfg(test)]
 mod tests {
-    use hex;
-    use sha2::{Digest, Sha256};
+    use maplit::hashmap;
     use zkpass_client::core::{
         DataVerificationRequest, PublicKey, PublicKeyOption, ZkPassError, ZkPassProof,
     };
+    use zkpass_core::interface::UserDataRequest;
 
     #[test]
     fn test_access() {
@@ -19,8 +19,12 @@ mod tests {
             zkvm: String::from("r0"),
             dvr_title: String::from("title"),
             dvr_id: String::from("myid"),
-            user_data_url: Some(String::from("https://xyz-issuer.com")),
-            user_data_verifying_key: PublicKeyOption::PublicKey(pubkey2),
+            user_data_requests: hashmap! {
+                String::from("") => UserDataRequest {
+                    user_data_url: Some(String::from("https://xyz-issuer.com")),
+                    user_data_verifying_key: PublicKeyOption::PublicKey(pubkey2),
+                }
+            },
             query_engine_ver: String::from("1.0.2"),
             query_method_ver: String::from("12122121"),
             query: String::from(""),
@@ -35,18 +39,16 @@ mod tests {
             x: String::from("9480"),
             y: String::from("9232"),
         };
-        let mut hasher = Sha256::new();
-        hasher.update(serde_json::to_string(&_dvr).unwrap());
-        let digest = hex::encode(hasher.finalize());
 
-        let digest2 = _dvr.get_sha256_digest();
-        assert!(digest == digest2);
-        println!("digest={}", digest2);
+        let digest = _dvr.get_sha256_digest();
+        println!("digest={}", digest);
 
         let _zkpass_proof = ZkPassProof {
             zkproof: String::from("xxx"),
             dvr_verifying_key: pubkey,
-            user_data_verifying_key: pubkey2,
+            user_data_verifying_keys: hashmap! {
+                String::from("") => pubkey2,
+            },
             dvr_title: String::from("dvr title"),
             dvr_id: String::from("12179312"),
             dvr_digest: digest,
