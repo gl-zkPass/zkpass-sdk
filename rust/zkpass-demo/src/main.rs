@@ -39,7 +39,7 @@ fn main() {
         .version("0.1.0")
         .about("A CLI app for submitting a DVR query to the zkPass service")
         .arg(
-            Arg::with_name("zkvm-type").help("The zkVM type: 'sp1' or 'r0'").required(true).index(1)
+            Arg::with_name("zkvm-type").help("The zkVM type: 'r0'").required(true).index(1)
         )
         .arg(
             Arg::with_name("user-data-file")

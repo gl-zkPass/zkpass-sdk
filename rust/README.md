@@ -70,7 +70,7 @@ Follow these steps to test demo:
    example (multiple user data):
 
    ```
-   ./target/release/zkpass-demo sp1 -U ./test/data/multiple/bank.json ./test/data/multiple/health.json  -D ./test/data/multiple/insurance-dvr.json
+   ./target/release/zkpass-demo r0 -U ./test/data/multiple/bank.json ./test/data/multiple/health.json -D ./test/data/multiple/insurance-dvr.json
    ```
 
    Or you can simply run the script with `./test.sh`
