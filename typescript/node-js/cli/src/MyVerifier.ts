@@ -90,14 +90,23 @@ export class MyVerifier extends Verifier {
 
     const queryObj = JSON.parse(query);
     const userDataRequests: UserDataRequests = {};
-    dataTags.forEach((tag) => {
-      userDataRequests[tag] = {
+    if (dataTags.length === 1) {
+      userDataRequests[""] = {
         user_data_url: USER_DATA_URL,
         user_data_verifying_key: {
           KeysetEndpoint: issuerPubkey,
         },
       };
-    });
+    } else {
+      dataTags.forEach((tag) => {
+        userDataRequests[tag] = {
+          user_data_url: USER_DATA_URL,
+          user_data_verifying_key: {
+            KeysetEndpoint: issuerPubkey,
+          },
+        };
+      });
+    }
 
     const dvrData: DvrData = {
       dvr_title: DVR_TITLE,
