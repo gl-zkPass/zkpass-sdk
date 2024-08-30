@@ -1,19 +1,17 @@
 #![no_main]
 
 use risc0_zkvm::guest::env;
-use zkpass_query::expression::{ProofMethodInput, ProofMethodOutput};
+use zkpass_query::engine::{ProofMethodInput, ZkPassQuery};
 
 risc0_zkvm::guest::entry!(main);
 
+///
+/// The zkvm's proof method
+///
 pub fn main() {
     let input: ProofMethodInput = env::read();
 
-    let result: bool = input.expr.eval(&input.map).unwrap();
-
-    let output = ProofMethodOutput {
-        result: result
-    };
-    // call assert!() as necessary here
+    let output = ZkPassQuery::execute(&input);
 
     env::commit(&output);
 }

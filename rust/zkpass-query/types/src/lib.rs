@@ -1,7 +1,7 @@
-use serde::{ Deserialize, Serialize };
+use chrono::prelude::*;
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::HashMap;
-use chrono::prelude::*;
 
 mod date_format {
     pub const DDMMYYYY: &str = "DD/MM/YYYY";
@@ -56,7 +56,11 @@ impl SymbolTable {
 
     pub fn find(&self, key: &str) -> Option<&Val> {
         self.table.iter().find_map(|entry| {
-            if entry.key == key { Some(&entry.val) } else { None }
+            if entry.key == key {
+                Some(&entry.val)
+            } else {
+                None
+            }
         })
     }
 }
@@ -99,7 +103,7 @@ pub fn lookup<'a>(table: &'a LookupTable, key: &String) -> Option<&'a Val> {
 }
 
 pub struct OutputReader {
-    entries: Vec<Entry>, // to keep the order of entries
+    entries: Vec<Entry>,               // to keep the order of entries
     index_map: HashMap<String, usize>, // to search entry, maps keys to their index in the entries Vec
 }
 
@@ -115,14 +119,23 @@ impl OutputReader {
                 for (key, valnode) in map {
                     match valnode {
                         Value::String(s) => {
-                            table.add(Entry { key, val: Val::Str(s) });
+                            table.add(Entry {
+                                key,
+                                val: Val::Str(s),
+                            });
                         }
                         Value::Bool(b) => {
-                            table.add(Entry { key, val: Val::Bool(b) });
+                            table.add(Entry {
+                                key,
+                                val: Val::Bool(b),
+                            });
                         }
                         Value::Number(n) => {
                             let i = n.as_i64().unwrap();
-                            table.add(Entry { key, val: Val::Int(i) });
+                            table.add(Entry {
+                                key,
+                                val: Val::Int(i),
+                            });
                         }
                         _ => {
                             return Err(OutputReaderError::UnsupportedTypeError);
@@ -204,11 +217,12 @@ impl OutputReader {
 
 pub fn escape_string(input: &str) -> String {
     // Check if any character needs to be escaped.
-    if
-        !input
-            .chars()
-            .any(|c| matches!(c, '\"' | '\\' | '\n' | '\r' | '\t' | '\u{0008}' | '\u{000C}'))
-    {
+    if !input.chars().any(|c| {
+        matches!(
+            c,
+            '\"' | '\\' | '\n' | '\r' | '\t' | '\u{0008}' | '\u{000C}'
+        )
+    }) {
         return input.to_string();
     }
 
@@ -217,9 +231,9 @@ pub fn escape_string(input: &str) -> String {
         match c {
             '\"' => escaped_string.push_str("\\\""), // Escape double quote
             '\\' => escaped_string.push_str("\\\\"), // Escape backslash
-            '\n' => escaped_string.push_str("\\n"), // Escape newline
-            '\r' => escaped_string.push_str("\\r"), // Escape carriage return
-            '\t' => escaped_string.push_str("\\t"), // Escape tab
+            '\n' => escaped_string.push_str("\\n"),  // Escape newline
+            '\r' => escaped_string.push_str("\\r"),  // Escape carriage return
+            '\t' => escaped_string.push_str("\\t"),  // Escape tab
             '\u{0008}' => escaped_string.push_str("\\b"), // Escape backspace
             '\u{000C}' => escaped_string.push_str("\\f"), // Escape form feed
             _ => escaped_string.push(c),
@@ -234,7 +248,7 @@ pub fn escape_string(input: &str) -> String {
 //
 #[derive(Debug, Deserialize, Serialize)]
 pub struct LocalDate {
-    pub day: u8, // 1-31
+    pub day: u8,   // 1-31
     pub month: u8, // 1-12
     pub year: u16, // e.g. 2024
 }
@@ -244,8 +258,8 @@ impl LocalDate {
     // given a date format and allowing for different delimiters ('/', '-', '.')
     pub fn parse_date(date_str: &str, date_format: &str) -> Option<Self> {
         // Find positions of the delimiter to slice the string without collecting parts.
-        let first_delim = date_str.find(|c: char| (c == '/' || c == '-' || c == '.'))?;
-        let last_delim = date_str.rfind(|c: char| (c == '/' || c == '-' || c == '.'))?;
+        let first_delim = date_str.find(|c: char| c == '/' || c == '-' || c == '.')?;
+        let last_delim = date_str.rfind(|c: char| c == '/' || c == '-' || c == '.')?;
 
         if first_delim == last_delim {
             return None; // Only one delimiter found, invalid format.
@@ -295,21 +309,26 @@ impl LocalDate {
     pub fn from_u32(value: u32) -> Self {
         let day = (value & 0b11111) as u8; // Extracts 5 bits for the day
         let month = ((value >> 5) & 0b1111) as u8; // Extracts next 4 bits for the month
-        let year = ((value >> 9) & 0xffff) as u16; // Extracts next 16 bits for the year
+        let year = ((value >> 9) & 0xFFFF) as u16; // Extracts next 16 bits for the year
 
         LocalDate { day, month, year }
     }
 
     // Calculates the age difference between two LocalDate instances.
     pub fn calculate_age_difference(a: &LocalDate, b: &LocalDate) -> u16 {
-        let (earlier, later) = if LocalDate::is_later(a, b) { (b, a) } else { (a, b) };
+        let (earlier, later) = if LocalDate::is_later(a, b) {
+            (b, a)
+        } else {
+            (a, b)
+        };
 
         let mut age = later.year - earlier.year;
 
         // If the later date's month is before the earlier date's month,
         // or if it's the same month but the later date's day is before the earlier date's day,
         // then subtract one year from the age.
-        if later.month < earlier.month || (later.month == earlier.month && later.day < earlier.day) {
+        if later.month < earlier.month || (later.month == earlier.month && later.day < earlier.day)
+        {
             if age > 0 {
                 // Prevent underflow
                 age -= 1;

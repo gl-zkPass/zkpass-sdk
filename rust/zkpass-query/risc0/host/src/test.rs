@@ -4,7 +4,7 @@ mod tests {
     use std::io::prelude::*;
     use std::time::Instant;
     use crate::create_zkpass_query_engine;
-    use crate::ProofMethodOutput;
+    use crate::OutputReader;
 
     #[derive(Debug)]
     struct TestCase {
@@ -34,7 +34,7 @@ mod tests {
                 user_data_file: "./../../../test/data/jane2-blood-test-result.json".to_string(),
                 query_file: "./../../../test/data/employee-onboarding-dvr.json".to_string(),
                 expected_result: false,
-            },
+            }
         ];
     }
 
@@ -45,26 +45,25 @@ mod tests {
         //
         // prep the inputs
         //
-        let mut data_content= std::fs::File::open(
-            data_files).expect("Example file should be accessible");
+        let mut data_content = std::fs::File
+            ::open(data_files)
+            .expect("Example file should be accessible");
         let mut data = String::new();
-        data_content.read_to_string(&mut data)
-            .expect("Should not have I/O errors");
-        //println!("input: data={}", data);
+        data_content.read_to_string(&mut data).expect("Should not have I/O errors");
 
-        let mut rules_data = std::fs::File::open(
-            rules_file).expect("Example file should be accessible");
+        let mut rules_data = std::fs::File
+            ::open(rules_file)
+            .expect("Example file should be accessible");
         let mut rules = String::new();
-        rules_data.read_to_string(&mut rules)
-            .expect("Should not have I/O errors");
-        //println!("input: rules={}", rules);
+        rules_data.read_to_string(&mut rules).expect("Should not have I/O errors");
 
         println!("executing query and generating zkproof...");
         let start = Instant::now();
         //////////////// the meat //////////////////
         let query_engine = create_zkpass_query_engine();
-        let receipt = query_engine.execute_query_and_create_zkproof(data.as_str(), rules.as_str()).unwrap();
-        //println!("receipt: len={}", receipt.len());
+        let receipt = query_engine
+            .execute_query_and_create_zkproof(data.as_str(), rules.as_str())
+            .unwrap();
         ////////////////////////////////////////////
         let duration = start.elapsed();
 
@@ -73,7 +72,7 @@ mod tests {
         receipt
     }
 
-    fn verify_proof(receipt: &str) -> ProofMethodOutput {
+    fn verify_proof(receipt: &str) -> String {
         //
         //          Verifier side
         //
@@ -100,7 +99,9 @@ mod tests {
             println!("\n#### Running test for {}", test.user_data_file);
             let zkproof = gen_proof(test.user_data_file.as_str(), test.query_file.as_str());
             let output = verify_proof(zkproof.as_str());
-            assert!(output.result == test.expected_result);
+            let output_reader = OutputReader::from_json(&output).unwrap();
+            let b = output_reader.find_bool("result").unwrap();
+            assert!(b == test.expected_result);
         }
     }
 }

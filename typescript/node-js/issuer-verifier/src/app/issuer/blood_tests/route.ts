@@ -1,17 +1,6 @@
 /*
  * route.ts
  *
- * Authors:
- *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
- *   Zulchaidir (zulchaidir@gdplabs.id)
- * Created Date: October 31st 2023
- * -----
- * Last Modified: February 29th 2024
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
- * -----
- * Reviewers:
- *   Zulchaidir (zulchaidir@gdplabs.id)
- * ---
  * References:
  *   NONE
  * ---
@@ -21,15 +10,11 @@
 import fs from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
-import { ZkPassApiKey, ZkPassClient } from "@didpass/zkpass-client-ts";
+import { signDataToJwsToken } from "@/utils/signing";
 import {
-  ISSUER_JWKS_KID,
-  ISSUER_JWKS_URL,
-  ISSUER_PRIVATE_KEY_PEM,
-  API_KEY,
-  API_SECRET,
-  ZKPASS_SERVICE_URL,
-  ZKPASS_ZKVM
+  BLOOD_TEST_ISSUER_JWKS_KID,
+  BLOOD_TEST_ISSUER_JWKS_URL,
+  BLOOD_TEST_ISSUER_PRIVATE_KEY_PEM,
 } from "@/utils/constants";
 
 const ASSET_PATH = "public/issuer/";
@@ -71,7 +56,14 @@ export async function POST(req: Request) {
 
   const bloodTest = bloodTests[userName];
 
-  const jwt = await _signBloodTest(bloodTest);
+  const signingKey = {
+    jwks: {
+      jku: BLOOD_TEST_ISSUER_JWKS_URL,
+      kid: BLOOD_TEST_ISSUER_JWKS_KID,
+    },
+    privateKey: BLOOD_TEST_ISSUER_PRIVATE_KEY_PEM,
+  };
+  const jwt = await signDataToJwsToken(bloodTest, signingKey);
 
   console.log("=== blood_test jwt sent ===");
   return _setHeader(NextResponse.json({ status: 200, data: jwt }));
@@ -84,39 +76,6 @@ export async function GET() {
 export async function OPTIONS() {
   let response = _setHeader(NextResponse.json({ status: 200 }));
   return response;
-}
-
-async function _signBloodTest(data: { [key: string]: any }) {
-  const API_KEY_OBJ = new ZkPassApiKey(
-    API_KEY ?? "",
-    API_SECRET ?? ""
-  );
-
-  const verifyingKeyJKWS = {
-    jku: ISSUER_JWKS_URL,
-    kid: ISSUER_JWKS_KID,
-  };
-
-  /**
-   * Step 1: Instantiate the zkPassClient object
-   */
-  const zkPassClient = new ZkPassClient({
-    zkPassServiceUrl: ZKPASS_SERVICE_URL ?? "",
-    zkPassApiKey: API_KEY_OBJ,
-    zkVm: ZKPASS_ZKVM ?? "",
-  });
-
-  /**
-   * Step 2: Call the zkPassClient.signDataToJwsToken.
-   *         This is to digitally-sign the user data.
-   */
-  const dataToken = await zkPassClient.signDataToJwsToken(
-    ISSUER_PRIVATE_KEY_PEM,
-    data,
-    verifyingKeyJKWS
-  );
-
-  return dataToken;
 }
 
 function _setHeader(response: NextResponse) {

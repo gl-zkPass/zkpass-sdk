@@ -1,7 +1,8 @@
 use crate::core::*;
 use async_trait::async_trait;
 use serde_json::Value;
-use zkpass_core::interface::get_current_timestamp;
+use std::collections::HashMap;
+use zkpass_core::jwt_helpers::get_current_timestamp;
 
 #[async_trait]
 ///
@@ -31,7 +32,7 @@ pub trait ZkPassProofGenerator {
     ///
     /// | Argument                                                       | Description                               |
     /// |----------------------------------------------------------------|-------------------------------------------|
-    /// | <span style="color: blue;"> **`user_data_token`** </span>      | The signed user data JWS token |
+    /// | <span style="color: blue;"> **`user_data_tokens`** </span>     | Multiple signed user data JWS tokens |
     /// | <span style="color: blue;"> **`dvr_token`** </span>            | The signed DVR JWS token
     ///
     /// | Return Value                                                   | Description                                |
@@ -39,8 +40,8 @@ pub trait ZkPassProofGenerator {
     /// |<span style="color: green;"> **`Result<String, ZkPassError>`** </span> | On Ok, the signed `ZkPassProof` token is returned as a String <br> On Err, the ZkPassError is returned |
     async fn generate_zkpass_proof(
         &self,
-        user_data_token: &str,
-        dvr_token: &str
+        user_data_tokens: &HashMap<String, String>,
+        dvr_token: &str,
     ) -> Result<String, ZkPassError>;
 }
 
@@ -69,7 +70,7 @@ pub trait ZkPassUtility {
         &self,
         signing_key: &str,
         data: Value,
-        verifying_key_jwks: Option<KeysetEndpoint>
+        verifying_key_jwks: Option<KeysetEndpoint>,
     ) -> Result<String, ZkPassError>;
 
     /// # Description
@@ -120,7 +121,7 @@ pub trait ZkPassUtility {
     fn decrypt_jwe_token(
         &self,
         key: &str,
-        jwe_token: &str
+        jwe_token: &str,
     ) -> Result<(String, String), ZkPassError>;
 }
 
@@ -142,7 +143,7 @@ pub trait ZkPassProofMetadataValidator: Sync + Send {
     /// |<span style="color: green;"> **`Result<(DataVerificationRequest, PublicKey, u64), ZkPassError>`** </span> | On Ok, the (expected DVR, expected verifying DVR key, expected ttl) are returned  <br> On Err, the ZkPassError is returned |
     fn validate(
         &self,
-        dvr_id: &str
+        dvr_id: &str,
     ) -> Result<(DataVerificationRequest, PublicKey, u64), ZkPassError>;
 }
 
@@ -166,39 +167,47 @@ pub trait ZkPassProofVerifier {
     async fn verify_zkpass_proof(
         &self,
         zkpass_proof_token: &str,
-        validator: &Box<dyn ZkPassProofMetadataValidator>
+        validator: &Box<dyn ZkPassProofMetadataValidator>,
     ) -> Result<(String, ZkPassProof), ZkPassError> {
         //
         //  zkp verification
         //
-        let (result, zkpass_proof) = self.verify_zkpass_proof_internal(zkpass_proof_token).await?;
+        let (result, zkpass_proof) = self
+            .verify_zkpass_proof_internal(zkpass_proof_token)
+            .await?;
 
         //
         //  post-zkp metadata validations
         //  call the metadata validator callback, passing the dvr_id
         //    the callback returns the expected: (dvr, dvr_verifying_key, ttl)
         //
-        let (expected_dvr, expected_dvr_verifying_key, expected_ttl) = validator.validate(
-            zkpass_proof.dvr_id.as_str()
-        )?;
+        let (expected_dvr, expected_dvr_verifying_key, expected_ttl) =
+            validator.validate(zkpass_proof.dvr_id.as_str())?;
 
         //
         //  checking for valid dvr
         //
         if zkpass_proof.dvr_digest != expected_dvr.get_sha256_digest() {
-            return Err(ZkPassError::MismatchedUserDataVerifyingKey);
+            return Err(ZkPassError::MismatchedDvrDigest);
         }
 
         //
         //  checking for valid keys used to verify user data & dvr
         //
-        match expected_dvr.user_data_verifying_key {
-            PublicKeyOption::PublicKey(key) => {
-                if key != zkpass_proof.user_data_verifying_key {
-                    return Err(ZkPassError::MismatchedUserDataVerifyingKey);
+        for (tag, user_data_request) in expected_dvr.user_data_requests.iter() {
+            let proof_user_data_verifying_key = zkpass_proof
+                .user_data_verifying_keys
+                .get(tag)
+                .ok_or(ZkPassError::MismatchedUserDataVerifyingKey)?;
+
+            match &user_data_request.user_data_verifying_key {
+                PublicKeyOption::PublicKey(pub_key_req) => {
+                    if pub_key_req != proof_user_data_verifying_key {
+                        return Err(ZkPassError::MismatchedUserDataVerifyingKey);
+                    }
                 }
-            }
-            _ => {} // get the pubkey from endpoint
+                _ => {} // If the pubkey is still in the form of PublicKeyOption::KeySet, we can't compare it here
+            };
         }
         if zkpass_proof.dvr_verifying_key != expected_dvr_verifying_key {
             return Err(ZkPassError::MismatchedDvrVerifyingKey);
@@ -231,7 +240,7 @@ pub trait ZkPassProofVerifier {
     /// |<span style="color: green;"> **`Result<(bool, ZkPassProof), ZkPassError>`** </span> | On Ok, the query result returned as a bool, and the ZkPassProof value is also returned<br> On Err, the ZkPassError is returned |
     async fn verify_zkpass_proof_internal(
         &self,
-        zkpass_proof_token: &str
+        zkpass_proof_token: &str,
     ) -> Result<(String, ZkPassProof), ZkPassError>;
 
     /// # **Description**

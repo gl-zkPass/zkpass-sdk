@@ -7,9 +7,8 @@ use base64;
 use base64::{ engine::general_purpose, Engine as _ };
 use sha2::{Digest, Sha256};
 use hex;
-use zkpass_query::expression::{
+use zkpass_query::engine::{
     ZkPassQueryEngine,
-    ProofMethodOutput,
     ProofMethodInput,
     ZkPassQueryEngineError
 };
@@ -39,7 +38,7 @@ fn execute_query_and_create_zkproof_internal(input: &ProofMethodInput) -> Result
     Ok(zkproof_b64)
 }
 
-pub(crate) fn verify_zkproof_internal(zkproof_b64: &str) -> ProofMethodOutput {
+pub(crate) fn verify_zkproof_internal(zkproof_b64: &str) -> String {
     info!(">> verify_zkproof_internal");
 
     // deserialize the proof b64 string into proof value
@@ -48,7 +47,7 @@ pub(crate) fn verify_zkproof_internal(zkproof_b64: &str) -> ProofMethodOutput {
     // verify the proof
     SP1Verifier::verify(ELF, &zkproof).expect("verification failed");
     // read the output
-    let output: ProofMethodOutput = zkproof.stdout.read::<ProofMethodOutput>();
+    let output: String = zkproof.stdout.read::<String>();
 
     info!("<< verify_zkproof_internal");
     output
@@ -90,7 +89,7 @@ impl ZkPassQueryEngine for SP1ZkPassQueryEngine {
         }
     }
 
-    fn verify_zkproof(&self, receipt: &str) -> Result<ProofMethodOutput, ZkPassQueryEngineError> {
+    fn verify_zkproof(&self, receipt: &str) -> Result<String, ZkPassQueryEngineError> {
         match panic::catch_unwind(|| verify_zkproof_internal(receipt)) {
             Ok(result) => Ok(result),
             Err(_error) => Err(ZkPassQueryEngineError::UnhandledPanicError),

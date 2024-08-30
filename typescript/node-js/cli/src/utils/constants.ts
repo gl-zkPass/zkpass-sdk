@@ -3,16 +3,6 @@
  *
  * Values within constants.ts are strictly used for testing purposes only
  *
- * Authors:
- *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
- * Created Date: November 29th 2023
- * -----
- * Last Modified: May 17th 2024
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
- * -----
- * Reviewers:
- *   Nugraha Tejapermana (nugraha.tejapermana@gdplabs.id)
- * ---
  * References:
  *   NONE
  * ---

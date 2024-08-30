@@ -1,31 +1,20 @@
 /*
  * Holder.ts
  *
- * Authors:
- *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
- * Created Date: December 19th 2023
- * -----
- * Last Modified: July 27th 2024
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
- * -----
- * Reviewers:
- *   Zulchaidir (zulchaidir@gdplabs.id)
- *   Nugraha Tejapermana (nugraha.tejapermana@gdplabs.id)
- *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
- * ---
  * References:
  *   NONE
  * ---
  * Copyright (c) 2023 PT Darta Media Indonesia. All rights reserved.
  */
 import { ZkPassApiKey, ZkPassClient } from "@didpass/zkpass-client-ts";
+import { UserDataTag } from "../utils/helper";
 
 export abstract class Holder {
   protected async createZkPassProof(
     zkPassServiceUrl: string,
     apiKey: ZkPassApiKey,
     zkPassZkvm: string,
-    userDataToken: string,
+    userDataToken: UserDataTag,
     dvrToken: string
   ): Promise<string> {
     //
@@ -42,7 +31,7 @@ export abstract class Holder {
     //         to get the zkPassProofToken.
     //
     const zkPassProofToken = await zkPassClient.generateZkPassProof(
-      { "": userDataToken },
+      userDataToken,
       dvrToken
     );
 
@@ -50,7 +39,7 @@ export abstract class Holder {
   }
 
   abstract start(
-    userDataToken: string,
+    userDataToken: UserDataTag,
     dvrToken: string,
     zkPassServiceUrl: string,
     apiKey: ZkPassApiKey,

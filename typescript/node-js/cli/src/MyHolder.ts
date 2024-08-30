@@ -1,18 +1,6 @@
 /*
  * MyHolder.ts
  *
- * Authors:
- *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
- * Created Date: December 21st 2023
- * -----
- * Last Modified: February 29th 2024
- * Modified By: LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
- * -----
- * Reviewers:
- *   Zulchaidir (zulchaidir@gdplabs.id)
- *   Nugraha Tejapermana (nugraha.tejapermana@gdplabs.id)
- *   LawrencePatrickSianto (lawrence.p.sianto@gdplabs.id)
- * ---
  * References:
  *   NONE
  * ---
@@ -20,10 +8,11 @@
  */
 import { ZkPassApiKey } from "@didpass/zkpass-client-ts";
 import { Holder } from "./libs/Holder";
+import { UserDataTag } from "./utils/helper";
 
 export class MyHolder extends Holder {
   public async start(
-    userDataToken: string,
+    userDataToken: UserDataTag,
     dvrToken: string,
     zkPassServiceUrl: string,
     apiKey: ZkPassApiKey,
