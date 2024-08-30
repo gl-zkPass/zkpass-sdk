@@ -91,7 +91,8 @@ export class MyVerifier extends Verifier {
     const queryObj = JSON.parse(query);
     const userDataRequests: UserDataRequests = {};
     dataTags.forEach((tag) => {
-      userDataRequests[tag] = {
+      const key = dataTags.length === 1 ? "" : tag;
+      userDataRequests[key] = {
         user_data_url: USER_DATA_URL,
         user_data_verifying_key: {
           KeysetEndpoint: issuerPubkey,
