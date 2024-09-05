@@ -86,7 +86,7 @@ export default function Home() {
               }
             }}
           />
-          <Button variant="outlined" onClick={_handleLogin}>
+          <Button data-testid="page-login-btn" variant="outlined" onClick={_handleLogin}>
             Login
           </Button>
         </Paper>
