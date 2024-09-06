@@ -12,13 +12,12 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { useRouter } from "next/navigation";
 import Home from "@/app/page";
 import { MYNAMASTE_URL } from "@/utils/constants";
+import { checkTextToBeInDocument } from "../../test-utils/checks";
 
-// Mock the useRouter hook
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }));
 
-// Mock the fetch function
 const mockFetch = jest.fn();
 global.fetch = mockFetch;
 
@@ -37,7 +36,7 @@ describe("Home", () => {
 
   test("renders correctly", () => {
     render(<Home />);
-    expect(screen.getByText("zkPass Demo : My Namaste")).toBeInTheDocument();
+    checkTextToBeInDocument("zkPass Demo : My Namaste");
     expect(screen.getByLabelText("Username")).toBeInTheDocument();
     expect(screen.getByLabelText("Password")).toBeInTheDocument();
     expect(screen.getByTestId("page-login-btn")).toBeInTheDocument();
@@ -48,9 +47,7 @@ describe("Home", () => {
 
     render(<Home />);
     fireEvent.click(screen.getByTestId("page-login-btn"));
-    expect(
-      screen.getByText("Username or password cannot be empty")
-    ).toBeInTheDocument();
+    checkTextToBeInDocument("Username or password cannot be empty");
 
     act(() => {
       jest.advanceTimersByTime(6000);
@@ -70,9 +67,7 @@ describe("Home", () => {
       code: "Enter",
     });
 
-    expect(
-      screen.getByText("Username or password cannot be empty")
-    ).toBeInTheDocument();
+    checkTextToBeInDocument("Username or password cannot be empty");
   });
 
   test("Handle keyDown do nothing on password field", async () => {
@@ -133,7 +128,7 @@ describe("Home", () => {
         method: "POST",
         body: JSON.stringify({ username: "testuser", password: "password" }),
       });
-      expect(screen.getByText("Invalid credentials")).toBeInTheDocument();
+      checkTextToBeInDocument("Invalid credentials");
     });
   });
 

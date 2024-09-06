@@ -12,6 +12,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import HeaderBar from "../../../src/components/header";
 import { useRouter } from "next/navigation";
 import { MYNAMASTE_URL } from "@/utils/constants";
+import { checkTextToBeInDocument } from "../../test-utils/checks";
 
 // Mock the useRouter hook
 jest.mock("next/navigation", () => ({
@@ -37,21 +38,20 @@ describe("HeaderBar", () => {
 
   test("renders header without user", () => {
     render(<HeaderBar user={undefined} />);
-    expect(screen.getByText("My Namaste")).toBeInTheDocument();
-    expect(screen.getByText("Login")).toBeInTheDocument();
+    checkTextToBeInDocument("My Namaste");
+    checkTextToBeInDocument("Login");
   });
 
   test("renders with user", () => {
     render(<HeaderBar user='testuser' />);
-    expect(screen.getByText("My Namaste")).toBeInTheDocument();
-    expect(screen.getByText("Logout: testuser")).toBeInTheDocument();
+    checkTextToBeInDocument("My Namaste");
+    checkTextToBeInDocument("Logout: testuser");
   });
 
   describe("Logout", () => {
     function doLogout() {
       render(<HeaderBar user='testuser' />);
-      const logoutButton = screen.getByText("Logout: testuser");
-      fireEvent.click(logoutButton);
+      fireEvent.click(screen.getByText("Logout: testuser"));
 
       expect(fetch).toHaveBeenCalledWith(`${MYNAMASTE_URL}/api/logout`, {
         method: "POST",

@@ -6,7 +6,7 @@ export const createFetchPromise = (response: any) => {
   });
 };
 
-export const checkTextToBeInDocument = async (text: string) => {
+export const checkTextToBeInDocument = (text: string) => {
   expect(screen.getByText(text)).toBeInTheDocument();
 };
 

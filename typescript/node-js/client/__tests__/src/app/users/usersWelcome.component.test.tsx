@@ -11,6 +11,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { useRouter } from "next/navigation";
 import UsersWelcome from "@/app/users/usersWelcome.component";
+import { checkTextToBeInDocument } from "../../../test-utils/checks";
 
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
@@ -32,13 +33,9 @@ describe("UsersWelcome", () => {
   test("renders correctly with user", () => {
     render(<UsersWelcome user='testuser' />);
 
-    expect(screen.getByText("Welcome testuser!")).toBeInTheDocument();
-    expect(
-      screen.getByText("Start Employee Onboarding (Single User Data)")
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("Start Employee Onboarding (Multiple User Data)")
-    ).toBeInTheDocument();
+    checkTextToBeInDocument("Welcome testuser!");
+    checkTextToBeInDocument("Start Employee Onboarding (Single User Data)");
+    checkTextToBeInDocument("Start Employee Onboarding (Multiple User Data)");
   });
 
   test("redirects to home when user is not defined", () => {

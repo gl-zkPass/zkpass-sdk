@@ -11,6 +11,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { cookies } from "next/headers";
 import Users from "@/app/onboarding/page";
+import { checkTextToBeInDocument } from "../../../test-utils/checks";
 
 jest.mock("next/headers", () => ({
   cookies: jest.fn(),
@@ -37,9 +38,7 @@ describe("Onboarding Page", () => {
     });
 
     render(<Users />);
-    expect(
-      screen.getByText("Testuser's Employee Onboarding.")
-    ).toBeInTheDocument();
+    checkTextToBeInDocument("Testuser's Employee Onboarding.");
   });
 
   test("renders EmployeeOnboarding without user when cookie is not present", () => {
