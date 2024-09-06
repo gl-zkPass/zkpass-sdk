@@ -18,7 +18,10 @@ const config: Config = {
     "\\.(gif|ttf|eot|svg|jpg|png)$": "<rootDir>/__mocks__/imageMock.ts",
     "^jose": require.resolve("jose"),
   },
-  modulePathIgnorePatterns: ["<rootDir>/e2e-test/"],
+  modulePathIgnorePatterns: [
+    "<rootDir>/e2e-test/",
+    "<rootDir>/__tests__/test-utils",
+  ],
   preset: "ts-jest",
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testEnvironment: "jest-environment-jsdom",
