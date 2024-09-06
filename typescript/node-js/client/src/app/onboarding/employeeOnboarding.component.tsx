@@ -126,24 +126,23 @@ export default function EmployeeOnboarding({
             setRequestedBloodTest(true);
             setActiveStep(2);
           } else {
-            const message =
-              dvrFetchResponse.message || bloodTestFetchResponse.message;
-            showError(message);
+            showError(ErrorMessage.FETCH);
           }
         })
         .catch((error) => showError(error.message));
     })();
   }, []);
 
-  const showError = (message: string = "Unexpected Error") => {
+  const showError = (message: string) => {
     setMessage(message);
     setOpen(true);
   };
 
   enum ErrorMessage {
-    DVR = "Error Parsing DVR",
-    BLOOD_TEST = "Error Parsing Blood Test User Data",
-    KYC = "Error Parsing KYC User Data",
+    DVR = "Parsing Error on DVR",
+    BLOOD_TEST = "Parsing Error on Blood Test User Data",
+    KYC = "Parsing Error on KYC User Data",
+    FETCH = "Failed to Fetch Data",
   }
   const decodePayload = (jwtString: string) => {
     const payload = jwt.decode(jwtString, { complete: true })?.payload;
@@ -257,7 +256,7 @@ export default function EmployeeOnboarding({
       console.log("== proof body not 200");
 
       setIsLoading(false);
-      showError(proofBody.message);
+      showError(proofBody.message!);
     }
   };
 

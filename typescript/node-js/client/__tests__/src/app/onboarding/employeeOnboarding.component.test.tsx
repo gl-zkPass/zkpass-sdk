@@ -200,7 +200,7 @@ describe("EmployeeOnboarding", () => {
       render(<EmployeeOnboarding user={mockUser} />);
       checkTextToBeInDocument("Testuser's Employee Onboarding.");
 
-      await checkTextToBeInDocumentAsync("Error Parsing DVR");
+      await checkTextToBeInDocumentAsync("Parsing Error on DVR");
     });
 
     test("handle error empty Blood Test User Data string", async () => {
@@ -209,7 +209,9 @@ describe("EmployeeOnboarding", () => {
       render(<EmployeeOnboarding user={mockUser} />);
       checkTextToBeInDocument("Testuser's Employee Onboarding.");
 
-      await checkTextToBeInDocumentAsync("Error Parsing Blood Test User Data");
+      await checkTextToBeInDocumentAsync(
+        "Parsing Error on Blood Test User Data"
+      );
     });
 
     test("handle error empty KYC User Data string", async () => {
@@ -218,7 +220,7 @@ describe("EmployeeOnboarding", () => {
       render(<EmployeeOnboarding user={mockUser} />);
       checkTextToBeInDocument("Testuser's Employee Onboarding.");
 
-      await checkTextToBeInDocumentAsync("Error Parsing KYC User Data");
+      await checkTextToBeInDocumentAsync("Parsing Error on KYC User Data");
     });
 
     test("handle error on generating proof", async () => {
@@ -265,16 +267,14 @@ describe("EmployeeOnboarding", () => {
       render(<EmployeeOnboarding user={mockUser} />);
       checkTextToBeInDocument("Testuser's Employee Onboarding.");
 
-      await checkTextToBeInDocumentAsync(MOCK_RESPONSES.FAILED_FETCH.message);
+      await checkTextToBeInDocumentAsync("Failed to Fetch Data");
 
       act(() => {
         jest.advanceTimersByTime(6000);
       });
 
       await waitFor(() => {
-        expect(screen.queryByText(MOCK_RESPONSES.FAILED_FETCH.message)).toBe(
-          null
-        );
+        expect(screen.queryByText("Failed to Fetch Data")).toBe(null);
       });
     });
   });
