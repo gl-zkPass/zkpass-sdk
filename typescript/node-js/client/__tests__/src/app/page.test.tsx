@@ -109,9 +109,9 @@ describe("Home", () => {
     });
   });
 
-  test("shows error message for failed login", async () => {
+  test("shows error message when fetch status is not 200", async () => {
     (fetch as jest.Mock).mockResolvedValueOnce({
-      json: async () => ({ status: 401, message: "Invalid credentials" }),
+      json: async () => ({ status: 404, message: "Credentials not Found" }),
     });
 
     render(<Home />);
@@ -128,14 +128,13 @@ describe("Home", () => {
         method: "POST",
         body: JSON.stringify({ username: "testuser", password: "password" }),
       });
-      checkTextToBeInDocument("Invalid credentials");
+      checkTextToBeInDocument("Credentials not Found");
     });
   });
 
   test("shows error message when error raised", async () => {
     (fetch as jest.Mock).mockResolvedValueOnce({
-      json: async () =>
-        Promise.reject({ status: 401, message: "Invalid credentials" }),
+      json: async () => Promise.reject("Some Error Raised"),
     });
 
     render(<Home />);
@@ -152,7 +151,7 @@ describe("Home", () => {
         method: "POST",
         body: JSON.stringify({ username: "testuser", password: "password" }),
       });
-      expect(screen.queryByText("Invalid credentials")).toBe(null);
+      expect(screen.queryByText("Some Error Raised")).toBe(null);
     });
   });
 });
