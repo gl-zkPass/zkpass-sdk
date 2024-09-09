@@ -8,6 +8,7 @@
  */
 
 import crypto from "crypto";
+import { NextResponse } from "next/server";
 
 export async function POST() {
   const KEYPAIR_TYPE = "ec";
@@ -50,12 +51,12 @@ export async function POST() {
   const privateKey: string = keypair.privateKey;
   console.log({ publicKey, privateKey });
 
-  return Response.json({
+  return NextResponse.json({
     status: "ok",
     message: "Key pair generated, check your console log.",
   });
 }
 
 export async function GET() {
-  return Response.json({ data: "get api keys" });
+  return NextResponse.json({ data: "get api keys" });
 }
