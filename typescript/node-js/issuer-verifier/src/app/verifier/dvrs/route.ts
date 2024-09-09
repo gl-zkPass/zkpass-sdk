@@ -9,7 +9,7 @@
 
 import fs from "fs";
 import path from "path";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import {
   ZkPassClient,
   DataVerificationRequest,
@@ -41,7 +41,7 @@ interface User {
   dateOfBirth: string;
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   console.log("*** POST verifier/dvrs ***");
 
   const { name, multiple } = await req.json();
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
   const users: { [key: string]: User } = JSON.parse(usersFileContents);
 
   if (!users[userName]) {
-    return Response.json({
+    return NextResponse.json({
       status: 400,
       message: `User ${userName} not found`,
     });
@@ -68,7 +68,7 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
-  return Response.json({ data: "get api dvrs" });
+  return NextResponse.json({ data: "get api dvrs" });
 }
 
 export async function OPTIONS() {
@@ -87,7 +87,7 @@ function _setHeader(response: NextResponse) {
 }
 
 async function _generateSignedDVR(user: User, usingMultipleUserData: boolean) {
-  const API_KEY_OBJ = new ZkPassApiKey(API_KEY ?? "", API_SECRET ?? "");
+  const API_KEY_OBJ = new ZkPassApiKey(API_KEY, API_SECRET);
 
   const verifierVerifyingKeyJKWS = {
     jku: VERIFIER_JWKS_URL,
@@ -102,9 +102,9 @@ async function _generateSignedDVR(user: User, usingMultipleUserData: boolean) {
    * Step 1: Instantiate the ZkPassClient object.
    */
   const zkPassClient = new ZkPassClient({
-    zkPassServiceUrl: ZKPASS_SERVICE_URL ?? "",
+    zkPassServiceUrl: ZKPASS_SERVICE_URL,
     zkPassApiKey: API_KEY_OBJ,
-    zkVm: ZKPASS_ZKVM ?? "",
+    zkVm: ZKPASS_ZKVM,
   });
 
   /**

@@ -13,11 +13,9 @@ const config: Config = {
   coveragePathIgnorePatterns: ["/node_modules/"],
   moduleNameMapper: {
     "^@/(.*)$": ["<rootDir>/src/$1"],
-    "^@components/(.*)$": ["<rootDir>/src/components/$1"],
     "\\.(css|less|sass|scss)$": "identity-obj-proxy",
-    // "^jose": require.resolve("jose"),
+    "^jose": require.resolve("jose"),
   },
-  // modulePathIgnorePatterns: ["<rootDir>/__tests__/test-utils"],
   preset: "ts-jest",
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testEnvironment: "jest-environment-jsdom",
