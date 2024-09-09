@@ -80,38 +80,43 @@ describe("verifier/dvrs/route.ts", () => {
   describe("POST", () => {
     const mockDvrToken = "mockDvrToken";
     const mockUuid = "mockUuid";
-    const multipleUserDataQuery =
-      '[{"assign":{"lab_id":{"==":[{"dvar":"lab.ID"},"QH801874"]}}},{"assign":{"test_id":{"==":[{"dvar":"testID"},"SCREEN-7083-12345"]}}},{"assign":{"subject_first_name":{"~==":[{"dvar":"subject.firstName"},"John"]}}},{"assign":{"subject_last_name":{"~==":[{"dvar":"subject.lastName"},"Doe"]}}},{"assign":{"subject_date_of_birth":{"==":[{"dvar":"subject.dateOfBirth"},"1990-01-01"]}}},{"assign":{"measuredPanelsNgML_cocaine":{"<=":[{"dvar":"measuredPanelsNgML.cocaine"},10]}}},{"assign":{"test_passed":{"and":[{"lvar":"lab_id"},{"lvar":"test_id"},{"lvar":"subject_first_name"},{"lvar":"subject_last_name"},{"lvar":"subject_date_of_birth"},{"lvar":"measuredPanelsNgML_cocaine"}]}}},{"output":{"result":{"lvar":"test_passed"}}}]';
     const singleUserDataQuery =
+      '[{"assign":{"lab_id":{"==":[{"dvar":"lab.ID"},"QH801874"]}}},{"assign":{"test_id":{"==":[{"dvar":"testID"},"SCREEN-7083-12345"]}}},{"assign":{"subject_first_name":{"~==":[{"dvar":"subject.firstName"},"John"]}}},{"assign":{"subject_last_name":{"~==":[{"dvar":"subject.lastName"},"Doe"]}}},{"assign":{"subject_date_of_birth":{"==":[{"dvar":"subject.dateOfBirth"},"1990-01-01"]}}},{"assign":{"measuredPanelsNgML_cocaine":{"<=":[{"dvar":"measuredPanelsNgML.cocaine"},10]}}},{"assign":{"test_passed":{"and":[{"lvar":"lab_id"},{"lvar":"test_id"},{"lvar":"subject_first_name"},{"lvar":"subject_last_name"},{"lvar":"subject_date_of_birth"},{"lvar":"measuredPanelsNgML_cocaine"}]}}},{"output":{"result":{"lvar":"test_passed"}}}]';
+    const multipleUserDataQuery =
       '[{"assign":{"lab_id":{"==":[{"dvar":"blood_test.lab.ID"},"QH801874"]}}},{"assign":{"test_id":{"==":[{"dvar":"blood_test.testID"},"SCREEN-7083-12345"]}}},{"assign":{"subject_first_name":{"~==":[{"dvar":"blood_test.subject.firstName"},"John"]}}},{"assign":{"subject_last_name":{"~==":[{"dvar":"blood_test.subject.lastName"},"Doe"]}}},{"assign":{"subject_date_of_birth":{"==":[{"dvar":"blood_test.subject.dateOfBirth"},"1990-01-01"]}}},{"assign":{"measuredPanelsNgML_cocaine":{"<=":[{"dvar":"blood_test.measuredPanelsNgML.cocaine"},10]}}},{"assign":{"matchKycId":{"==":[{"dvar":"blood_test.subject.kyc.kycId"},{"dvar":"kyc.kycId"}]}}},{"assign":{"matchKycType":{"==":[{"dvar":"blood_test.subject.kyc.kycType"},{"dvar":"kyc.kycType"}]}}},{"assign":{"matchDateOfBirth":{"==":[{"dvar":"blood_test.subject.dateOfBirth"},{"dvar":"kyc.subject.dateOfBirth"}]}}},{"assign":{"test_passed":{"and":[{"lvar":"lab_id"},{"lvar":"test_id"},{"lvar":"subject_first_name"},{"lvar":"subject_last_name"},{"lvar":"subject_date_of_birth"},{"lvar":"measuredPanelsNgML_cocaine"},{"lvar":"matchKycId"},{"lvar":"matchKycType"},{"lvar":"matchDateOfBirth"}]}}},{"output":{"result":{"lvar":"test_passed"}}}]';
 
-    function dvrProject(query: string) {
+    function dvrObject(mode: "MultipleUSerData" | "SingleUserData") {
+      const query =
+        mode == "MultipleUSerData"
+          ? multipleUserDataQuery
+          : singleUserDataQuery;
+
+      const userDataRequestTemplate = {
+        user_data_url: "http://localhost:3000/verifier",
+        user_data_verifying_key: {
+          KeysetEndpoint: {
+            jku: "https://raw.githubusercontent.com/gl-zkPass/zkpass-sdk/main/docs/zkpass/sample-jwks/issuer-key.json",
+            kid: "k-1",
+          },
+        },
+      };
+      const userDataRequests =
+        mode == "MultipleUSerData"
+          ? {
+              blood_test: userDataRequestTemplate,
+              kyc: userDataRequestTemplate,
+            }
+          : {
+              "": userDataRequestTemplate,
+            };
+
       return {
         dvr_title: "Onboarding Blood Test",
         dvr_id: mockUuid,
         query_engine_ver: "1.0",
         query_method_ver: "1.0",
         query: query,
-        user_data_requests: {
-          blood_test: {
-            user_data_url: "http://localhost:3000/verifier",
-            user_data_verifying_key: {
-              KeysetEndpoint: {
-                jku: "https://raw.githubusercontent.com/gl-zkPass/zkpass-sdk/main/docs/zkpass/sample-jwks/issuer-key.json",
-                kid: "k-1",
-              },
-            },
-          },
-          kyc: {
-            user_data_url: "http://localhost:3000/verifier",
-            user_data_verifying_key: {
-              KeysetEndpoint: {
-                jku: "https://raw.githubusercontent.com/gl-zkPass/zkpass-sdk/main/docs/zkpass/sample-jwks/issuer-key.json",
-                kid: "k-1",
-              },
-            },
-          },
-        },
+        user_data_requests: userDataRequests,
         dvr_verifying_key: {
           KeysetEndpoint: {
             jku: VERIFIER_JWKS_URL,
@@ -155,7 +160,7 @@ describe("verifier/dvrs/route.ts", () => {
       const response = await POST(mockRequest);
 
       expect(DataVerificationRequest.fromJSON).toHaveBeenCalledWith(
-        dvrProject(singleUserDataQuery)
+        dvrObject("SingleUserData")
       );
 
       expect(nextRespJsonMock).toHaveBeenCalledWith({
@@ -174,7 +179,7 @@ describe("verifier/dvrs/route.ts", () => {
       const response = await POST(mockRequest);
 
       expect(DataVerificationRequest.fromJSON).toHaveBeenCalledWith(
-        dvrProject(multipleUserDataQuery)
+        dvrObject("MultipleUSerData")
       );
 
       expect(nextRespJsonMock).toHaveBeenCalledWith({
