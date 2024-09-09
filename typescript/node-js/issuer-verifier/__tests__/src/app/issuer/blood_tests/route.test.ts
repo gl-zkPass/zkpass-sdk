@@ -32,7 +32,7 @@ jest.mock("next/server", () => ({
   NextResponse: jest.fn(),
 }));
 
-describe("route.ts", () => {
+describe("issuer/blood_tests/route.ts", () => {
   const nextRespSetMock = jest.fn();
   const nextRespJsonMock = jest.fn().mockReturnValue({
     headers: {

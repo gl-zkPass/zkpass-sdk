@@ -24,7 +24,7 @@ jest.mock("crypto", () => ({
   }),
 }));
 
-describe("route.ts", () => {
+describe("keys/route.ts", () => {
   const nextRespJsonMock = jest.fn();
 
   beforeEach(() => {
