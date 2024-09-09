@@ -14,7 +14,7 @@ const config: Config = {
   moduleNameMapper: {
     "^@/(.*)$": ["<rootDir>/src/$1"],
     "^@components/(.*)$": ["<rootDir>/src/components/$1"],
-    // "\\.(css|less|sass|scss)$": "identity-obj-proxy", //TODO
+    "\\.(css|less|sass|scss)$": "identity-obj-proxy",
     // "^jose": require.resolve("jose"),
   },
   // modulePathIgnorePatterns: ["<rootDir>/__tests__/test-utils"],
