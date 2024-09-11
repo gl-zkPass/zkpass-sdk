@@ -18,7 +18,7 @@ import {
 
 export async function POST(req: Request) {
   try {
-    const API_KEY_OBJ = new ZkPassApiKey(API_KEY ?? "", API_SECRET ?? "");
+    const API_KEY_OBJ = new ZkPassApiKey(API_KEY, API_SECRET);
 
     // The Kyc value will be null / undefined if we only use single user data
     const { dvr, blood_test, kyc } = await req.json();
@@ -29,9 +29,9 @@ export async function POST(req: Request) {
      * Step 1: Instantiate the ZkPassClient object.
      */
     const zkPassClient = new ZkPassClient({
-      zkPassServiceUrl: ZKPASS_SERVICE_URL ?? "",
+      zkPassServiceUrl: ZKPASS_SERVICE_URL,
       zkPassApiKey: API_KEY_OBJ,
-      zkVm: ZKPASS_ZKVM ?? "",
+      zkVm: ZKPASS_ZKVM,
     });
 
     /**
@@ -40,11 +40,14 @@ export async function POST(req: Request) {
      */
     const proof = await zkPassClient.generateZkPassProof(userDataTokens, dvr);
     console.log({ proof });
-    return Response.json({ status: 200, data: proof });
+    return NextResponse.json({ status: 200, data: proof });
   } catch (error) {
     console.log("== Error generating proof ==");
     console.log({ error });
-    return Response.json({ status: 200, message: "Error generating proof" });
+    return NextResponse.json({
+      status: 200,
+      message: "Error generating proof",
+    });
   }
 }
 
