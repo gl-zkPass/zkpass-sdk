@@ -27,7 +27,7 @@ async function signDataToJwsToken(
   data: { [key: string]: any },
   signingKey: SigningKey
 ) {
-  const API_KEY_OBJ = new ZkPassApiKey(API_KEY ?? "", API_SECRET ?? "");
+  const API_KEY_OBJ = new ZkPassApiKey(API_KEY, API_SECRET);
 
   const verifyingKeyJKWS = {
     jku: signingKey.jwks.jku,
@@ -38,9 +38,9 @@ async function signDataToJwsToken(
    * Step 1: Instantiate the zkPassClient object
    */
   const zkPassClient = new ZkPassClient({
-    zkPassServiceUrl: ZKPASS_SERVICE_URL ?? "",
+    zkPassServiceUrl: ZKPASS_SERVICE_URL,
     zkPassApiKey: API_KEY_OBJ,
-    zkVm: ZKPASS_ZKVM ?? "",
+    zkVm: ZKPASS_ZKVM,
   });
 
   /**
