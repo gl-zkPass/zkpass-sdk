@@ -68,7 +68,7 @@ export default function EmployeeOnboarding({
   }
 
   useEffect(() => {
-    if (!requestedDvr || !requestedBloodTest) {
+    (async () => {
       setIsLoading(true);
       const dvrUrl = `${VERIFIER_URL}/dvrs`;
       const bloodTestUrl = `${ISSUER_URL}/blood_tests`;
@@ -76,18 +76,20 @@ export default function EmployeeOnboarding({
       const fetchingDvrBody = isUsingMultipleUserData
         ? { name: user, multiple: true }
         : { name: user };
-      const fetchingDvr = fetch(dvrUrl, {
+
+      const fetchingDvr = await fetch(dvrUrl, {
         method: "POST",
         body: JSON.stringify(fetchingDvrBody),
       });
-      const fetchingBloodTest = fetch(bloodTestUrl, {
+      const fetchingBloodTest = await fetch(bloodTestUrl, {
         method: "POST",
         body: JSON.stringify({ name: user }),
       });
-      const fetchingKycResult = fetch(kycResultUrl, {
+      const fetchingKycResult = await fetch(kycResultUrl, {
         method: "POST",
         body: JSON.stringify({ name: user }),
       });
+
       interface FetchResponse {
         status: number;
         message?: string;
@@ -96,7 +98,7 @@ export default function EmployeeOnboarding({
 
       Promise.all([fetchingDvr, fetchingBloodTest, fetchingKycResult])
         .then((responses) =>
-          Promise.all(responses.map((response) => response.json()))
+          Promise.all(responses.map(async (response) => await response.json()))
         )
         .then(([dvrResult, bloodTestResult, kycResult]) => {
           let dvrFetchResponse = dvrResult as FetchResponse;
@@ -105,39 +107,55 @@ export default function EmployeeOnboarding({
           if (
             dvrFetchResponse.status == 200 &&
             bloodTestFetchResponse.status == 200 &&
-            kycResultResponse.status == 200
+            kycResultResponse.status == 200 &&
+            dvrFetchResponse.data &&
+            bloodTestFetchResponse.data &&
+            kycResultResponse.data
           ) {
-            setDvr(dvrResult.data as string);
-            _getDvrPayload(dvrResult.data as string);
-            setBloodTest(bloodTestResult.data as string);
-            _getBloodTestPayload(bloodTestResult.data as string);
-            setKycResult(kycResult.data as string);
-            _getKycPayload(kycResult.data as string);
+            setDvr(dvrFetchResponse.data);
+            _getDvrPayload(dvrFetchResponse.data);
+
+            setBloodTest(bloodTestFetchResponse.data);
+            _getBloodTestPayload(bloodTestFetchResponse.data);
+
+            setKycResult(kycResultResponse.data);
+            _getKycPayload(kycResultResponse.data);
+
             setIsLoading(false);
             setRequestedDvr(true);
             setRequestedBloodTest(true);
             setActiveStep(2);
           } else {
-            const message =
-              dvrFetchResponse.message || bloodTestFetchResponse.message;
-            setMessage(message as string);
-            setOpen(true);
+            showError(ErrorMessage.FETCH);
           }
         })
-        .catch((error) => console.error(error));
-    }
+        .catch((error) => showError(error.message));
+    })();
   }, []);
 
-  const _getDvrPayload = async (dvrJwt: string) => {
-    console.log("_getDvrPayload before if");
+  const showError = (message: string) => {
+    setMessage(message);
+    setOpen(true);
+  };
 
-    if (dvrJwt.length === 0) {
-      return;
-    }
-    console.log("_getDvrPayload");
-
-    const payload = jwt.decode(dvrJwt, { complete: true })?.payload;
+  enum ErrorMessage {
+    DVR = "Parsing Error on DVR",
+    BLOOD_TEST = "Parsing Error on Blood Test User Data",
+    KYC = "Parsing Error on KYC User Data",
+    FETCH = "Failed to Fetch Data",
+  }
+  const decodePayload = (jwtString: string) => {
+    const payload = jwt.decode(jwtString, { complete: true })?.payload;
     console.log({ dvrJwtPayload: payload });
+    return payload;
+  };
+
+  const _getDvrPayload = (dvrJwt: string) => {
+    const payload = decodePayload(dvrJwt);
+    if (payload == undefined) {
+      throw new Error(ErrorMessage.DVR);
+    }
+
     interface DvrPayload {
       data: {
         query: string;
@@ -149,32 +167,28 @@ export default function EmployeeOnboarding({
     const formatedDvr = JSON.stringify(DvrPayload, null, 2);
     setFormatedDvr(formatedDvr);
   };
-  const _getBloodTestPayload = async (bloodTestJwt: string) => {
-    if (bloodTestJwt.length === 0) {
-      return;
+
+  const _getBloodTestPayload = (bloodTestJwt: string) => {
+    const payload = decodePayload(bloodTestJwt);
+    if (payload == undefined) {
+      throw new Error(ErrorMessage.BLOOD_TEST);
     }
-    const payload = jwt.decode(bloodTestJwt, { complete: true })?.payload;
-    console.log({ bloodTestJwtPayload: payload });
 
     const formatedBloodTest = JSON.stringify(payload, null, 2);
     setFormatedBloodTest(formatedBloodTest);
   };
 
-  const _getKycPayload = async (kycJwt: string) => {
-    if (kycJwt.length === 0) {
-      return;
+  const _getKycPayload = (kycJwt: string) => {
+    const payload = decodePayload(kycJwt);
+    if (payload == undefined) {
+      throw new Error(ErrorMessage.KYC);
     }
-    const payload = jwt.decode(kycJwt, { complete: true })?.payload;
-    console.log({ KycJwtPayload: payload });
 
     const formatedKycResult = JSON.stringify(payload, null, 2);
     setFormatedKycResult(formatedKycResult);
   };
 
   const _formatUsername = (input: string): string => {
-    if (input.length === 0) {
-      return input;
-    }
     return input.charAt(0).toUpperCase() + input.slice(1);
   };
 
@@ -184,8 +198,6 @@ export default function EmployeeOnboarding({
         return formatedBloodTest;
       case "KYC":
         return formatedKycResult;
-      default:
-        return "";
     }
   };
 
@@ -193,7 +205,7 @@ export default function EmployeeOnboarding({
     setConfirmUserData(true);
     setIsLoading(true);
     setLoadingMessage("Generating Proof...");
-    const url = `${MYNAMASTE_URL}/api/proofs`;
+
     interface ProofResponse {
       status: number;
       message?: string;
@@ -202,18 +214,22 @@ export default function EmployeeOnboarding({
     const body = isUsingMultipleUserData
       ? { dvr, blood_test: bloodTest, kyc: kycResult }
       : { dvr, blood_test: bloodTest };
+
+    const url = `${MYNAMASTE_URL}/api/proofs`;
     const proof = await fetch(url, {
       method: "POST",
       body: JSON.stringify(body),
     });
     const proofBody: ProofResponse = await proof.json();
     console.log({ proof: proofBody.data });
+
     if (proofBody.status == 200) {
       console.log("== proof body 200");
       const validateProof = await fetch(`${VERIFIER_URL}/proofs`, {
         method: "POST",
         body: JSON.stringify({ proof: proofBody.data }),
       });
+
       interface ProofResult {
         status: number;
         data: {
@@ -240,8 +256,7 @@ export default function EmployeeOnboarding({
       console.log("== proof body not 200");
 
       setIsLoading(false);
-      setOpen(true);
-      setMessage(proofBody.message as string);
+      showError(proofBody.message!);
     }
   };
 
@@ -254,14 +269,17 @@ export default function EmployeeOnboarding({
         onClose={() => setOpen(false)}
         message={message}
       />
-      <div className="flex flex-col justify-start items-center h-screen pt-8">
+      <div className='flex flex-col justify-start items-center h-screen pt-8'>
         <Paper
           elevation={3}
-          className="w-3/5 p-7 flex flex-col items-center gap-5"
+          className='w-3/5 p-7 flex flex-col items-center gap-5'
         >
-          <div className="flex items-center text-lg">
-            {_formatUsername(user!)}'s Employee Onboarding.
-          </div>
+          {user && (
+            <div className='flex items-center text-lg'>
+              {_formatUsername(user)}'s Employee Onboarding.
+            </div>
+          )}
+
           <Stepper activeStep={activeStep}>
             {steps.map((label, index) => {
               const stepProps: { completed?: boolean } = {};
@@ -275,98 +293,95 @@ export default function EmployeeOnboarding({
               );
             })}
           </Stepper>
-          {loadedProof && proofResult ? (
+
+          {loadedProof && proofResult && (
             <Paper
               elevation={2}
-              className="flex flex-row items-center gap-2 p-4 bg-green-200"
+              className='flex flex-row items-center gap-2 p-4 bg-green-200'
             >
               <CheckCircleOutlineIcon
                 sx={{ color: "rgb(74 222 128)" }}
-                fontSize="large"
+                fontSize='large'
               />
               The blood test {isUsingMultipleUserData ? "and kyc" : ""}{" "}
               succeeded onboarding requirements.
             </Paper>
-          ) : loadedProof && !proofResult ? (
+          )}
+          {loadedProof && !proofResult && (
             <Paper
               elevation={2}
-              className="flex flex-row items-center gap-2 p-4 bg-red-200"
+              className='flex flex-row items-center gap-2 p-4 bg-red-200'
             >
-              <CancelIcon sx={{ color: "rgb(248 113 113)" }} fontSize="large" />
+              <CancelIcon sx={{ color: "rgb(248 113 113)" }} fontSize='large' />
               The blood test {isUsingMultipleUserData ? "and/or kyc" : ""}{" "}
               failed onboarding requirements.
             </Paper>
-          ) : (
-            <></>
           )}
+
           {loadedProof && (
             <Button
-              className="text-center block"
-              href="/users"
-              variant="outlined"
+              className='text-center block'
+              href='/users'
+              variant='outlined'
             >
               Back to Home
             </Button>
           )}
 
-          {isLoading ? (
-            <div className="flex flex-col justify-center items-center gap-4">
+          {isLoading && (
+            <div className='flex flex-col justify-center items-center gap-4'>
               <Box sx={{ display: "flex" }}>
                 <CircularProgress />
               </Box>
               <div>{loadingMessage}</div>
             </div>
-          ) : (
-            <></>
           )}
 
-          {!confirmUserData && requestedDvr && requestedBloodTest ? (
+          {!confirmUserData && requestedDvr && requestedBloodTest && (
             <Paper
               elevation={2}
-              className="p-6 flex items-center flex-col gap-4 bg-gray-200"
+              className='p-6 flex items-center flex-col gap-4 bg-gray-200'
             >
-              {!confirmUserData && !confirmDvr ? (
+              {!confirmUserData && !confirmDvr && (
                 <>
-                  <div className="text-base">
+                  <div className='text-base'>
                     Please review the Employee Onboarding questionnaires
                   </div>
                   <Paper
                     elevation={1}
-                    className="max-h-96 max-w-lg overflow-scroll p-5"
+                    className='max-h-96 max-w-lg overflow-scroll p-5'
                   >
                     <pre dangerouslySetInnerHTML={{ __html: formatedDvr }} />
                   </Paper>
                   <Button
-                    variant="outlined"
+                    variant='outlined'
                     onClick={() => setConfirmDvr(true)}
                   >
                     Confirm and Continue
                   </Button>
                 </>
-              ) : (
-                <></>
               )}
 
-              {confirmDvr && !confirmUserData ? (
+              {confirmDvr && !confirmUserData && (
                 <>
-                  <div className="text-base">
+                  <div className='text-base'>
                     Please review the {activeUserData} Result
                   </div>
-                  <Paper elevation={1} className="max-h-96 overflow-scroll p-5">
+                  <Paper elevation={1} className='max-h-96 overflow-scroll p-5'>
                     <pre
                       dangerouslySetInnerHTML={{ __html: _viewUserData() }}
                     />
                   </Paper>
                   {isUsingMultipleUserData && (
-                    <div className="flex w-full gap-4">
+                    <div className='flex w-full gap-4'>
                       <Button
                         variant={
                           activeUserData == "Blood Test"
                             ? "outlined"
                             : "contained"
                         }
-                        color="info"
-                        className="grow"
+                        color='info'
+                        className='grow'
                         onClick={() => setActiveUserData("Blood Test")}
                       >
                         View Blood_Test Data
@@ -375,24 +390,20 @@ export default function EmployeeOnboarding({
                         variant={
                           activeUserData == "KYC" ? "outlined" : "contained"
                         }
-                        color="info"
-                        className="grow"
+                        color='info'
+                        className='grow'
                         onClick={() => setActiveUserData("KYC")}
                       >
                         View KYC Data
                       </Button>
                     </div>
                   )}
-                  <Button variant="outlined" onClick={_handleGenerateProof}>
+                  <Button variant='outlined' onClick={_handleGenerateProof}>
                     Confirm and Generate Proof
                   </Button>
                 </>
-              ) : (
-                <></>
               )}
             </Paper>
-          ) : (
-            <></>
           )}
         </Paper>
       </div>

@@ -13,7 +13,7 @@ import { cookies } from "next/headers";
 export async function POST(req: Request) {
   console.log("POST /api/logout");
   cookies().delete("username");
-  return Response.json({ status: 200, message: "Logout successful" });
+  return NextResponse.json({ status: 200, message: "Logout successful" });
 }
 
 export async function OPTIONS() {

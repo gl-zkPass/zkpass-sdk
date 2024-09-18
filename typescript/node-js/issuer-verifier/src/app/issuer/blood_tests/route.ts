@@ -48,7 +48,7 @@ export async function POST(req: Request) {
     JSON.parse(usersFileContents);
 
   if (!bloodTests[userName]) {
-    return Response.json({
+    return NextResponse.json({
       status: 400,
       message: `Blood test for ${userName} is not found`,
     });

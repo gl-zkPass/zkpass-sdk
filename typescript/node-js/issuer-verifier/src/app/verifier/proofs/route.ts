@@ -15,12 +15,13 @@ import {
   ZKPASS_SERVICE_URL,
   ZKPASS_ZKVM,
 } from "@/utils/constants";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   console.log("*** POST verifier/proofs ***");
 
   try {
-    const API_KEY_OBJ = new ZkPassApiKey(API_KEY ?? "", API_SECRET ?? "");
+    const API_KEY_OBJ = new ZkPassApiKey(API_KEY, API_SECRET);
 
     const { proof } = await req.json();
     console.log({ proof });
@@ -30,9 +31,9 @@ export async function POST(req: Request) {
      * Step 1: Instantiate the zkPassClient object.
      */
     const zkPassClient = new ZkPassClient({
-      zkPassServiceUrl: ZKPASS_SERVICE_URL ?? "",
+      zkPassServiceUrl: ZKPASS_SERVICE_URL,
       zkPassApiKey: API_KEY_OBJ,
-      zkVm: ZKPASS_ZKVM ?? "",
+      zkVm: ZKPASS_ZKVM,
     });
 
     /**
@@ -45,14 +46,17 @@ export async function POST(req: Request) {
     console.log({ proofResult });
 
     console.log("=== proof OK result sent ===");
-    return Response.json({ status: 200, data: proofResult });
+    return NextResponse.json({ status: 200, data: proofResult });
   } catch (error) {
     console.log({ error });
     console.log("=== proof Error result sent ===");
-    return Response.json({ status: 400, message: "Error validating proof" });
+    return NextResponse.json({
+      status: 400,
+      message: "Error validating proof",
+    });
   }
 }
 
 export async function GET() {
-  return Response.json({ data: "get api proofs" });
+  return NextResponse.json({ data: "get api proofs" });
 }
