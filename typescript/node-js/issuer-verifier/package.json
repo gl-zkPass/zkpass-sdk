@@ -1,6 +1,6 @@
 {
   "name": "issuer-verifier",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
@@ -10,7 +10,7 @@
     "test": "NODE_ENV=test jest"
   },
   "dependencies": {
-    "@didpass/zkpass-client-ts": "^1.1.0",
+    "@didpass/zkpass-client-ts": "^1.2.0",
     "jose": "^4.15.4",
     "next": "14.1.1",
     "react": "^18",

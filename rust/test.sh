@@ -1,5 +1,7 @@
 #!/bin/bash
 
+./download-so.sh
+
 cargo build -r
 
 export LD_LIBRARY_PATH=lib
