@@ -32,12 +32,8 @@ export function assertDemoOutput(
   queryResult: boolean,
   queryResultOutput: string
 ): void {
-  let expectedOutput = "{ args: [ ";
-  for (const userDataFilepath of userDataFilepaths) {
-    expectedOutput += `'./${userDataFilepath}', `;
-  }
-  expectedOutput += `'./${dvrFilepath}' ] }`;
-  assertContainsNormalizedText(result, expectedOutput);
+  const args = generateArgsText(userDataFilepaths, dvrFilepath);
+  assertContainsNormalizedText(result, args);
 
   for (const userDataFilepath of userDataFilepaths) {
     const userDataName = extractFileName(userDataFilepath);
@@ -56,4 +52,16 @@ export function assertDemoOutput(
 
   const queryResultText = `the query result is ${queryResult} ${queryResultOutput}`;
   assertContainsNormalizedText(result, queryResultText);
+}
+
+function generateArgsText(
+  userDataFilepaths: string[],
+  dvrFilepath: string
+): string {
+  let args = "{ args: [ ";
+  for (const userDataFilepath of userDataFilepaths) {
+    args += `'./${userDataFilepath}', `;
+  }
+  args += `'./${dvrFilepath}' ] }`;
+  return args;
 }
