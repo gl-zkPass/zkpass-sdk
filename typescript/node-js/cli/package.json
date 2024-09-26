@@ -6,19 +6,23 @@
   "scripts": {
     "build": "rm -rf ./build && tsc",
     "demo": "npm run build && node build/index.js",
-    "demo-basic": "npm run build && node build/index.js ./test/data/basic-data.json ./test/data/basic-dvr.json",
-    "demo-basic-false": "npm run build && node build/index.js ./test/data/basic-data-false.json ./test/data/basic-dvr.json",
-    "demo-dewi": "npm run build && node build/index.js ./test/data/dewi-profile-wrong.json ./test/data/bca-insurance-dewi-dvr.json",
-    "demo-ramana": "npm run build && node build/index.js ./test/data/ramana-profile.json ./test/data/bca-finance-ramana-dvr.json",
-    "demo-jane": "npm run build && node build/index.js ./test/data/jane-blood-test-result.json ./test/data/employee-onboarding-dvr.json",
-    "demo-multi": "npm run build && node build/index.js ./test/data/multiple/bank.json ./test/data/multiple/health.json ./test/data/multiple/insurance-dvr.json"
+    "demo-basic": "npm run build && node build/index.js ./test-data/basic-data.json ./test-data/basic-dvr.json",
+    "demo-basic-false": "npm run build && node build/index.js ./test-data/basic-data-false.json ./test-data/basic-dvr.json",
+    "demo-dewi": "npm run build && node build/index.js ./test-data/dewi-profile-wrong.json ./test-data/bca-insurance-dewi-dvr.json",
+    "demo-ramana": "npm run build && node build/index.js ./test-data/ramana-profile.json ./test-data/bca-finance-ramana-dvr.json",
+    "demo-jane": "npm run build && node build/index.js ./test-data/jane-blood-test-result.json ./test-data/employee-onboarding-dvr.json",
+    "demo-multi": "npm run build && node build/index.js ./test-data/multiple/bank.json ./test-data/multiple/health.json ./test-data/multiple/insurance-dvr.json",
+    "test": "./__tests__/run-tests.sh"
   },
   "dependencies": {
     "@didpass/zkpass-client-ts": "^1.2.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.13",
     "@types/node": "^20.10.0",
+    "jest": "^29.7.0",
+    "ts-jest": "29.2.3",
     "typescript": "^5"
   }
 }
