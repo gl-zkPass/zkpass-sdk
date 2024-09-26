@@ -8,6 +8,6 @@
  */
 
 export const FRONTEND_URL = "http://localhost:3000";
-export const PROOF_GENERATION_TIMEOUT = 30000;
+export const PROOF_GENERATION_TIMEOUT = 60000;
 
 export type UserDataType = "SINGLE_USER_DATA" | "MULTIPLE_USER_DATA";

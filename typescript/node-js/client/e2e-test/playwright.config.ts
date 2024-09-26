@@ -4,8 +4,8 @@ export default defineConfig({
   testDir: "./tests",
   fullyParallel: true,
   forbidOnly: false,
-  retries: 2,
-  workers: 3,
+  retries: 3,
+  workers: 1,
   reporter: "html",
   use: {
     trace: "on-first-retry",
