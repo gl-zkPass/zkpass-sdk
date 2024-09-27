@@ -20,6 +20,7 @@ const config: Config = {
   preset: "ts-jest",
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testEnvironment: "jest-environment-jsdom",
+  testPathIgnorePatterns: ["e2e-test"],
   transform: {
     "^.+\\.(js|jsx|ts|tsx)$": ["babel-jest", { configFile: "next/babel" }],
   },
