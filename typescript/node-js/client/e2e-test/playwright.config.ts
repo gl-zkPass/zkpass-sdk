@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import { FRONTEND_URL, ISSUER_VERIFIER_URL } from "./utils/constants";
 
 export default defineConfig({
   testDir: "./tests",
@@ -24,6 +25,18 @@ export default defineConfig({
     {
       name: "Microsoft Edge",
       use: { ...devices["Desktop Edge"], channel: "msedge" },
+    },
+  ],
+  webServer: [
+    {
+      command: `cd .. && npm run dev`,
+      url: FRONTEND_URL,
+      reuseExistingServer: true,
+    },
+    {
+      command: `cd ../../issuer-verifier && npm run dev`,
+      url: ISSUER_VERIFIER_URL,
+      reuseExistingServer: true,
     },
   ],
 });
