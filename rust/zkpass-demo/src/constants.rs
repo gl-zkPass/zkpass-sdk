@@ -30,3 +30,34 @@ pub fn verifier_pubkey() -> PublicKey {
         y: String::from("IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA=="),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_issuer_pubkey() {
+        let pubkey = issuer_pubkey();
+        assert_eq!(
+            pubkey.x,
+            "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE7f0QoVUsccB9yMwHAR7oVk/L+ZkX"
+        );
+        assert_eq!(
+            pubkey.y,
+            "8ZqC1Z0XTaj3BMcMnqh+VzdHZX3yGKa3+uhNAhKWWyfB/r+3E8rPSHtXXQ=="
+        );
+    }
+
+    #[test]
+    fn test_verifier_pubkey() {
+        let pubkey = verifier_pubkey();
+        assert_eq!(
+            pubkey.x,
+            "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU"
+        );
+        assert_eq!(
+            pubkey.y,
+            "IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA=="
+        );
+    }
+}

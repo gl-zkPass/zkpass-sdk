@@ -3,6 +3,8 @@ mod data_holder;
 mod data_issuer;
 mod helper;
 mod proof_verifier;
+#[cfg(test)]
+mod sample_proof;
 mod test;
 
 use clap::{App, Arg};

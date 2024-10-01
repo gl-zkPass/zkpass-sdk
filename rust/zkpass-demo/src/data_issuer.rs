@@ -71,3 +71,46 @@ impl DataIssuer {
         data
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn add_dummy_file() {
+        let data = r#"{"name": "Alice", "age": 25}"#;
+        std::fs::write("./user_data_1.json", data).expect("Unable to write file");
+        std::fs::write("./user_data_2.json", data).expect("Unable to write file");
+    }
+
+    fn remove_dummy_file() {
+        std::fs::remove_file("./user_data_1.json").expect("Unable to remove file");
+        std::fs::remove_file("./user_data_2.json").expect("Unable to remove file");
+    }
+
+    #[test]
+    fn test_get_user_data_tokens() {
+        add_dummy_file();
+
+        let data_issuer = DataIssuer;
+        let zkvm = "sp1";
+        let data_files = vec![
+            ("tag1".to_string(), "./user_data_1.json".to_string()),
+            ("tag2".to_string(), "./user_data_2.json".to_string()),
+        ]
+        .into_iter()
+        .collect();
+
+        let user_data_tokens = data_issuer.get_user_data_tokens(zkvm, data_files);
+        assert_eq!(user_data_tokens.len(), 2);
+        remove_dummy_file();
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_read_user_data_token_error() {
+        let data_issuer = DataIssuer;
+        let data_file = "./user_data_3.json".to_string();
+
+        let _ = data_issuer.read_user_data_token(&data_file);
+    }
+}
