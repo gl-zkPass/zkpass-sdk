@@ -27,3 +27,21 @@ pub fn wrap_single_user_data_input<T>(input: T) -> HashMap<String, T> {
     map.insert(String::from(""), input);
     map
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_package_version() {
+        assert_eq!(package_version(), "1.2.0");
+    }
+
+    #[test]
+    fn test_wrap_single_user_data_input() {
+        let input = "Hello, World!";
+        let wrapped_input = wrap_single_user_data_input(input);
+        assert_eq!(wrapped_input.len(), 1);
+        assert_eq!(wrapped_input.get(""), Some(&"Hello, World!"));
+    }
+}
