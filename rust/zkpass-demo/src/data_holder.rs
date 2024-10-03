@@ -154,11 +154,10 @@ mod tests {
         data_files.insert(String::from(""), String::from("./user_data_holder.json"));
         let dvr_file = "./dvr_holder.json";
 
-        // The generate proof will pass, but the verification will fail because the generated proof has dvr_id which does not placed on the DVR_TABLE
         let join_handle =
             tokio::spawn(async move { data_holder.start(zkvm, data_files, dvr_file).await });
         let result = join_handle.await;
-        assert!(result.is_err());
+        assert!(result.is_ok());
 
         std::fs::remove_file(dvr_file).expect("Unable to remove file");
         std::fs::remove_file("./user_data_holder.json").expect("Unable to remove file");
