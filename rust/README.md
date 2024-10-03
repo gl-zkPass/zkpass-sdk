@@ -74,3 +74,8 @@ Follow these steps to test demo:
    ```
 
    Or you can simply run the script with `./test.sh`
+
+## Run Rust Test
+
+1. Run `export LD_LIBRARY_PATH=../lib`
+2. Run `cargo test -r -- --skip e2e-tests`
