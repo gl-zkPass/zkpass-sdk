@@ -281,6 +281,8 @@ mod tests {
         IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==
         -----END PUBLIC KEY-----";
 
+    const DVR_TOKEN: &str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
+
     #[test]
     fn test_tokenize_and_verify_data() {
         let data = json!(
@@ -314,14 +316,7 @@ mod tests {
         assert_eq!(data, verified_data);
     }
 
-    #[tokio::test]
-    async fn test_generate_proof() {
-        // endpoint mocking
-        let server = MockServer::start();
-        server.mock(|when, then| {
-            when.method(POST).path(format!("/{}", GENERATE_PROOF_PATH));
-            then.status(200).body("{\"proof\":\"kjsdafkjasdfkdlaf\"}");
-        });
+    fn server_mock_jwks(server: &MockServer) {
         server.mock(|when, then| {
             when.method(GET).path("/.well-known/jwks.json");
             then.status(200).body(
@@ -331,25 +326,132 @@ mod tests {
                     y: "IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==",
                 }
                  */
-                "[{\"kty\": \"EC\",\"crv\": \"P-256\",\"x\": \"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU\",\"y\": \"IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==\",\"kid\": \"ServiceEncryptionPubK\",\"jwt\": \"\"}]"
+                "[{\"kty\": \"EC\",\"crv\": \"P-256\",\"x\": \"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU\",
+                \"y\": \"IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==\",\"kid\": \"ServiceEncryptionPubK\",\"jwt\": \"\"}]"
             );
         });
+    }
 
-        let dvr_token = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
-        let user_data_tokens = hashmap! {
+    fn get_user_data_tokens() -> HashMap<String, String> {
+        hashmap! {
             String::from("") => String::from("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_="),
-        };
+        }
+    }
 
+    fn get_zkpass_client(server_url: String) -> ZkPassClient {
         let zkpass_api_key = ZkPassApiKey {
             api_key: String::from("my-api-key"),
             secret_api_key: String::from("my-secret-api-key"),
         };
-        let zkpass_service_url = server.url("");
-        let zkpass_client = ZkPassClient::new(&zkpass_service_url, Some(zkpass_api_key), "r0");
+        ZkPassClient::new(&server_url, Some(zkpass_api_key), "r0")
+    }
+
+    #[tokio::test]
+    async fn test_generate_proof() {
+        // endpoint mocking
+        let server = MockServer::start();
+        server.mock(|when, then| {
+            when.method(POST).path(format!("/{}", GENERATE_PROOF_PATH));
+            then.status(200)
+                .body("{\"proof\":\"kjsdafkjasdfkdlaf\", \"output\":\"kjsdafkjasdfkdlaf\"}");
+        });
+        server_mock_jwks(&server);
+
+        let zkpass_client = get_zkpass_client(server.url(""));
         let result = zkpass_client
-            .generate_zkpass_proof(&user_data_tokens, dvr_token)
-            .await
-            .unwrap();
-        println!("result: {:?}", result);
+            .generate_zkpass_proof(&get_user_data_tokens(), DVR_TOKEN)
+            .await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_generate_proof_error() {
+        std::env::set_var("DVR_APP_PATH", "/v1/proof");
+        let server = MockServer::start();
+        server.mock(|when, then| {
+            when.method(POST).path(format!("/{}", GENERATE_PROOF_PATH));
+            then.status(400).body("{\"error\":\"error\"}");
+        });
+        server_mock_jwks(&server);
+
+        // Error generate proof because server return error too
+        let zkpass_client = get_zkpass_client(server.url(""));
+        let result = zkpass_client
+            .generate_zkpass_proof(&get_user_data_tokens(), DVR_TOKEN)
+            .await;
+        assert!(result.is_err());
+
+        // Error generate proof because JWKS return error too
+        server.mock(|when, then| {
+            when.method(GET).path("/.well-known/jwks.json");
+            then.status(200).body(
+                "[{\"x\": \"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU\",
+                \"y\": \"IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==\"}]",
+            );
+        });
+        let result = zkpass_client
+            .generate_zkpass_proof(&get_user_data_tokens(), DVR_TOKEN)
+            .await;
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_get_api_token() {
+        let zkpass_api_key = ZkPassApiKey {
+            api_key: String::from("api_1"),
+            secret_api_key: String::from("secret_api_1"),
+        };
+        let zkpass_client = ZkPassClient::new("https://hostname.com", Some(zkpass_api_key), "r0");
+        let result = zkpass_client.get_api_token();
+        assert_eq!(result.unwrap(), "YXBpXzE6c2VjcmV0X2FwaV8x".to_string());
+
+        let zkpass_client = ZkPassClient::new("https://hostname.com", None, "r0");
+        let result = zkpass_client.get_api_token();
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_fetch_public_keys() {
+        let correct_jwks_result =
+            "[{\"kty\": \"EC\",\"crv\": \"P-256\",\"x\": \"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU\",\"y\": \"IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==\",\"kid\": \"ServiceEncryptionPubK\",\"jwt\": \"\"}]";
+        let wrong_jwks_result =
+            "[{\"x\": \"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU\",\"y\": \"IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==\"}]";
+        let server = MockServer::start();
+        let zkpass_service_url = server.url("");
+        server.mock(|when, then| {
+            when.method(GET).path("/.well-known/jwks.json");
+            then.status(200).body(correct_jwks_result);
+        });
+
+        let zkpass_client = ZkPassClient::new(zkpass_service_url.as_str(), None, "r0");
+        let result = zkpass_client
+            .fetch_public_keys(KID_SERVICE_ENCRYPTION_PUB_KEY)
+            .await;
+        assert!(result.is_ok());
+
+        // Error, url is correct, KID is not found
+        let result = zkpass_client.fetch_public_keys(&"NotFound").await;
+        assert!(result.is_err());
+
+        // Error, url not found
+        server.mock(|when, then| {
+            when.method(GET).path("/.well-known/jwks.json");
+            then.status(200).body(wrong_jwks_result);
+        });
+        let mut zkpass_client = ZkPassClient::new("http://localhost:3000", None, "r0");
+        let result = zkpass_client.fetch_public_keys(&"NotFound").await;
+        assert!(result.is_err());
+
+        // Error, url is correct, but it is not JWK structure, KID is not found
+        zkpass_client.zkpass_service_url = zkpass_service_url;
+        let result = zkpass_client.fetch_public_keys(&"NotFound").await;
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_get_query_engine_version_info() {
+        let zkpass_client = ZkPassClient::new("https://hostname.com", None, "r0");
+        let result = zkpass_client.get_query_engine_version_info();
+        assert!(result.is_ok());
     }
 }

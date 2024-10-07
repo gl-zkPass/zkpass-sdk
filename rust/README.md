@@ -74,3 +74,21 @@ Follow these steps to test demo:
    ```
 
    Or you can simply run the script with `./test.sh`
+
+## Run Rust Test
+
+Simply run `./cargo-test.sh` is sufficient, but you can also test them individually.
+
+### To Run Test Without e2e_tests
+
+1. Run `export LD_LIBRARY_PATH=../lib`
+2. Run `./download-so.sh`
+3. Run `cargo build -r`
+4. Run `cargo test -r -- --skip e2e_tests`
+
+### To Run e2e_tests
+
+1. Run `export LD_LIBRARY_PATH=lib`
+2. Run `./download-so.sh`
+3. Run `cargo build -r`
+4. Run `cargo test -r -- --ignored e2e_tests`

@@ -76,3 +76,90 @@ impl DataHolder {
         println!("the query result is {}", val);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::sample_proof::SAMPLE_PROOF;
+    use httpmock::{
+        Method::{GET, POST},
+        MockServer,
+    };
+    use serde_json::json;
+
+    fn add_dummy_file() {
+        let data = json!({
+            "name": "Ramana",
+            "_name_zkpass_public_": true,
+            "dateOfBirth": "21/04/2003",
+            "email": "ramana@example.com",
+            "city": "Jakarta",
+            "country": "Indonesia",
+            "skills": ["Rust", "JavaScript", "HTML/CSS"]
+        });
+        std::fs::write("./user_data_holder.json", data.to_string()).expect("Unable to write file");
+
+        let dvr = json!( [
+            {
+                "assign": {
+                    "query_result": {
+                        "and": [
+                            { "==": [{ "dvar": "country" }, "Indonesia"] },
+                            { "==": [{ "dvar": "city" }, "Jakarta"] },
+                            {
+                                "or": [
+                                    { "~==": [{ "dvar": "skills[0]" }, "Rust"] },
+                                    { "~==": [{ "dvar": "skills[1]" }, "Rust"] },
+                                    { "~==": [{ "dvar": "skills[2]" }, "Rust"] }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            { "output": { "title": "Job Qualification" } },
+            { "output": { "name": { "dvar": "name" } } },
+            { "output": { "is_qualified": { "lvar": "query_result" } } },
+            { "output": { "result": { "lvar": "query_result" } } }
+        ]);
+        std::fs::write("./dvr_holder.json", dvr.to_string()).expect("Unable to write file");
+    }
+
+    #[tokio::test]
+    async fn test_data_holder() {
+        add_dummy_file();
+        let server = MockServer::start();
+        server.mock(|when, then| {
+            when.method(POST).path("/v1/proof");
+            then.status(200).body(SAMPLE_PROOF);
+        });
+        server.mock(|when, then| {
+            when.method(GET).path("/.well-known/jwks.json");
+            then.status(200).body(
+                "[
+                    {\"kty\": \"EC\",\"crv\": \"P-256\",\"x\": \"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU\",\"y\": \"IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==\",\"kid\": \"ServiceEncryptionPubK\",\"jwt\": \"\"},
+                    {\"kty\": \"EC\",\"crv\": \"P-256\",\"x\": \"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEp6WJlwAtld/U4hDmmuuMdZCVtMeU\",\"y\": \"IT3xkDdUwLOvsVVA+iiSwfaX4HqKlRPDGG+F6WGjnxys9T5GtNe3nvewOA==\",\"kid\": \"ServiceSigningPubK\",\"jwt\": \"\"}
+                ]"
+            );
+        });
+
+        let zkpass_url = format!("http://{}", server.address());
+        std::env::set_var("ZKPASS_URL", zkpass_url);
+        std::env::set_var("API_KEY", "api_key");
+        std::env::set_var("SECRET_API_KEY", "secret_api_key");
+
+        let data_holder = DataHolder;
+        let zkvm = "r0";
+        let mut data_files = HashMap::new();
+        data_files.insert(String::from(""), String::from("./user_data_holder.json"));
+        let dvr_file = "./dvr_holder.json";
+
+        let join_handle =
+            tokio::spawn(async move { data_holder.start(zkvm, data_files, dvr_file).await });
+        let result = join_handle.await;
+        assert!(result.is_ok());
+
+        std::fs::remove_file(dvr_file).expect("Unable to remove file");
+        std::fs::remove_file("./user_data_holder.json").expect("Unable to remove file");
+    }
+}

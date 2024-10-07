@@ -25,3 +25,6 @@ zkpass-core = { path = "../zkpass-core" }
 
 [build-dependencies]
 reqwest = { version = "0.11.20", features = ["blocking", "json"] }
+
+[dev-dependencies]
+httpmock = "0.6.8"

@@ -79,4 +79,11 @@ mod test {
 
         assert_eq!(decoded, user_data_tokens);
     }
+
+    #[test]
+    fn test_decode_user_data_tokens_invalid() {
+        let encoded = r#"{"key1":"value1","key2":value2}"#; // Invalid JSON
+        let result = decode_user_data_tokens(encoded);
+        assert!(result.is_err());
+    }
 }

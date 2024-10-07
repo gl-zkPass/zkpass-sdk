@@ -201,3 +201,37 @@ impl ProofVerifier {
         user_data_requests
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_metadata_validator() {
+        let validator = MyMetadataValidator;
+        let dvr_id = "dvr-1";
+        let result = validator.validate(dvr_id);
+        assert!(result.is_err());
+
+        let mut hash_table = DVR_TABLE.lock().unwrap();
+        hash_table.insert(
+            dvr_id.to_string(),
+            DataVerificationRequest {
+                zkvm: "sp1".to_string(),
+                dvr_title: "My DVR".to_string(),
+                dvr_id: dvr_id.to_string(),
+                query_engine_ver: "1.0".to_string(),
+                query_method_ver: "1.0".to_string(),
+                query: "{}".to_string(),
+                user_data_requests: HashMap::new(),
+                dvr_verifying_key: Some(PublicKeyOption::PublicKey(verifier_pubkey())),
+            },
+        );
+        drop(hash_table);
+
+        let (dvr, verifying_key, ttl) = validator.validate(dvr_id).unwrap();
+        assert_eq!(dvr.dvr_id, dvr_id);
+        assert_eq!(verifying_key, verifier_pubkey());
+        assert_eq!(ttl, 600);
+    }
+}
