@@ -6,12 +6,12 @@
   "scripts": {
     "build": "rm -rf ./build && tsc",
     "demo": "npm run build && node build/index.js",
-    "demo-basic": "npm run build && node build/index.js ./test/data/basic-data.json ./test/data/basic-dvr.json",
-    "demo-basic-false": "npm run build && node build/index.js ./test/data/basic-data-false.json ./test/data/basic-dvr.json",
-    "demo-dewi": "npm run build && node build/index.js ./test/data/dewi-profile-wrong.json ./test/data/bca-insurance-dewi-dvr.json",
-    "demo-ramana": "npm run build && node build/index.js ./test/data/ramana-profile.json ./test/data/bca-finance-ramana-dvr.json",
-    "demo-jane": "npm run build && node build/index.js ./test/data/jane-blood-test-result.json ./test/data/employee-onboarding-dvr.json",
-    "demo-multi": "npm run build && node build/index.js ./test/data/multiple/bank.json ./test/data/multiple/health.json ./test/data/multiple/insurance-dvr.json"
+    "demo-basic": "npm run build && node build/index.js ../rust/test/data/basic-data.json ../rust/test/data/basic-dvr.json",
+    "demo-basic-false": "npm run build && node build/index.js ../rust/test/data/basic-data-false.json ../rust/test/data/basic-dvr.json",
+    "demo-dewi": "npm run build && node build/index.js ../rust/test/data/dewi-profile-wrong.json ../rust/test/data/bca-insurance-dewi-dvr.json",
+    "demo-ramana": "npm run build && node build/index.js ../rust/test/data/ramana-profile.json ../rust/test/data/bca-finance-ramana-dvr.json",
+    "demo-jane": "npm run build && node build/index.js ../rust/test/data/jane-blood-test-result.json ../rust/test/data/employee-onboarding-dvr.json",
+    "demo-multi": "npm run build && node build/index.js ../rust/test/data/multiple/bank.json ../rust/test/data/multiple/health.json ../rust/test/data/multiple/insurance-dvr.json"
   },
   "dependencies": {
     "@zkpass/dvr-client-ts": "0.0.2",
