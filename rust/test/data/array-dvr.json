@@ -1,0 +1,15 @@
+[
+  {
+    "assign": {
+      "result_status": {
+        "and": [
+          { ">": [25, { "dvar": "items[].age" }] },
+          { ">=": [{ "dvar": "items[].age" }, 40, "or"] },
+          { "<": [{ "dvar": "items[].age" }, 60, "and"] }
+        ]
+      }
+    }
+  },
+  { "output": { "result": { "lvar": "result_status" } } },
+  { "output": { "names": { "dvar": "items[].name" } } }
+]

@@ -29,8 +29,7 @@ echo "Using environment: $env"
 
 # URLs to download
 urls=(
-    "https://github.com/gl-zkPass/zkpass-sdk/releases/download/$env-lib/libsp1_zkpass_query.so"
-    "https://github.com/gl-zkPass/zkpass-sdk/releases/download/$env-lib/libr0_zkpass_query.so"
+    "https://github.com/gl-zkPass/zkpass-sdk/releases/download/$env-lib/libdvr_client.so"
 )
 
 # Download files and place them into ./lib/
