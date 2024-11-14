@@ -2,13 +2,6 @@
  * interface.rs
  * zkPass public interfaces, structs, and enums
  *
- * Authors:
- * Created at: September 21st 2024
- * -----
- * Last Modified: August 23rd 2024
- * -----
- * Reviewers:
- * ---
  * References:
  *   NONE
  * ---

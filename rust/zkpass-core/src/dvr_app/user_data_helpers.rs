@@ -2,14 +2,6 @@
  * user_data_helpers.rs
  * Helpers for operations related to User Data token
  *
- * Authors:
- * Created at: June 27th 2024
- * -----
- * Last Modified: September 4th 2024
- * -----
- * Reviewers:
- *
- * ---
  * References:
  *   https://docs.ssi.id/zkpass/v/zkpass-developers-guide/introduction/key-concepts/user-data
  * ---

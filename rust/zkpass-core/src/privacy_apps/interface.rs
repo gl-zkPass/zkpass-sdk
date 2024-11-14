@@ -2,11 +2,6 @@
  * interface.rs
  * File contains shared components for privacy apps
  *
- * Authors:
- * Created at: August 21st 2024
- * -----
- * Last Modified: September 6th 2024
- * ---
  * References:
  *   NONE
  * ---

@@ -3,14 +3,6 @@
  * this file is used only for testing purposes. to fix coverage issue
  * on await function, we need to have yield after the await statement
  *
- * Authors:
- * Created Date: August 12th 2024
- * -----
- * Last Modified: August 12th 2024
- * -----
- * Reviewers:
- *   NONE
- * ---
  * References:
  *   https://github.com/rust-lang/rust/issues/98712
  * ---

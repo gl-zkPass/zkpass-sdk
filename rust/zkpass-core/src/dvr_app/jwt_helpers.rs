@@ -2,11 +2,6 @@
  * jwt_helpers.rs
  * Helpers for JWT, JWS, JWE operations that are not specific to User Data or DVR token
  *
- * Authors:
- * Created at: June 26th 2024
- * -----
- * Last Modified: September 27th 2024
- * -----
  * References:
  *   - [RFC 7519: JWT](https://datatracker.ietf.org/doc/html/rfc7519)
  *   - [RFC 7516: JWE](https://datatracker.ietf.org/doc/html/rfc7516)

@@ -1,14 +1,3 @@
-//
-// Note: The e2e_tests won't be run on the Google Cloud Build
-//       because it is a part of End to End Testing and not Unit Test.
-//
-// On the Google Cloud Build, the e2e_tests will be skipped using this command:
-// `cargo test --release -- --skip e2e_tests`
-//
-// To run the e2e_tests locally, you can use:
-// `cargo test --release -- e2e_tests -- --exact`
-//
-
 #[cfg(test)]
 mod e2e_tests {
     use std::{ env, process::{ Command, Stdio } };

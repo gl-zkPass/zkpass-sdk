@@ -2,14 +2,6 @@
  * dvr_helpers.rs
  * Helpers for operations related to DVR token
  *
- * Authors:
- * Created at: July 1st 2024
- * -----
- * Last Modified: September 27th 2024
- * -----
- * Reviewers:
- *
- * ---
  * References:
  *   https://docs.ssi.id/zkpass/v/zkpass-developers-guide/introduction/key-concepts/dvr
  * ---
