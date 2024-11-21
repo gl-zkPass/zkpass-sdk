@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "name": "John",
+      "age": 30,
+      "_name_zkpass_public_": true
+    },
+    {
+      "name": "Jane",
+      "age": 25,
+      "_name_zkpass_public_": true
+    },
+    {
+      "name": "Dewi",
+      "age": 35,
+      "_name_zkpass_public_": true
+    },
+    {
+      "name": "ramana",
+      "age": 40,
+      "_name_zkpass_public_": true
+    }
+  ]
+}
