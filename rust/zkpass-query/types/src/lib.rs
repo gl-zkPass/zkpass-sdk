@@ -1,14 +1,16 @@
-use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::HashMap;
+use chrono::prelude::*;
+
+mod tests;
 
 mod date_format {
     pub const DDMMYYYY: &str = "DD/MM/YYYY";
     pub const MMDDYYYY: &str = "MM/DD/YYYY";
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub enum ZkPassQueryEngineError {
     UnhandledPanicError,
     UnexpectedValueError,
@@ -22,10 +24,12 @@ pub enum ZkPassQueryEngineError {
     UserDataParsingError,
     LocalVarParsingError,
     DataVarParsingError,
+    DvrNotAnArrayError,
     DataVarNameNotStartingWithAlphabetError,
     ExpectingOperandsInArrayParsingError,
     ExpectingFirstOperandParsingError,
     ExpectingSecondOperandParsingError,
+    ExpectingThirdOperandParsingError,
     OutputStatementExpectingOperandInObjectParsingError,
     OutputStatementExpectingOneOperandParsingError,
     OutputStatementParsingError,
@@ -38,16 +42,17 @@ pub enum ZkPassQueryEngineError {
     IfStatementMissingConditionParsingError,
     IfStatementMissingThenBlockParsingError,
     UnexpectedOperatorParsingError,
+    ArrayComparisonNotSupportedError,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct SymbolTable {
-    pub table: Vec<Entry>,
+    pub table: Vec<Entry>
 }
 
 impl SymbolTable {
     pub fn new() -> Self {
-        SymbolTable { table: Vec::new() }
+        SymbolTable{table: Vec::new()}
     }
 
     pub fn add(&mut self, entry: Entry) {
@@ -67,10 +72,9 @@ impl SymbolTable {
 
 pub type OutputTable = SymbolTable;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub enum OutputReaderError {
-    UnsupportedTypeError,
-    ExpectingObjectError,
+    UnsupportedTypeError, ExpectingObjectError
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, Eq, PartialEq)]
@@ -78,12 +82,13 @@ pub enum Val {
     Str(String),
     Int(i64),
     Bool(bool),
+    Array(Vec<Val>),
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Entry {
     pub key: String,
-    pub val: Val,
+    pub val: Val
 }
 
 ///
@@ -103,7 +108,7 @@ pub fn lookup<'a>(table: &'a LookupTable, key: &String) -> Option<&'a Val> {
 }
 
 pub struct OutputReader {
-    entries: Vec<Entry>,               // to keep the order of entries
+    entries: Vec<Entry>, // to keep the order of entries
     index_map: HashMap<String, usize>, // to search entry, maps keys to their index in the entries Vec
 }
 
@@ -119,30 +124,42 @@ impl OutputReader {
                 for (key, valnode) in map {
                     match valnode {
                         Value::String(s) => {
-                            table.add(Entry {
-                                key,
-                                val: Val::Str(s),
-                            });
-                        }
+                            table.add(Entry{key, val: Val::Str(s)});
+                        },
                         Value::Bool(b) => {
-                            table.add(Entry {
-                                key,
-                                val: Val::Bool(b),
-                            });
-                        }
+                            table.add(Entry{key, val: Val::Bool(b)});
+                        },
                         Value::Number(n) => {
                             let i = n.as_i64().unwrap();
-                            table.add(Entry {
-                                key,
-                                val: Val::Int(i),
-                            });
+                            table.add(Entry{key, val: Val::Int(i)});
+                        }
+                        Value::Array(a) => {
+                            let mut array = Vec::new();
+                            for valnode in a {
+                                match valnode {
+                                    Value::String(s) => {
+                                        array.push(Val::Str(s));
+                                    },
+                                    Value::Bool(b) => {
+                                        array.push(Val::Bool(b));
+                                    },
+                                    Value::Number(n) => {
+                                        let i = n.as_i64().unwrap();
+                                        array.push(Val::Int(i));
+                                    }
+                                    _ => {
+                                        return Err(OutputReaderError::UnsupportedTypeError);
+                                    }
+                                }
+                            }
+                            table.add(Entry{key, val: Val::Array(array)});
                         }
                         _ => {
                             return Err(OutputReaderError::UnsupportedTypeError);
                         }
                     }
                 }
-            }
+            },
             _ => {
                 return Err(OutputReaderError::ExpectingObjectError);
             }
@@ -169,17 +186,15 @@ impl OutputReader {
 
     // Find an entry given a key.
     pub fn find(&self, key: &str) -> Option<&Val> {
-        self.index_map
-            .get(key)
-            .and_then(|&index| self.entries.get(index))
-            .map(|entry| &entry.val)
+        self.index_map.get(key).and_then(|&index| self.entries.get(index)).map(|entry| &entry.val)
     }
 
     pub fn find_bool(&self, key: &str) -> Option<bool> {
         let val = self.find(key)?;
         if let Val::Bool(b) = val {
             Some(*b)
-        } else {
+        }
+        else {
             None
         }
     }
@@ -188,7 +203,8 @@ impl OutputReader {
         let val = self.find(key)?;
         if let Val::Str(s) = val {
             Some((*s).clone())
-        } else {
+        }
+        else {
             None
         }
     }
@@ -197,7 +213,8 @@ impl OutputReader {
         let val = self.find(key)?;
         if let Val::Int(i) = val {
             Some(*i)
-        } else {
+        }
+        else {
             None
         }
     }
@@ -217,12 +234,7 @@ impl OutputReader {
 
 pub fn escape_string(input: &str) -> String {
     // Check if any character needs to be escaped.
-    if !input.chars().any(|c| {
-        matches!(
-            c,
-            '\"' | '\\' | '\n' | '\r' | '\t' | '\u{0008}' | '\u{000C}'
-        )
-    }) {
+    if !input.chars().any(|c| matches!(c, '\"' | '\\' | '\n' | '\r' | '\t' | '\u{0008}' | '\u{000C}')) {
         return input.to_string();
     }
 
@@ -250,7 +262,7 @@ pub fn escape_string(input: &str) -> String {
 pub struct LocalDate {
     pub day: u8,   // 1-31
     pub month: u8, // 1-12
-    pub year: u16, // e.g. 2024
+    pub year: u16  // e.g. 2024
 }
 
 impl LocalDate {
@@ -272,17 +284,17 @@ impl LocalDate {
                 day = date_str[..first_delim].parse().ok()?;
                 month = date_str[first_delim + 1..last_delim].parse().ok()?;
                 year = date_str[last_delim + 1..].parse().ok()?;
-            }
+            },
             date_format::MMDDYYYY => {
                 month = date_str[..first_delim].parse().ok()?;
                 day = date_str[first_delim + 1..last_delim].parse().ok()?;
                 year = date_str[last_delim + 1..].parse().ok()?;
-            }
+            },
             _ => {
                 return None; // Only one delimiter found, invalid format.
             }
         }
-        Some(LocalDate { day, month, year })
+        Some(LocalDate{ day, month, year })
     }
 
     // Gets the current date and converts into u32
@@ -327,8 +339,7 @@ impl LocalDate {
         // If the later date's month is before the earlier date's month,
         // or if it's the same month but the later date's day is before the earlier date's day,
         // then subtract one year from the age.
-        if later.month < earlier.month || (later.month == earlier.month && later.day < earlier.day)
-        {
+        if later.month < earlier.month || (later.month == earlier.month && later.day < earlier.day) {
             if age > 0 {
                 // Prevent underflow
                 age -= 1;

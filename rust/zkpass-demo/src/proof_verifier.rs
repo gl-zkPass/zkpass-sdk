@@ -1,19 +1,37 @@
-use crate::constants::{self, issuer_pubkey, verifier_pubkey, VERIFIER_PRIVKEY};
+/*
+ * proof_verifier.rs
+ * Simulating the Proof Verifier process for the zkPass Demo
+ *
+ * ---
+ * References:
+ *   https://docs.ssi.id/zkpass/zkpass-developers-guide/privacy-apps/dvr/dvr-client-roles/proof-verifier
+ * ---
+ * Copyright (c) 2024 PT Darta Media Indonesia. All rights reserved.
+ */
+use crate::{
+    helper::extract_payload_without_validation,
+    lib_loader::{
+        generate_query_token,
+        get_dvr_id_from_proof,
+        verify_zkpass_proof as verify_zkpass_proof_ffi,
+    },
+    sample_keys::{ issuer_pubkey, verifier_pubkey, VERIFIER_PRIVKEY },
+};
+use dvr_types::{
+    DvrDataFfi,
+    ExpectedDvrMetadataFfi,
+    UserDataRequestFfi,
+    PublicKeyOptionFfi,
+    PublicKeyOptionTagFfi,
+    PublicKeyOptionUnionFfi,
+    KeysetEndpointFfi,
+    PublicKeyFfi,
+};
 use lazy_static::lazy_static;
-use serde_json::{json, Value};
-use std::collections::HashMap;
-use std::io::prelude::*;
-use std::sync::Mutex;
-use std::time::Instant;
+use serde_json::Value;
+use std::{ collections::HashMap, io::prelude::*, sync::Mutex, time::Instant, ffi::CString };
 use tracing::trace;
 use uuid::Uuid;
-use zkpass_client::core::{
-    DataVerificationRequest, KeysetEndpoint, PublicKey, PublicKeyOption, ZkPassError,
-};
-use zkpass_client::interface::{
-    ZkPassClient, ZkPassProofMetadataValidator, ZkPassProofVerifier, ZkPassUtility,
-};
-use zkpass_core::interface::UserDataRequest;
 
 //
 //  Global table to store the generated DVR values
@@ -22,182 +40,235 @@ use zkpass_core::interface::UserDataRequest;
 //  Note: The hash table entry should have time-expiration
 //
 lazy_static! {
-    static ref DVR_TABLE: Mutex<HashMap<String, DataVerificationRequest>> = {
+    static ref DVR_TABLE: Mutex<HashMap<String, String>> = {
         let map = HashMap::new();
         Mutex::new(map)
     };
 }
-struct MyMetadataValidator;
 
-impl MyMetadataValidator {
-    fn get_expected_dvr_verifying_key(&self) -> PublicKey {
-        let expected_dvr_verifying_key = verifier_pubkey();
-
-        expected_dvr_verifying_key
-    }
-
-    fn get_expected_dvr(&self, dvr_id: &str) -> Result<DataVerificationRequest, ZkPassError> {
-        //
-        //  find the DVR in the table
-        //
-        let dvr: DataVerificationRequest;
-        let mut hash_table = DVR_TABLE.lock().unwrap();
-        let removed_item: Option<DataVerificationRequest> = hash_table.remove(dvr_id);
-        match removed_item {
-            Some(_dvr) => {
-                println!("#### found dvr: id={}", _dvr.dvr_id);
-                dvr = _dvr;
-            }
-            None => {
-                println!("#### no dvr found for the id");
-                return Err(ZkPassError::MismatchedDvrDigest);
-            }
-        }
-
-        Ok(dvr)
-    }
+// This struct ensures that the data reference is valid
+struct PublicKeyOptionHolder {
+    key_x: CString,
+    key_y: CString,
+    empty_str: CString,
+    public_key_option: PublicKeyOptionFfi,
 }
 
-impl ZkPassProofMetadataValidator for MyMetadataValidator {
-    fn validate(
-        &self,
-        dvr_id: &str,
-    ) -> Result<(DataVerificationRequest, PublicKey, u64), ZkPassError> {
-        let expected_ttl: u64 = 600;
-
-        Ok((
-            self.get_expected_dvr(dvr_id)?,
-            self.get_expected_dvr_verifying_key(),
-            expected_ttl,
-        ))
-    }
+// This struct ensures that the data reference is valid
+#[allow(dead_code)]
+struct UserDataRequestsHolder {
+    tags: Vec<CString>,
+    user_data_requests: Vec<UserDataRequestFfi>,
+    key_x: CString,
+    key_y: CString,
+    empty_str: CString,
+    public_key_option: PublicKeyOptionFfi,
 }
 
 //
 //  Simulating the Proof Verifier
 //
-pub struct ProofVerifier;
+pub struct ProofVerifier {
+    pub user_data_tags: Vec<String>,
+}
+
+impl Default for ProofVerifier {
+    fn default() -> Self {
+        ProofVerifier {
+            user_data_tags: Vec::new(),
+        }
+    }
+}
 
 impl ProofVerifier {
-    //
-    //  Simulating the Proof Verifier's get_dvr_token REST API
-    //
+    ///
+    /// Generates the user data requests.
+    ///
+    fn user_data_requests(&self) -> Box<UserDataRequestsHolder> {
+        let issuer_public_key_option_holder = self.generate_issuer_public_key_option();
+        let user_data_tags = self.user_data_tags.clone();
+        let tags: Vec<CString> = user_data_tags
+            .iter()
+            .map(|tag| CString::new(tag.as_str()).unwrap())
+            .collect();
+
+        let user_data_requests = tags
+            .iter()
+            .map(|tag| {
+                UserDataRequestFfi {
+                    key: tag.as_ptr(),
+                    value: issuer_public_key_option_holder.public_key_option.clone(),
+                }
+            })
+            .collect();
+
+        Box::new(UserDataRequestsHolder {
+            tags,
+            user_data_requests: user_data_requests,
+            key_x: issuer_public_key_option_holder.key_x,
+            key_y: issuer_public_key_option_holder.key_y,
+            empty_str: issuer_public_key_option_holder.empty_str,
+            public_key_option: issuer_public_key_option_holder.public_key_option,
+        })
+    }
+
+    ///
+    /// Simulates the Proof Verifier's get_dvr_token REST API.
+    ///
     pub fn get_dvr_token(
-        &self,
+        &mut self,
         zkvm: &str,
         dvr_file: &str,
-        user_data_tags: Vec<&String>,
+        user_data_tags: Vec<&String>
     ) -> String {
+        self.user_data_tags = user_data_tags
+            .iter()
+            .cloned()
+            .map(|s| s.clone())
+            .collect();
+
         let mut query_content = std::fs::File::open(dvr_file).expect("Cannot find the dvr file");
         let mut query = String::new();
-        query_content
-            .read_to_string(&mut query)
-            .expect("Should not have I/O errors");
+        query_content.read_to_string(&mut query).expect("Should not have I/O errors");
         trace!("query={}", query);
 
-        let kid = String::from("k-1");
-        let jku = String::from(
-            "https://raw.githubusercontent.com/gl-zkPass/zkpass-sdk/main/docs/zkpass/sample-jwks/verifier-key.json"
-        );
-        let _ep = KeysetEndpoint { jku, kid };
-
         let query: Value = serde_json::from_str(&query).unwrap();
-        let user_data_requests = self.get_user_data_requests(user_data_tags);
 
         //
         //  Proof Verifier's integration points with the zkpass-client SDK library
         //  (for get_dvr_token REST API)
         //
 
-        //
-        //  Step 1: Instantiate the zkpass_client object.
-        //
-        let zkpass_client = ZkPassClient::new("", None, zkvm);
+        let query_string = serde_json::to_string(&query).unwrap();
+
+        let zkvm_cstring = CString::new(zkvm).unwrap();
+        let dvr_title_cstring = CString::new("My DVR").unwrap();
+        let dvr_id_cstring = CString::new(Uuid::new_v4().to_string()).unwrap();
+        let query_cstring = CString::new(query_string).unwrap();
+
+        let verifier_public_key_option_holder = self.generate_verifier_public_key_option();
+        let verifier_public_key_option = verifier_public_key_option_holder.public_key_option;
+
+        let user_data_requests_holder = self.user_data_requests();
+        let user_data_requests = user_data_requests_holder.user_data_requests;
+        let user_data_requests_slice = user_data_requests.as_slice();
 
         //
-        //  Step 2: Call zkpass_client.get_query_engine_version_info.
-        //          The version info is needed for DVR object creation.
+        // Step 1: Create the DVR object.
         //
-        let query_engine_version_info = zkpass_client.get_query_engine_version_info().unwrap();
-
-        //
-        // Step 3: Create the DVR object.
-        //
-        let dvr = DataVerificationRequest {
-            zkvm: String::from(zkvm),
-            dvr_title: String::from("My DVR"),
-            dvr_id: Uuid::new_v4().to_string(),
-            query_engine_ver: query_engine_version_info.0,
-            query_method_ver: query_engine_version_info.1,
-            query: serde_json::to_string(&query).unwrap(),
-            user_data_requests: user_data_requests,
-            dvr_verifying_key: Some(PublicKeyOption::PublicKey(verifier_pubkey())),
+        let dvr_data = DvrDataFfi {
+            zkvm: zkvm_cstring.as_ptr(),
+            dvr_title: dvr_title_cstring.as_ptr(),
+            dvr_id: dvr_id_cstring.as_ptr(),
+            query: query_cstring.as_ptr(),
+            user_data_requests: user_data_requests_slice.as_ptr(),
+            user_data_requests_len: user_data_requests_slice.len() as u64,
+            dvr_verifying_key: verifier_public_key_option,
         };
 
         //
-        //  Step 4: Call zkpass_client.sign_data_to_jws_token.
+        //  Step 2: Call dvr client's generate_query_token function
         //          to digitally-sign the dvr data.
         //
-        let dvr_token = zkpass_client
-            .sign_data_to_jws_token(VERIFIER_PRIVKEY, json!(dvr), None)
-            .unwrap();
+        let dvr_token = unsafe { generate_query_token(VERIFIER_PRIVKEY, dvr_data) };
+        let payload = extract_payload_without_validation(&dvr_token).unwrap();
 
         // save the dvr to a global hash table
         // this will be needed by the validator to check the proof metadata
         let mut dvr_table = DVR_TABLE.lock().unwrap();
-        dvr_table.insert(dvr.dvr_id.clone(), dvr.clone());
+        if let Some(data) = payload.get("data") {
+            let dvr_id = data["dvr_id"].as_str().unwrap();
+            dvr_table.insert(dvr_id.to_string(), data.to_string());
+        }
 
         dvr_token
     }
 
+    ///
+    /// Generates the public key option.
+    ///
+    fn generate_public_key_option(&self, is_verifier: bool) -> Box<PublicKeyOptionHolder> {
+        let (key_x, key_y) = if is_verifier { verifier_pubkey() } else { issuer_pubkey() };
+        let key_x = CString::new(key_x).unwrap();
+        let key_y = CString::new(key_y).unwrap();
+        let empty_str = CString::new("").unwrap();
+
+        let public_key_option = PublicKeyOptionFfi {
+            tag: PublicKeyOptionTagFfi::PublicKey,
+            value: PublicKeyOptionUnionFfi {
+                keyset_endpoint: KeysetEndpointFfi {
+                    jku: empty_str.as_ptr(),
+                    kid: empty_str.as_ptr(),
+                },
+                public_key: PublicKeyFfi {
+                    x: key_x.as_ptr(),
+                    y: key_y.as_ptr(),
+                },
+            },
+        };
+
+        Box::new(PublicKeyOptionHolder {
+            key_x,
+            key_y,
+            empty_str,
+            public_key_option,
+        })
+    }
+
+    ///
+    /// Generates the verifier public key option.
+    ///
+    fn generate_verifier_public_key_option(&self) -> Box<PublicKeyOptionHolder> {
+        self.generate_public_key_option(true)
+    }
+
+    ///
+    /// Generates the issuer public key option.
+    ///
+    fn generate_issuer_public_key_option(&self) -> Box<PublicKeyOptionHolder> {
+        self.generate_public_key_option(false)
+    }
+
     //
-    //  Simulating the Proof Verifier's verify_zkpass_proof REST API
-    //
+    /// Simulates the Proof Verifier's verify_zkpass_proof REST API.
+    ///
     pub async fn verify_zkpass_proof(&self, zkvm: &str, zkpass_proof_token: &str) -> String {
         println!("\n#### starting zkpass proof verification...");
         let start = Instant::now();
 
-        let proof_metadata_validator =
-            Box::new(MyMetadataValidator) as Box<dyn ZkPassProofMetadataValidator>;
+        let url = std::env
+            ::var("ZKPASS_URL")
+            .unwrap_or("https://staging-zkpass.ssi.id".to_string());
+
+        let some_ttl: u64 = 3600;
+        let dvr_id = unsafe { get_dvr_id_from_proof(zkpass_proof_token) };
+        let expected_dvr = DVR_TABLE.lock().unwrap().get(&dvr_id).unwrap().clone();
+        let expected_dvr_cstring = CString::new(expected_dvr).unwrap();
+
+        let user_data_requests_holder = self.user_data_requests();
+        let user_data_requests = user_data_requests_holder.user_data_requests;
+        let user_data_requests_slice = user_data_requests.as_slice();
 
         //
-        //  Proof Verifier's integration points with the zkpass-client SDK library
-        //  (for verify_zkpass_proof REST API)
+        // Step 1: Create the expected metadata object.
         //
-
-        //
-        // Step 1: Instantiate the zkpass_client object.
-        //
-        let zkpass_service_url = constants::ZKPASS_URL;
-        let zkpass_client = ZkPassClient::new(&zkpass_service_url, None, zkvm);
+        let expected_metadata = ExpectedDvrMetadataFfi {
+            ttl: some_ttl,
+            dvr: expected_dvr_cstring.as_ptr(),
+            user_data_verifying_keys: user_data_requests_slice.as_ptr(),
+            user_data_verifying_keys_len: user_data_requests_slice.len() as u64,
+        };
 
         //
         // Step 2: Call zkpass_client.verify_zkpass_proof to verify the proof.
         //
-        let (result, _zkpass_proof) = zkpass_client
-            .verify_zkpass_proof(zkpass_proof_token, &proof_metadata_validator)
-            .await
-            .unwrap();
+        let result = unsafe {
+            verify_zkpass_proof_ffi(&url, zkvm, zkpass_proof_token, expected_metadata)
+        };
 
         let duration = start.elapsed();
         println!("#### verification completed [time={:?}]", duration);
 
         result
-    }
-
-    fn get_user_data_requests(
-        &self,
-        user_data_tags: Vec<&String>,
-    ) -> HashMap<String, UserDataRequest> {
-        let mut user_data_requests: HashMap<String, UserDataRequest> = HashMap::new();
-        for tag in user_data_tags {
-            let user_data_request = UserDataRequest {
-                user_data_url: Some(String::from("https://hostname/api/user_data/")),
-                user_data_verifying_key: PublicKeyOption::PublicKey(issuer_pubkey()),
-            };
-            user_data_requests.insert(tag.clone(), user_data_request);
-        }
-
-        user_data_requests
     }
 }

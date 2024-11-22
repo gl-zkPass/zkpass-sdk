@@ -8,15 +8,17 @@
           },
           {
             ">=": [
-              {"get_age": [{ "dvar": "personalInfo.dateOfBirth" }, "MM/DD/YYYY"]},
+              {
+                "get_age": [
+                  { "dvar": "personalInfo.dateOfBirth" },
+                  "MM/DD/YYYY"
+                ]
+              },
               21
             ]
           },
           {
-            "~==": [
-              { "dvar": "contactInfo.address.city" },
-              "jakarta"
-            ]
+            "~contains": [{ "dvar": "contactInfo.address.city" }, "jakarta"]
           },
           {
             ">=": [{ "dvar": "financialInfo.creditRatings.pefindo" }, 650]

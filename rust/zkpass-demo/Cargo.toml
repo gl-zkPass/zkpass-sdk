@@ -1,17 +1,21 @@
 [package]
 name = "zkpass-demo"
-version = "1.2.0"
+version = "1.3.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+base64 = "0.13.0"
 clap = "3.0.0"
+client_utils = { path = "../privacy-apps/client_utils" }
 dotenv = "0.15.0"
+dvr_types = { path = "../privacy-apps/dvr_types" }
 futures = "0.3.28"
 hex = "0.4.3"
 josekit = "0.8.3"
 lazy_static = "1.4.0"
+libloading = "0.8.5"
 maplit = "1.0.2"
 serde = "1.0.188"
 serde_json = "1.0.114"
@@ -20,8 +24,7 @@ tokio = { version = "1.32.0", features = ["full"] }
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 uuid = { version = "1.2.2", features = ["v4"] }
-zkpass-client = { path = "../zkpass-client" }
-zkpass-core = { path = "../zkpass-core" }
+zkpass-query-types = { path = "../zkpass-query/types" }
 
-[build-dependencies]
-reqwest = { version = "0.11.20", features = ["blocking", "json"] }
+[dev-dependencies]
+httpmock = "0.7.0"

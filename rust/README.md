@@ -16,61 +16,46 @@ The zkPass SDK is composed of several components, each serving a distinct role i
 - **zkpass-core**  
   This is the foundational library that is shared internally across all other zkPass components. It provides the common types and codes used by the other components.
 
-- **zkpass-client**  
-  This library acts as the primary library for the zkPass SDK, designed to facilitate seamless integration of the zkPass service with the applications. It eases the complexities involved in connecting to and interacting with the zkPass RESTful API. Exclusively designed for public use, this library stands apart from other zkPass library components, which are confined for internal system use only.
+- **zkpass-demo**  
+  Rust-based command-line application that simulates the generating and verifying of zkPass proofs. This demo showcases how to interact with the zkPass system, including data issuance, proof verification, and querying results.
 
-- **"apps/zkpass-demo"**  
-  This is a CLI demo application that utilizes the `zkpass-client` SDK library. It serves as a practical example to guide developers in effectively leveraging the `zkpass-client` library in their projects. This application is included in the zkPass SDK.
+- **privacy-apps**  
+  This is a library that contains the `dvr_types` and `client_utils`, which are used to interact with the Dvr client to generate & verify proofs.
 
-## Initial Build Setup Prerequisites
+## Understanding zkpass-demo Code
 
-To build the zkPass repo, follow these two simple steps to configure your build tools and environment:
+The [`zkpass-demo`](./zkpass-demo) project consists of several components:
 
-1. Install rust compiler  
-   Follow the installation instructions at  
-   [Getting started - Rust Programming Language (rust-lang.org)](https://www.rust-lang.org/learn/get-started)
+- [**data_holder.rs**](./zkpass-demo/src/data_holder.rs): Manages the issuance of user data tokens and DVR, and initiates proof generation and validation.
+- [**data_issuer.rs**](./zkpass-demo/src/data_issuer.rs): Simulates the issuance of user data tokens.
+- [**proof_verifier.rs**](./zkpass-demo/src/proof_verifier.rs): Generates and verifies proofs from the zkPass service.
+- [**helper.rs**](./zkpass-demo/src/helper.rs): Provides utility functions for data extraction and validation.
+- [**lib_loader.rs**](./zkpass-demo/src/lib_loader.rs): Loads the Dvr module client and provides a convenient interface for interacting with the zkPass service.
+- [**sample_keys.rs**](./zkpass-demo/src/sample_keys.rs): Contains the sample keys for the demo.
 
-## Build Instructions
+### Disclaimer
 
-To build all components, at the zkPass repo root dir run the following:
+The demo is intended for educational purposes. As such, it uses `unwrap` and `expect` liberally throughout the code. These methods will cause the program to panic if an error occurs. In a production environment, it is recommended to handle errors gracefully and avoid using these methods without proper error handling.
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- [Rust](https://www.rust-lang.org/tools/install) (version 1.79 or later)
+- [Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html) (comes with Rust)
+
+## Build and Run the demo
 
 <pre>
-  cargo build --release  
+  ./test.sh
 </pre>
 
-This will build all components which are placed under the `target/release` directory.
+This script will build the demo and download the Dvr client, then run 3 different demos.
 
-## Unit test
-
-To run all unit tests, at the zkPass repo root dir run the following:
+## Run Tests
 
 <pre>
-  cargo test --release  
+  ./cargo-test.sh
 </pre>
 
-## Run the demo
-
-Follow these steps to test demo:
-
-1. In rust directory
-2. Build zkPass with `cargo build --release`
-3. Add environment with command `export LD_LIBRARY_PATH=./lib`
-4. Run the demo with this format
-
-   ```
-   ./target/release/zkpass-demo r0 [--user-data-file / -U] [tag:]<test data 1> [tag:]<test data 2> [--dvr-file / - D] <dvr file>
-   ```
-
-   example (single user data):
-
-   ```
-   ./target/release/zkpass-demo r0 -U test/data/dewi-profile-wrong.json -D test/data/bca-insurance-dewi-dvr.json
-   ```
-
-   example (multiple user data):
-
-   ```
-   ./target/release/zkpass-demo r0 -U ./test/data/multiple/bank.json ./test/data/multiple/health.json -D ./test/data/multiple/insurance-dvr.json
-   ```
-
-   Or you can simply run the script with `./test.sh`
+This script will run all unit tests.
