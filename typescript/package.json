@@ -14,7 +14,7 @@
     "demo-multi": "npm run build && node build/index.js ../rust/test/data/multiple/bank.json ../rust/test/data/multiple/health.json ../rust/test/data/multiple/insurance-dvr.json"
   },
   "dependencies": {
-    "@zkpass/dvr-client-ts": "0.0.2",
+    "@zkpass/dvr-client-ts": "0.0.3",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
