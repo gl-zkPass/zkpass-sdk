@@ -13,7 +13,7 @@ mod tests {
     use dvr_types::{ DvrDataFfi, ExpectedDvrMetadataFfi, UserDataRequestFfi };
     use std::ffi::CString;
     use uuid::Uuid;
-    use crate::data_issuer::DataIssuer;
+    use crate::{ data_issuer::DataIssuer, proof_verifier::ProofVerifier };
 
     #[test]
     fn test_access() {
@@ -24,14 +24,19 @@ mod tests {
             secret_api_key: CString::new("secret_api_key").unwrap().into_raw(),
         };
 
-        let data_issuer = DataIssuer;
-        let issuer_public_key_option = data_issuer.generate_issuer_public_key_option();
-        let public_key_option = issuer_public_key_option.public_key_option.clone();
+        let _data_issuer = DataIssuer;
+        let proof_verifier = ProofVerifier::default();
+
+        let data_issuer_pub_key_holder = proof_verifier.generate_public_key_option(false);
+        let data_issuer_pub_key = data_issuer_pub_key_holder.public_key_option;
+
+        let proof_verifier_pub_key_holder = proof_verifier.generate_public_key_option(true);
+        let proof_verifier_pub_key = proof_verifier_pub_key_holder.public_key_option;
 
         let empty_str = CString::new("").unwrap();
         let user_data_request = UserDataRequestFfi {
             key: empty_str.as_ptr(),
-            value: public_key_option.clone(),
+            value: data_issuer_pub_key,
         };
 
         let zkvm_cstring = CString::new("r0").unwrap();
@@ -47,7 +52,7 @@ mod tests {
             query: query_cstring.as_ptr(),
             user_data_requests: user_data_requests_slice.as_ptr(),
             user_data_requests_len: user_data_requests_slice.len() as u64,
-            dvr_verifying_key: public_key_option,
+            dvr_verifying_key: proof_verifier_pub_key,
         };
 
         let some_ttl: u64 = 3600;

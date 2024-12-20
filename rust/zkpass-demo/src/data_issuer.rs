@@ -9,13 +9,7 @@
  * Copyright (c) 2024 PT Darta Media Indonesia. All rights reserved.
  */
 use crate::{ sample_keys::ISSUER_PRIVKEY, lib_loader::generate_user_data_token };
-use dvr_types::{
-    KeysetEndpointFfi,
-    PublicKeyFfi,
-    PublicKeyOptionFfi,
-    PublicKeyOptionTagFfi,
-    PublicKeyOptionUnionFfi,
-};
+use dvr_types::PublicKeyOptionFfi;
 use serde_json::Value;
 use std::{ collections::HashMap, io::prelude::*, ffi::CString };
 use tracing::info;
@@ -63,43 +57,11 @@ impl DataIssuer {
     /// Signs the user data token.
     ///
     fn sign_user_data_token(&self, data: Value) -> String {
-        let issuer_public_key_option_holder = self.generate_issuer_public_key_option();
-        let public_key_option = issuer_public_key_option_holder.public_key_option.clone();
-
         let user_data_token = unsafe {
-            generate_user_data_token(ISSUER_PRIVKEY, &data.to_string(), public_key_option)
+            generate_user_data_token(ISSUER_PRIVKEY, &data.to_string())
         };
 
         user_data_token
-    }
-
-    ///
-    /// Generates the issuer public key option.
-    ///
-    pub fn generate_issuer_public_key_option(&self) -> Box<IssuerPublicKeyOptionHolder> {
-        let empty_str = CString::new("").unwrap();
-
-        let jku = CString::new(String::from("k-1")).unwrap();
-        let kid = CString::new(
-            String::from(
-                "https://raw.githubusercontent.com/gl-zkPass/zkpass-sdk/main/docs/zkpass/sample-jwks/issuer-key.json"
-            )
-        ).unwrap();
-
-        let public_key_option = PublicKeyOptionFfi {
-            tag: PublicKeyOptionTagFfi::KeysetEndpoint,
-            value: PublicKeyOptionUnionFfi {
-                keyset_endpoint: KeysetEndpointFfi { jku: jku.as_ptr(), kid: kid.as_ptr() },
-                public_key: PublicKeyFfi { x: empty_str.as_ptr(), y: empty_str.as_ptr() },
-            },
-        };
-
-        Box::new(IssuerPublicKeyOptionHolder {
-            jku,
-            kid,
-            empty_str,
-            public_key_option,
-        })
     }
 
     ///

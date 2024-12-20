@@ -47,11 +47,11 @@ lazy_static! {
 }
 
 // This struct ensures that the data reference is valid
-struct PublicKeyOptionHolder {
+pub struct PublicKeyOptionHolder {
     key_x: CString,
     key_y: CString,
     empty_str: CString,
-    public_key_option: PublicKeyOptionFfi,
+    pub public_key_option: PublicKeyOptionFfi,
 }
 
 // This struct ensures that the data reference is valid
@@ -187,7 +187,7 @@ impl ProofVerifier {
     ///
     /// Generates the public key option.
     ///
-    fn generate_public_key_option(&self, is_verifier: bool) -> Box<PublicKeyOptionHolder> {
+    pub fn generate_public_key_option(&self, is_verifier: bool) -> Box<PublicKeyOptionHolder> {
         let (key_x, key_y) = if is_verifier { verifier_pubkey() } else { issuer_pubkey() };
         let key_x = CString::new(key_x).unwrap();
         let key_y = CString::new(key_y).unwrap();

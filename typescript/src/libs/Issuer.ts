@@ -9,10 +9,7 @@
 
 import { KEY, SECRET, ZKPASS_SERVICE_URL } from "../utils/constants";
 import { UserDataTag } from "../utils/helper";
-import {
-  DvrModuleClient,
-  PublicKeyOrKeysetEndpoint,
-} from "@zkpass/dvr-client-ts";
+import { DvrModuleClient } from "@zkpass/dvr-client-ts";
 
 interface UserData {
   [key: string]: any;
@@ -22,11 +19,7 @@ export abstract class Issuer {
   //
   // This function simulates the Data Issuer process of signing the user data
   //
-  protected signUserData(
-    signingKey: string,
-    data: UserData,
-    verifyingKeyJws: PublicKeyOrKeysetEndpoint
-  ): string {
+  protected signUserData(signingKey: string, data: UserData): string {
     //
     // Step 1: Instantiate the DVR module client object
     //
@@ -42,8 +35,7 @@ export abstract class Issuer {
     //
     return dvrModuleClient.callDvrGenerateUserDataToken(
       signingKey,
-      JSON.stringify(data),
-      verifyingKeyJws
+      JSON.stringify(data)
     );
   }
 
