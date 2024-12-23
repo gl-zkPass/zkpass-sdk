@@ -13,7 +13,7 @@ use client_utils::{
     ffi_helper::c_str_to_string,
     interface::PrivacyAppCredentialsFfi,
 };
-use dvr_types::{ PublicKeyOptionFfi, DvrDataFfi, ExpectedDvrMetadataFfi };
+use dvr_types::{ DvrDataFfi, ExpectedDvrMetadataFfi };
 use libloading::{ Library, Symbol };
 use std::ffi::{ c_char, CString };
 
@@ -28,27 +28,18 @@ fn load_library() -> Library {
 ///
 /// Calls the generate user data token function from the dvr module SDK library.
 ///
-pub unsafe fn generate_user_data_token(
-    signing_key: &str,
-    user_data: &str,
-    public_key_option: PublicKeyOptionFfi
-) -> String {
+pub unsafe fn generate_user_data_token(signing_key: &str, user_data: &str) -> String {
     let signing_key_c_str = CString::new(signing_key).unwrap();
     let user_data_c_str = CString::new(user_data).unwrap();
 
     let lib = load_library();
     let generate_user_data_token: Symbol<
-        unsafe extern "C" fn(
-            *const c_char,
-            *const c_char,
-            PublicKeyOptionFfi
-        ) -> FfiResult<*const c_char>
+        unsafe extern "C" fn(*const c_char, *const c_char) -> FfiResult<*const c_char>
     > = lib.get(b"dvr_generate_user_data_token").unwrap();
 
     let user_data_token_result = generate_user_data_token(
         signing_key_c_str.as_ptr(),
-        user_data_c_str.as_ptr(),
-        public_key_option
+        user_data_c_str.as_ptr()
     );
     assert!(user_data_token_result.is_success());
 
