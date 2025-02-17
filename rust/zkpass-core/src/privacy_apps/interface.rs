@@ -2,6 +2,13 @@
  * interface.rs
  * File contains shared components for privacy apps
  *
+ * Authors:
+ *   NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * Created at: August 21st 2024
+ * -----
+ * Last Modified: September 6th 2024
+ * Modified By: NaufalFakhri (naufal.f.muhammad@gdplabs.id)
+ * ---
  * References:
  *   NONE
  * ---
@@ -19,6 +26,13 @@ pub type SocketConnectionMutex = Arc<Mutex<RefCell<Option<Box<dyn SocketConnecti
 
 /// <span style="font-size: 1.1em; color: #996515;"> ***Privacy App errors trait.*** </span>
 pub trait ZkPassPrivacyAppError: std::fmt::Debug {}
+
+#[derive(Debug)]
+pub enum PrivacyAppError {
+    UnknownEntryPointError(String),
+    CustomError(String),
+}
+impl ZkPassPrivacyAppError for PrivacyAppError {}
 
 /// <span style="font-size: 1.1em; color: #996515;"> ***Represents a public key.*** </span>
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
