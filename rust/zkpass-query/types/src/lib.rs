@@ -43,6 +43,9 @@ pub enum ZkPassQueryEngineError {
     IfStatementMissingThenBlockParsingError,
     UnexpectedOperatorParsingError,
     ArrayComparisonNotSupportedError,
+    CyclesLimitExceededError,
+    EnvironmentError,
+    SerializationError,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -266,6 +269,9 @@ pub struct LocalDate {
 }
 
 impl LocalDate {
+    // Constants for the number of days passed in each months.
+    const MONTHS_DAYS_PASSED: [i64; 12] = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+
     // Converts a date string into a LocalDate struct,
     // given a date format and allowing for different delimiters ('/', '-', '.')
     pub fn parse_date(date_str: &str, date_format: &str) -> Option<Self> {
@@ -326,8 +332,23 @@ impl LocalDate {
         LocalDate { day, month, year }
     }
 
+    /// Returns the number of days that is the sum of:
+    /// 1. Year days (365 days per year, does not count the leap year)
+    /// 2. Month days (days passed from the beginning of the year till the current month). Example:
+    ///    1. January = 1,
+    ///    2. February = 31 (because 31 days has passed from January),
+    ///    3. March = 59 (because 59 days, from 31 + 28, has passed from January), etc.
+    /// 3. Days passed.
+    ///
+    /// Example: 2024-03-15 = (2024 * 365) + 59 + 15 = 738_394
+    fn get_days(self: &Self) -> i64 {
+        let month_days = LocalDate::MONTHS_DAYS_PASSED[(self.month - 1) as usize];
+        let year_days = 365 * self.year as i64;
+        year_days + month_days + self.day as i64
+    }
+
     // Calculates the age difference between two LocalDate instances.
-    pub fn calculate_age_difference(a: &LocalDate, b: &LocalDate) -> u16 {
+    pub fn calculate_age_difference(a: &LocalDate, b: &LocalDate) -> i64 {
         let (earlier, later) = if LocalDate::is_later(a, b) {
             (b, a)
         } else {
@@ -346,7 +367,17 @@ impl LocalDate {
             }
         }
 
-        age
+        age as i64
+    }
+
+    /// Calculates the day difference between two LocalDate instances.
+    /// The result is positive if the first date is earlier than the second date.
+    /// The result is negative if the first date is later than the second date.
+    pub fn calculate_day_difference(check_date: &LocalDate, reference_date: &LocalDate) -> i64 {
+        let check_date_days = check_date.get_days() as i64;
+        let reference_date_days = reference_date.get_days() as i64;
+
+        reference_date_days - check_date_days
     }
 
     // Determines if date 'a' is later than date 'b'.

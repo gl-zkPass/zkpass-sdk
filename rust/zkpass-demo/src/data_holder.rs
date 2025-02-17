@@ -94,6 +94,7 @@ impl DataHolder {
             base_url: CString::new(base_url).unwrap().into_raw(),
             api_key: CString::new(api_key).unwrap().into_raw(),
             secret_api_key: CString::new(secret_api_key).unwrap().into_raw(),
+            using_queue: true,
         }
     }
 }

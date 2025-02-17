@@ -48,6 +48,9 @@ mod lib_test {
             "IfStatementMissingConditionParsingError",
             "IfStatementMissingThenBlockParsingError",
             "UnexpectedOperatorParsingError",
+            "CyclesLimitExceededError",
+            "EnvironmentError",
+            "SerializationError",
         ]);
 
         let arr = errors.as_array().unwrap();
@@ -306,5 +309,29 @@ mod lib_test {
         let age_difference = LocalDate::calculate_age_difference(&later_date, &earlier_date);
 
         assert!(age_difference == 0);
+    }
+
+    fn assert_calculate_day_difference_result(
+        check_date: &str,
+        reference_date: &str,
+        expected_age: i64
+    ) {
+        let check_date = LocalDate::parse_date(check_date, date_format::DDMMYYYY).unwrap();
+        let reference_date = LocalDate::parse_date(reference_date, date_format::DDMMYYYY).unwrap();
+        let day_difference = LocalDate::calculate_day_difference(&check_date, &reference_date);
+        assert!(day_difference == expected_age);
+    }
+
+    #[test]
+    fn lib_local_date_calculate_day_difference_test() {
+        assert_calculate_day_difference_result("01/02/2000", "01/02/2003", 1095);
+        assert_calculate_day_difference_result("02/02/2005", "02/02/2003", -730);
+        assert_calculate_day_difference_result("01/05/2005", "02/02/2004", -453);
+        assert_calculate_day_difference_result("05/01/2004", "02/04/2003", -278);
+        assert_calculate_day_difference_result("01/10/2000", "02/02/2000", -241);
+        assert_calculate_day_difference_result("01/10/2002", "02/02/2003", 124);
+        assert_calculate_day_difference_result("02/01/2040", "02/02/2040", 31);
+        assert_calculate_day_difference_result("20/02/2003", "02/02/2003", -18);
+        assert_calculate_day_difference_result("02/02/2003", "02/02/2003", 0);
     }
 }
