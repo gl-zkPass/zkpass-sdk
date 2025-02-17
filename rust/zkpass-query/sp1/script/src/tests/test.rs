@@ -2,8 +2,7 @@
 mod tests {
     mod heavy_tests {
         use lazy_static::lazy_static;
-        use std::io::prelude::*;
-        use std::time::Instant;
+        use zkpass_query_test_utils::proof::{ gen_proof, verify_proof };
         use crate::create_zkpass_query_engine;
         use crate::OutputReader;
 
@@ -39,67 +38,16 @@ mod tests {
             ];
         }
 
-        fn gen_proof_sp1(data_files: &str, rules_file: &str) -> String {
-            //
-            //          Prover side
-            //
-            //
-            // prep the inputs
-            //
-            let mut data_content = std::fs::File
-                ::open(data_files)
-                .expect("Example file should be accessible");
-            let mut data = String::new();
-            data_content.read_to_string(&mut data).expect("Should not have I/O errors");
-
-            let mut rules_data = std::fs::File
-                ::open(rules_file)
-                .expect("Example file should be accessible");
-            let mut rules = String::new();
-            rules_data.read_to_string(&mut rules).expect("Should not have I/O errors");
-
-            println!("executing query and generating zkproof...");
-            let start = Instant::now();
-            //////////////// the meat //////////////////
-            let query_engine = create_zkpass_query_engine();
-            let receipt = query_engine
-                .execute_query_and_create_zkproof(data.as_str(), rules.as_str())
-                .unwrap();
-            ////////////////////////////////////////////
-            let duration = start.elapsed();
-
-            println!("zkproof generation completed, time={:?}", duration);
-
-            receipt
-        }
-
-        fn verify_proof_sp1(receipt: &str) -> String {
-            //
-            //          Verifier side
-            //
-
-            let query_engine = create_zkpass_query_engine();
-
-            // verify the receipt
-            let start = Instant::now();
-            //////////////////////// the meat ///////////////////////////////
-            let output = query_engine.verify_zkproof(receipt).unwrap();
-            /////////////////////////////////////////////////////////////////
-            let duration = start.elapsed();
-
-            println!("\nverifying zkproof...");
-            println!("zkproof verified, time={:?}\n", duration);
-            println!("output={}", &output);
-
-            output
-        }
-
         #[test]
         fn heavy_test_generate_proof_using_sp1() {
             for test in TEST_CASES.iter() {
                 println!("\n#### Running test for {}", test.user_data_file);
-                let zkproof = gen_proof_sp1(test.user_data_file.as_str(), test.query_file.as_str());
-                let output = verify_proof_sp1(zkproof.as_str());
+                let zkproof = gen_proof(
+                    test.user_data_file.as_str(),
+                    test.query_file.as_str(),
+                    create_zkpass_query_engine
+                );
+                let output = verify_proof(zkproof.as_str(), create_zkpass_query_engine);
                 let output_reader = OutputReader::from_json(&output).unwrap();
                 let b = output_reader.find_bool("result").unwrap();
                 assert!(b == test.expected_result);
